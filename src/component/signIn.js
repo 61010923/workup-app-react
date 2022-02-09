@@ -118,7 +118,7 @@ function SignIn() {
           // helperText="Please enter your password"
             id="demo-helper-text-aligned"
             type="password"
-            label="password"
+            label="passwords"
             autoComplete="off"
             value={password}
             error={(loading && _isEmpty(password))}
