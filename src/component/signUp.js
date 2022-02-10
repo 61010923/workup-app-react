@@ -45,7 +45,7 @@ function SignUp(props) {
   // console.log(lastName)
   // console.log(email)
   // console.log(password)
-  console.log(`%c${userType}`, 'font-weight:bold; background-color: cyan;')
+  // console.log(`%c${userType}`, 'font-weight:bold; background-color: cyan;')
   const emailValidate = (e) => {
     const re = /\S+@\S+\.\S+/
     return re.test(e)
