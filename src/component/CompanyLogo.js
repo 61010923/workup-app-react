@@ -2,7 +2,6 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
-import { typography } from '@mui/system'
 import { Link } from '@mui/material'
 import sony from '../image/sony.png'
 
@@ -29,9 +28,9 @@ function CompanyLogo() {
         display: 'flex', flexDirection: 'column', ml: 2,
       }}
       >
-        <typography variant="h6">
+        <Typography variant="h6">
           Sony Technology (Thailand) Co., Ltd.
-        </typography>
+        </Typography>
         <Link
           href="/#"
           color="rgb(202 162 47)"
