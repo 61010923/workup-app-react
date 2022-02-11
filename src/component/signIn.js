@@ -33,10 +33,10 @@ function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  console.log(firstName)
-  console.log(lastName)
-  console.log(email)
-  console.log(password)
+  // console.log(firstName)
+  // console.log(lastName)
+  // console.log(email)
+  // console.log(password)
   const emailValidate = (e) => {
     const re = /\S+@\S+\.\S+/
     return re.test(e)
@@ -131,7 +131,7 @@ function SignIn() {
             // helperText="Please enter your password"
             id="demo-helper-text-aligned"
             type="password"
-            label="passwords"
+            label="password"
             autoComplete="off"
             value={password}
             error={loading && _isEmpty(password)}
