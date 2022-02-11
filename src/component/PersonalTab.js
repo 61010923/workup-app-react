@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {
-  Box, Button, TextField, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, MenuItem,
+  Box, Button, TextField, MenuItem,
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
@@ -8,7 +8,7 @@ import DatePicker from '@mui/lab/DatePicker'
 import AdapterDateFns from '@mui/lab/AdapterDateFns'
 import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import { useEffect } from 'react'
-import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import ImageUploader from './ImageUploader'
 
 const useStyles = makeStyles({
   container: {
@@ -52,6 +52,13 @@ function PersonalTab() {
   const [marital, setMarital] = React.useState('')
   const [gender, setGender] = React.useState('')
   const [province, setProvince] = React.useState('')
+  const [image, setImage] = React.useState(null)
+  console.log(image)
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setImage(URL.createObjectURL(event.target.files[0]))
+    }
+  }
   const handleChange = (event) => {
     setMarital(event.target.value)
   }
@@ -109,17 +116,6 @@ function PersonalTab() {
         />
       </LocalizationProvider>
       <Box sx={{ mt: 1, display: 'flex' }}>
-        {/* <FormControl>
-          <FormLabel id="demo-row-radio-buttons-group-label">Gender</FormLabel>
-          <RadioGroup
-            row
-            aria-labelledby="demo-row-radio-buttons-group-label"
-            name="row-radio-buttons-group"
-          >
-            <FormControlLabel value="male" control={<Radio />} label="Male" />
-            <FormControlLabel value="female" control={<Radio />} label="Female" />
-          </RadioGroup>
-        </FormControl> */}
         <TextField
           id="outlined-select-currency"
           select
@@ -176,18 +172,7 @@ function PersonalTab() {
         rows={4}
         fullWidth
       />
-
-      <label htmlFor="contained-button-file">
-        <input
-          type="file"
-          accept="image/*"
-          style={{ display: 'none' }}
-          id="contained-button-file"
-        />
-        <Button sx={{ mt: 1 }} variant="outlined" color="primary" fullWidth component="span" endIcon={<CloudUploadIcon />}>
-          Upload RESUME
-        </Button>
-      </label>
+      <ImageUploader />
       <Button sx={{ mt: 1 }} fullWidth variant="contained">save</Button>
 
     </Box>

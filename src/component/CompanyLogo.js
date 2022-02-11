@@ -14,6 +14,7 @@ const useStyles = makeStyles({
   logo: {
     width: '7rem',
     height: '7rem',
+    // objectFit: 'cover',
     borderRadius: '20px',
     border: '2px solid #3333',
   },
