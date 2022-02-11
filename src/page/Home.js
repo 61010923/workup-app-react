@@ -1,7 +1,6 @@
 import React from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
-import ReactDOM from 'react-dom'
 import OwlCarousel from 'react-owl-carousel'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'

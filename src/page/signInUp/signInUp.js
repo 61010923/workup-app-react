@@ -7,6 +7,7 @@ import TabPanel from '@mui/lab/TabPanel'
 import { makeStyles } from '@mui/styles'
 import { Avatar } from '@mui/material'
 import SignUp from '../../component/signUp'
+import Snackbar from '../../component/Snackbar'
 
 const useStyles = makeStyles({
   container: {
@@ -50,9 +51,10 @@ function SignInUp() {
         // margin: '0 auto',
         bgcolor: '#5a619929',
         boxShadow: 5,
-        borderRadius: 9,
+        borderRadius: 4,
       }}
       >
+        <Snackbar />
         <TabContext value={value}>
           <Box
             sx={{
