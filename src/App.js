@@ -7,11 +7,13 @@ import {
 } from 'react-router-dom'
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
 import SignInUp from './page/signInUp'
+import VerifyAccount from './page/verifyAccount'
 import Home from './page/Home'
 import DrawerTab from './component/drawer'
 import Company from './page/Company'
 import Career from './page/Career'
 import './App.css'
+
 import User from './page/User'
 import ImageUploader from './component/ImageUploader'
 import CompanyTable from './page/CompanyTable'
@@ -24,10 +26,9 @@ const useStyles = makeStyles({
 
   },
 })
-function App() {
+function App(props) {
   const classes = useStyles()
   return (
-
     <Routes>
       <Route
         exact
@@ -37,15 +38,10 @@ function App() {
             <DrawerTab />
             <Home />
           </Box>
-)}
+        )}
       />
-      <Route
-        exact
-        path="/login"
-        element={(
-          <SignInUp />
-)}
-      />
+      <Route exact path="/login" element={<SignInUp />} />
+      <Route exact path="/login/verify-account" element={<VerifyAccount />} />
       <Route
         exact
         path="/company"
@@ -54,9 +50,8 @@ function App() {
             <DrawerTab />
 
             <Company />
-
           </Box>
-)}
+        )}
       />
       <Route
         exact
@@ -98,9 +93,8 @@ function App() {
             <DrawerTab />
 
             <Career />
-
           </Box>
-)}
+        )}
       />
       <Route
         exact
@@ -125,7 +119,6 @@ function App() {
       />
       {/* <Route path="*" element={<NotFound />} /> */}
     </Routes>
-
   )
 }
 
