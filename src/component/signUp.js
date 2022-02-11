@@ -33,7 +33,6 @@ function SignUp(props) {
   const [password, setPassword] = useState('')
   const [company, setCompany] = useState('')
   const [loading, setLoading] = useState(false)
-<<<<<<< HEAD
   const [userType, setUserType] = useState('company')
 
   const initialState = () => {
@@ -44,14 +43,6 @@ function SignUp(props) {
     setCompany('')
     setLoading(false)
   }
-=======
-  const [userType, setUserType] = useState(false)
-  // console.log(firstName)
-  // console.log(lastName)
-  // console.log(email)
-  // console.log(password)
-  // console.log(`%c${userType}`, 'font-weight:bold; background-color: cyan;')
->>>>>>> main
   const emailValidate = (e) => {
     const re = /\S+@\S+\.\S+/
     return re.test(e)
@@ -81,6 +72,7 @@ function SignUp(props) {
   }
 
   const handleSubmit = async () => {
+    setLoading(true)
     const body = {
       email,
       password,
@@ -99,8 +91,10 @@ function SignUp(props) {
       console.log(response)
       if (response.status === 201) {
         history('/login/verify-account')
+        setLoading(false)
       }
     } catch (error) {
+      setLoading(false)
       console.log(error)
     }
   }

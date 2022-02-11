@@ -13,11 +13,8 @@ import DrawerTab from './component/drawer'
 import Company from './page/Company'
 import Career from './page/Career'
 import './App.css'
-<<<<<<< HEAD
 
-=======
 import User from './page/User'
->>>>>>> main
 // import Form from './component/form'
 
 const useStyles = makeStyles({
