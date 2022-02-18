@@ -33,10 +33,6 @@ function SignIn() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
-  // console.log(firstName)
-  // console.log(lastName)
-  // console.log(email)
-  // console.log(password)
   const emailValidate = (e) => {
     const re = /\S+@\S+\.\S+/
     return re.test(e)
@@ -51,7 +47,6 @@ function SignIn() {
     }
     return errorMessage
   }
-  // console.log(emailValidate(email))
   const handleChange = (e, setValue) => {
     const { value } = e.target
     // const name = e.target.value

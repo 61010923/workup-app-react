@@ -15,7 +15,8 @@ import Career from './page/Career'
 import './App.css'
 import AuthRoute from './utils/AuthRoute'
 import User from './page/User'
-// import Form from './component/form'
+import ImageUploader from './component/ImageUploader'
+import CompanyManagement from './page/CompanyManagement'
 
 const useStyles = makeStyles({
   container: {
@@ -65,6 +66,13 @@ function App() {
       />
       <Route
         exact
+        path="/upload"
+        element={(
+          <ImageUploader />
+)}
+      />
+      <Route
+        exact
         path="/career"
         element={(
           <Box mt={8.1} ml={9.3}>
@@ -74,6 +82,14 @@ function App() {
           </Box>
         )}
       />
+      <Route
+        exact
+        path="/CompanyManagement"
+        element={(
+          <CompanyManagement />
+)}
+      />
+
       {/* <Route path="*" element={<NotFound />} /> */}
     </Routes>
   )

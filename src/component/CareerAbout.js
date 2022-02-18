@@ -20,6 +20,8 @@ const useStyles = makeStyles({
     backgroundColor: 'rgb(248 248 248)',
     padding: '20px',
     borderRadius: '16px',
+    boxShadow: '0 0 8px 2px #939393',
+
   },
   dateBox: {
     display: 'flex',
@@ -115,7 +117,7 @@ function CareerAbout() {
       <Box className={classes.dateBox}>
         <Button
           style={{
-            maxWidth: '150px', minWidth: '100px',
+            maxWidth: '300px', minWidth: '100px',
           }}
           variant="contained"
           endIcon={<EmailIcon />}
@@ -124,7 +126,7 @@ function CareerAbout() {
         </Button>
         <Button
           style={{
-            maxWidth: '150px', minWidth: '100px', marginLeft: '13px',
+            maxWidth: '300px', minWidth: '100px', marginLeft: '13px',
           }}
           variant="contained"
           endIcon={<SendIcon />}

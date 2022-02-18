@@ -10,7 +10,6 @@ import { margin } from '@mui/system'
 
 export default function MediaCard(props) {
   const { title, image, describe } = props
-  // console.log(props)
   return (
     <Card sx={{ maxWidth: 345, margin: 2, cursor: 'pointer' }}>
       <CardMedia
