@@ -9,7 +9,5 @@
       "semi": [2, "never"],
       "no-unused-vars": "warn",
       "max-len": "warn",
-      "radix": "off"
-
 }
 }

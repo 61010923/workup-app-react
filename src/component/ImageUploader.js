@@ -40,7 +40,6 @@ function ImageUploader() {
     data.splice(index, 1)
     setSelectedFiles(data)
   }
-  console.log(selectedFiles)
   const handleImageChange = (e) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files).map((file) => URL.createObjectURL(file))

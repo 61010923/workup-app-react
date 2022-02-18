@@ -53,7 +53,6 @@ function PersonalTab() {
   const [gender, setGender] = React.useState('')
   const [province, setProvince] = React.useState('')
   const [image, setImage] = React.useState(null)
-  console.log(image)
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       setImage(URL.createObjectURL(event.target.files[0]))
@@ -65,19 +64,6 @@ function PersonalTab() {
   const handleChangeGender = (event) => {
     setGender(event.target.value)
   }
-  //   const fileInputRef = useRef()
-
-  //   const fetchProvinceData = async () => {
-  //     const res = await fetch('https://raw.githubusercontent.com/earthchie/jquery.Thailand.js/master/jquery.Thailand.js/database/raw_database/raw_database.json')
-  //     res
-  //       .json()
-  //       .then((data) => setProvince(data))
-  //       .catch((err) => console.log(err))
-  //   }
-  //   useEffect(() => {
-  //     fetchProvinceData()
-  //   }, [])
-  //   console.log(province)
   return (
     <Box className={classes.container}>
       <TextField
