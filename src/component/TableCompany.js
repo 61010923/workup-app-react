@@ -77,11 +77,14 @@ export default function StickyHeadTable() {
                   <TableCell align="">
                     {row.position}
                   </TableCell>
-                  <TableCell align="">
-                    {row.position}
+                  <TableCell align="right">
+                    {row.positionNumber}
+                  </TableCell>
+                  <TableCell align="right">
+                    {row.created}
                   </TableCell>
                   <TableCell align="">
-                    {row.position}
+                    {row.status}
                   </TableCell>
                 </TableRow>
               ))}
