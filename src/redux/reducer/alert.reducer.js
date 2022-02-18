@@ -1,10 +1,12 @@
 import { CLEAR_MESSAGE, SHOW_MESSAGE } from '../action/alert.action'
 
 const initialState = {
-  open: false,
-  type: '',
-  time: '',
-  message: '',
+  snackBar: {
+    open: false,
+    type: '',
+    time: '',
+    message: '',
+  },
 }
 
 // eslint-disable-next-line default-param-last
@@ -13,7 +15,7 @@ function alertReducer(state = initialState, action) {
     case SHOW_MESSAGE: {
       return {
         ...state,
-        ...action.payload,
+        snackBar: { ...action.payload },
       }
     }
     case CLEAR_MESSAGE: {

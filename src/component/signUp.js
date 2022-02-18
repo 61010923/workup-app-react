@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
@@ -8,10 +9,11 @@ import Button from '@mui/material/Button'
 import _isEmpty from 'lodash/isEmpty'
 import PropTypes from 'prop-types'
 import axios from 'axios'
+import _get from 'lodash/get'
 import BusinessIcon from '@mui/icons-material/Business'
 import PersonIcon from '@mui/icons-material/Person'
-import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
+import { checkLogin } from '../redux/action/user.action'
+import showMessage from '../redux/selector/alert.selector'
 
 const useStyles = makeStyles({
   flexBox: {
@@ -27,6 +29,8 @@ function SignUp(props) {
   const classes = useStyles()
   const { type } = props
   const history = useNavigate()
+  const dispatch = useDispatch()
+  const snackbar = useSelector(showMessage)
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -71,6 +75,31 @@ function SignUp(props) {
     setPassword(value)
   }
 
+  const handleLogin = async () => {
+    setLoading(true)
+    const body = {
+      email, password,
+    }
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/api/v1/auth/login`,
+        body,
+        {
+          headers: {
+            'Content-type': 'application/json',
+          },
+        },
+        { withCredentials: true },
+      )
+      if (response.status === 200 || response.status === 201) {
+        dispatch(checkLogin(_get(response, 'data.user.userId')))
+        history('/')
+        setLoading(false)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const handleSubmit = async () => {
     setLoading(true)
     const body = {
@@ -220,7 +249,7 @@ function SignUp(props) {
         <Button
           fullWidth
           variant="contained"
-          onClick={() => setLoading(true)}
+          onClick={() => handleLogin()}
         >
           Login
         </Button>
