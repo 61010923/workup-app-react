@@ -40,7 +40,7 @@ function AccountTab() {
         fullWidth
       />
       <TextField
-        sx={{ mt: 1 }}
+        sx={{ mt: 2 }}
         required
         id="demo-helper-text-aligned"
         label="Old Password"
@@ -49,7 +49,7 @@ function AccountTab() {
         fullWidth
       />
       <TextField
-        sx={{ mt: 1 }}
+        sx={{ mt: 2 }}
         required
         id="demo-helper-text-aligned"
         label="New Password"
@@ -58,7 +58,7 @@ function AccountTab() {
         fullWidth
       />
 
-      <Button sx={{ mt: 1 }} fullWidth variant="contained">save</Button>
+      <Button sx={{ mt: 2 }} fullWidth variant="contained">save</Button>
 
     </Box>
   )

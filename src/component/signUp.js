@@ -88,7 +88,6 @@ function SignUp(props) {
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/register`, body)
-      console.log(response)
       if (response.status === 201) {
         history('/login/verify-account')
         setLoading(false)

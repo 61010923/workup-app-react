@@ -25,13 +25,11 @@ const useStyles = makeStyles({
   },
   imageLogo: {
     position: 'absolute',
-    // zIndex: '999',
-    // top: '200px',
-    // left: '10px',
+
     top: '270px',
     left: '160px',
     width: '180px',
-    border: '2px solid #fff',
+    boxShadow: '0 0 3px 2px white',
     borderRadius: '20px',
   },
   CompanyName: {
