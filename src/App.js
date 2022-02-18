@@ -16,7 +16,6 @@ import './App.css'
 
 import User from './page/User'
 import ImageUploader from './component/ImageUploader'
-import CompanyTable from './page/CompanyTable'
 import CompanyManagement from './page/CompanyManagement'
 
 const useStyles = makeStyles({
@@ -98,25 +97,12 @@ function App(props) {
       />
       <Route
         exact
-        path="/management"
-        element={(
-          <CompanyTable />
-)}
-      />
-      <Route
-        exact
         path="/CompanyManagement"
         element={(
           <CompanyManagement />
 )}
       />
-      <Route
-        exact
-        path="/management"
-        element={(
-          <CompanyTable />
-)}
-      />
+
       {/* <Route path="*" element={<NotFound />} /> */}
     </Routes>
   )

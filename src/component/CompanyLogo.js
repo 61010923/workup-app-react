@@ -16,7 +16,8 @@ const useStyles = makeStyles({
     height: '7rem',
     // objectFit: 'cover',
     borderRadius: '20px',
-    border: '2px solid #3333',
+    boxShadow: '0 0 4px 2px #939393',
+
   },
 })
 function CompanyLogo() {

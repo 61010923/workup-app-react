@@ -15,19 +15,18 @@ const useStyles = makeStyles({
     borderRadius: '8px',
     border: '2px solid #40404059',
     cursor: 'pointer',
-    transition: 'transform 1s',
-    backgroundColor: '#4040400a',
-
+    transition: '1s',
+    boxShadow: '0 0 0 0 #40404059',
     '&:hover': {
-      transform: 'scale(1.05)',
+      boxShadow: '0 0 0 1px #40404059',
       backgroundColor: '#40404059',
+
     },
   },
   careerItems: {
     display: 'flex',
     alignItems: 'center',
-    // backgroundColor: 'red',
-    margin: '4px',
+    // margin: '4px',
   },
 })
 function CareerSuggest() {

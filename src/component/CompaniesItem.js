@@ -10,7 +10,7 @@ const useStyles = makeStyles({
     width: '220px',
     margin: '8px',
     borderRadius: '20px',
-    border: '2px solid #40404059',
+    boxShadow: '0 0 4px 2px #939393',
     cursor: 'pointer',
     transition: 'transform 1s',
     '&:hover': {

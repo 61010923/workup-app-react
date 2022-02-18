@@ -10,16 +10,30 @@ import sony from '../image/sony.png'
 const useStyles = makeStyles({
 
   positionItems: {
-
-    // margin: '8px 16px',
+    position: 'relative',
     display: 'flex',
     flexDirection: 'column',
     borderBottom: '2px solid rgb(242, 242, 242)',
     padding: '16px',
     cursor: 'pointer',
     transition: '0.5s',
-    '&:hover': {
-      backgroundColor: 'rgb(240, 240, 240)',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgb(242, 242, 242)',
+      transform: 'scaleY(0)',
+      transformOrigin: 'bottom',
+      transition: 'transform 0.5s',
+
+    },
+    '&:hover::before': {
+      transform: 'scaleY(1)',
+      transformOrigin: 'top',
+      transition: 'transform 0.5s',
 
     },
   },
@@ -44,7 +58,7 @@ function CareerTitle() {
 
   return (
     <Box className={classes.positionItems}>
-      <Box className={classes.numbers}>
+      <Box className={classes.numbers} sx={{ zIndex: 1 }}>
         <Typography variant="body2">
           1.
         </Typography>
@@ -52,10 +66,10 @@ function CareerTitle() {
           Feb 3, 2022
         </Typography>
       </Box>
-      <Typography variant="h6">
+      <Typography variant="h6" sx={{ zIndex: 1 }}>
         Software Engineer
       </Typography>
-      <Box className={classes.locationWrapper}>
+      <Box className={classes.locationWrapper} sx={{ zIndex: 1 }}>
         <Box className={classes.careerItems}>
           <LocationOnIcon />
           <Typography variant="body2">
@@ -69,7 +83,7 @@ function CareerTitle() {
           </Typography>
         </Box>
       </Box>
-      <Box className={classes.careerItems}>
+      <Box className={classes.careerItems} sx={{ zIndex: 1 }}>
         <HeadsetMicIcon />
         <Typography variant="body2">
           Online interview
