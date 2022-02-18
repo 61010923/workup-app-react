@@ -13,7 +13,7 @@ import DrawerTab from './component/drawer'
 import Company from './page/Company'
 import Career from './page/Career'
 import './App.css'
-
+import AuthRoute from './utils/AuthRoute'
 import User from './page/User'
 // import Form from './component/form'
 
@@ -24,20 +24,10 @@ const useStyles = makeStyles({
 
   },
 })
-function App(props) {
-  const classes = useStyles()
+function App() {
   return (
     <Routes>
-      <Route
-        exact
-        path="/"
-        element={(
-          <Box mt={8.1} ml={9.3}>
-            <DrawerTab />
-            <Home />
-          </Box>
-        )}
-      />
+      <Route exact path="/" element={<AuthRoute loginRequired page={Home} />} />
       <Route exact path="/login" element={<SignInUp />} />
       <Route exact path="/login/verify-account" element={<VerifyAccount />} />
       <Route
@@ -55,14 +45,12 @@ function App(props) {
         exact
         path="/user"
         element={(
-
           <Box mt={8.1} ml={9.3}>
             <DrawerTab />
 
             <User />
-
           </Box>
-)}
+        )}
       />
       <Route
         exact
@@ -72,9 +60,8 @@ function App(props) {
             <DrawerTab />
 
             <Company />
-
           </Box>
-)}
+        )}
       />
       <Route
         exact

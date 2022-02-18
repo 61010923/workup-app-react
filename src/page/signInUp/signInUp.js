@@ -7,7 +7,6 @@ import TabPanel from '@mui/lab/TabPanel'
 import { makeStyles } from '@mui/styles'
 import { Avatar } from '@mui/material'
 import SignUp from '../../component/signUp'
-import Snackbar from '../../component/Snackbar'
 
 const useStyles = makeStyles({
   container: {
@@ -54,7 +53,6 @@ function SignInUp() {
         borderRadius: 4,
       }}
       >
-        <Snackbar />
         <TabContext value={value}>
           <Box
             sx={{
@@ -62,6 +60,7 @@ function SignInUp() {
             }}
             className={classes.formWrapper}
           >
+            { value === '2' && (
             <Box className={classes.avatarWrapper}>
               <Avatar
                 alt="PraYut"
@@ -71,6 +70,7 @@ function SignInUp() {
                 }}
               />
             </Box>
+            )}
             <TabList
               onChange={handleChange}
               aria-label="lab API tabs example"

@@ -1,2 +1,2 @@
-const showMessage = (state) => state
+const showMessage = (state) => state.alertReducer.snackBar
 export default showMessage

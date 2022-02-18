@@ -3,13 +3,12 @@ import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import OwlCarousel from 'react-owl-carousel'
 import Typography from '@mui/material/Typography'
-import Grid from '@mui/material/Grid'
-import Card from '../component/Cart'
+import Card from '../../component/Cart'
 import 'owl.carousel/dist/assets/owl.carousel.css'
 import 'owl.carousel/dist/assets/owl.theme.default.css'
-import sony from '../image/sony.png'
-import TabJob from '../component/TabJob'
-import CompaniesItem from '../component/CompaniesItem'
+import sony from '../../image/sony.png'
+import TabJob from '../../component/TabJob'
+import CompaniesItem from '../../component/CompaniesItem'
 
 const options = {
   // margin: 30,
@@ -166,6 +165,5 @@ function Home() {
     </Box>
   )
 }
-// const rootElement = document.getElementById('root')
-// ReactDOM.render(<Home />, rootElement)
+
 export default Home
