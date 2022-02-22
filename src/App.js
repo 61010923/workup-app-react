@@ -17,6 +17,7 @@ import AuthRoute from './utils/AuthRoute'
 import User from './page/User'
 import ImageUploader from './component/ImageUploader'
 import CompanyManagement from './page/CompanyManagement'
+import NotFound from './component/NotFound'
 
 const useStyles = makeStyles({
   container: {
@@ -90,7 +91,7 @@ function App() {
 )}
       />
 
-      {/* <Route path="*" element={<NotFound />} /> */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   )
 }

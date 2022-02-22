@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { styled, useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
+import { Box, Avatar } from '@mui/material'
 import MuiDrawer from '@mui/material/Drawer'
 import MuiAppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -171,6 +171,26 @@ export default function DrawerTab() {
               <ListItemText primary={text} />
             </ListItem>
           ))}
+        </List>
+        <List style={{ marginTop: 'auto' }}>
+          <ListItem button key="user" onClick={() => handleClick('/user')}>
+            <ListItemIcon>
+              <Avatar
+                alt="N"
+                src="https://scontent.fbkk7-2.fna.fbcdn.net/v/t1.6435-9/83554419_106210414280175_3006330223613444096_n.jpg?_nc_cat=102&ccb=1-5&_nc_sid=09cbfe&_nc_eui2=AeFhlvqzGStqZBAFdkhlBkQ3N8O_W_p-RZg3w79b-n5FmOoQxkPUoZM01pikcdtbyH2jPS-FIgckXfpq2_Xkjocm&_nc_ohc=XxPFHROGU58AX8oG9CK&_nc_ht=scontent.fbkk7-2.fna&oh=00_AT9baaCF4Wfjr1ECOHmlQ5y1jU1WAhXIRYwytA-E67ugJQ&oe=6238D2BA"
+                sx={{ width: 40, height: 40 }}
+              />
+
+            </ListItemIcon>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                Meaw Meaw
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'blue' }}>
+                Member
+              </Typography>
+            </Box>
+          </ListItem>
         </List>
       </Drawer>
     </Box>
