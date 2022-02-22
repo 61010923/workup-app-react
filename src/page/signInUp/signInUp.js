@@ -60,7 +60,7 @@ function SignInUp() {
             }}
             className={classes.formWrapper}
           >
-            { value === '2' && (
+            { value === '1' && (
             <Box className={classes.avatarWrapper}>
               <Avatar
                 alt="PraYut"

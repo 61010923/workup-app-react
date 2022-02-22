@@ -49,6 +49,7 @@ const genders = [
 function PersonalTab() {
   const classes = useStyles()
   const [value, setValue] = React.useState(null)
+  console.log(value)
   const [marital, setMarital] = React.useState('')
   const [gender, setGender] = React.useState('')
   const [province, setProvince] = React.useState('')

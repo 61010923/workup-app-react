@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { styled, useTheme } from '@mui/material/styles'
 import { Box, Avatar } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
 import MuiDrawer from '@mui/material/Drawer'
 import MuiAppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -21,6 +22,9 @@ import HomeIcon from '@mui/icons-material/Home'
 import LoginIcon from '@mui/icons-material/Login'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import { useNavigate } from 'react-router-dom'
+import _get from 'lodash/get'
+import { logout } from '../redux/action/user.action'
+import userDetail from '../redux/selector/user.selector'
 
 const drawerWidth = 240
 
@@ -92,11 +96,17 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 export default function DrawerTab() {
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
+  const user = useSelector(userDetail)
+  const userToken = _get(user, 'userDetail.userToken')
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const handleDrawerOpen = () => {
     setOpen(true)
   }
   const handleClick = (path) => {
+    if (path === '/login') {
+      dispatch(logout(userToken))
+    }
     navigate(path)
   }
   const handleDrawerClose = () => {

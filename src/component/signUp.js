@@ -92,7 +92,11 @@ function SignUp(props) {
         { withCredentials: true },
       )
       if (response.status === 200 || response.status === 201) {
-        dispatch(checkLogin(_get(response, 'data.user.userId')))
+        dispatch(
+          checkLogin(
+            _get(response, 'data.user.userToken'),
+          ),
+        )
         history('/')
         setLoading(false)
       }
@@ -249,6 +253,7 @@ function SignUp(props) {
         <Button
           fullWidth
           variant="contained"
+          disabled={loading}
           onClick={() => handleLogin()}
         >
           Login

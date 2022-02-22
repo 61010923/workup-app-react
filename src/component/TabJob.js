@@ -9,13 +9,16 @@ const useStyles = makeStyles({
   urgentJobItems: {
     display: 'flex',
     margin: '8px',
+    height: '5rem',
+    alignItems: 'center',
     justifyContent: 'space-between',
     padding: '8px',
     borderRadius: '20px',
     cursor: 'pointer',
     transition: '0.5s',
+    boxShadow: '2.5px 5px 7.5px rgba(0,0,0,0.5)',
     '&:hover': {
-      backgroundColor: '#40404059',
+      backgroundColor: 'rgb(185 185 185 / 45%)',
     },
 
   },

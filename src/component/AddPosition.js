@@ -21,7 +21,6 @@ const styleModal = {
   height: 600,
   bgcolor: 'background.paper',
   boxShadow: 24,
-  //   borderRadius: 2,
   p: 4,
   overflow: 'auto',
 }

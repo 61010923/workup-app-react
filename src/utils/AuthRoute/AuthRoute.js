@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
+import { Box } from '@mui/material'
 import DrawerTab from '../../component/drawer'
 import userDetail from '../../redux/selector/user.selector'
 import showMessage from '../../redux/selector/alert.selector'
@@ -34,7 +35,9 @@ function AuthRoute(props) {
           type={snackbar.type}
         />
         <DrawerTab />
-        <Component />
+        <Box mt={8.1} ml={9.3}>
+          <Component />
+        </Box>
       </>
     )
   }

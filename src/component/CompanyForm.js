@@ -11,6 +11,7 @@ import CompanyInformation from './CompanyInformation'
 import TableCompany from './TableCompany'
 import AccountTab from './AccountTab'
 import AddPosition from './AddPosition'
+import TableCompanyJobApp from './TableCompanyJobApp'
 
 const useStyles = makeStyles({
   tabPanel: {
@@ -42,6 +43,7 @@ function UserForm() {
             <Tab label="Account" value="1" />
             <Tab label="Company Information" value="2" />
             <Tab label="Job Positions" value="3" />
+            <Tab label="Job Application" value="4" />
           </TabList>
         </Box>
         <Box className={classes.tabPanel}>
@@ -50,6 +52,12 @@ function UserForm() {
           <TabPanel value="3">
             <AddPosition />
             <TableCompany />
+          </TabPanel>
+          <TabPanel value="4">
+            <Typography variant="h6" sx={{ m: 3 }}>
+              ใบสมัครงาน
+            </Typography>
+            <TableCompanyJobApp />
           </TabPanel>
         </Box>
       </TabContext>

@@ -1,8 +1,8 @@
-import { LOADING, LOGIN_SUCCESS } from '../action/user.action'
+import { LOGOUT, LOADING, LOGIN_SUCCESS } from '../action/user.action'
 
 const initialState = {
-  isLogin: false,
-  userId: '',
+  isLogin: !!window.localStorage.getItem('userToken'),
+  userDetail: {},
   loading: false,
 }
 
@@ -18,7 +18,14 @@ function userReducer(state = initialState, action) {
     case LOGIN_SUCCESS: {
       return {
         isLogin: true,
-        userId: action.payload.userId,
+        userDetail: action.payload.userId,
+        loading: false,
+      }
+    }
+    case LOGOUT: {
+      return {
+        isLogin: false,
+        userDetail: {},
         loading: false,
       }
     }
