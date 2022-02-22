@@ -7,23 +7,26 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
+import { Typography, Box } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import ButtonActionManagePosition from './ButtonActionManagePosition'
 
 const columns = [
-  { id: 'position', label: 'Position', minWidth: 150 },
+  { id: 'position', label: 'Position', minWidth: 120 },
   {
     id: 'positionNumber',
     label: 'อัตราที่รับ',
-    minWidth: 150,
     align: 'right',
+    minWidth: 70,
   },
-  { id: 'created', label: 'Created', minWidth: 100 },
-  { id: 'status', label: 'Status', minWidth: 100 },
-  { id: 'action', label: 'Action', minWidth: 100 },
+  { id: 'created', label: 'Created', minWidth: 80 },
+  { id: 'status', label: 'Status', minWidth: 80 },
+  { id: 'action', label: 'Action' },
 ]
 
-function createData(position, positionNumber, created, status, action) {
+function createData(position, positionNumber, created, status) {
   return {
-    position, positionNumber, created, status, action,
+    position, positionNumber, created, status,
   }
 }
 
@@ -35,6 +38,13 @@ const rows = [
   createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
   createData('Software Engineer', 2, '16-02-2021', 'ไม่ประกาศ'),
   createData('Software Engineer', 2, '16-02-2021', 'ไม่ประกาศ'),
+  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
+  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
+  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
+  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
+  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
+  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
+  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
   createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
   createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
 ]
@@ -80,11 +90,28 @@ export default function StickyHeadTable() {
                   <TableCell align="right">
                     {row.positionNumber}
                   </TableCell>
-                  <TableCell align="right">
+                  <TableCell align="">
                     {row.created}
                   </TableCell>
                   <TableCell align="">
-                    {row.status}
+                    <Box sx={{
+                      backgroundColor:
+                      ((row.status === 'ประกาศ' && 'green')
+                      || (row.status === 'ไม่ประกาศ' && 'orange')
+                      ),
+                      padding: '0.3rem',
+                      borderRadius: '0.5rem',
+                      display: 'inline-block',
+                      color: '#fff',
+                      fontWeight: 'bold',
+                      boxShadow: '0 0 5px 2px #c8c7c6',
+                    }}
+                    >
+                      {row.status}
+                    </Box>
+                  </TableCell>
+                  <TableCell align="">
+                    <ButtonActionManagePosition />
                   </TableCell>
                 </TableRow>
               ))}
