@@ -5,6 +5,9 @@ import {
   Routes,
   Route,
 } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+import { autoLogin, logout } from './redux/action/user.action'
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
 import SignInUp from './page/signInUp'
 import VerifyAccount from './page/verifyAccount'
@@ -18,14 +21,23 @@ import User from './page/User'
 import ImageUploader from './component/ImageUploader'
 import CompanyManagement from './page/CompanyManagement'
 
-const useStyles = makeStyles({
-  container: {
-    marginLeft: '75px',
-    marginTop: '80px',
+// useEffect(() => {
 
-  },
-})
+// }, [third])
+
 function App() {
+  const dispatch = useDispatch()
+
+  const alreadyLogin = () => {
+    if (window.localStorage.getItem('userToken')) {
+      dispatch(autoLogin())
+    }
+  }
+
+  useEffect(() => {
+    alreadyLogin()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <Routes>
       <Route exact path="/" element={<AuthRoute loginRequired page={Home} />} />

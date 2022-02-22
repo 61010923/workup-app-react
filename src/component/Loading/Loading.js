@@ -19,14 +19,8 @@ function Loading() {
   const classes = useStyles()
   return (
     <Box className={classes.container}>
-      <Box display="flex" flexDirection="column">
+      <Box display="flex" flexDirection="column" maxWidth={400}>
         <Lottie options={{ animationData: loading, loop: true }} />
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-        />
       </Box>
     </Box>
 
