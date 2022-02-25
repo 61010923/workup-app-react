@@ -37,13 +37,13 @@ function UserForm() {
             aria-label="lab API tabs example"
             variant="fullWidth"
           >
-            <Tab label="Account" value="1" />
-            <Tab label="Personal Information" value="2" />
+            <Tab label="Personal Information" value="1" />
+            <Tab label="Account" value="2" />
           </TabList>
         </Box>
         <Box className={classes.tabPanel}>
-          <TabPanel value="1"><AccountTab /></TabPanel>
-          <TabPanel value="2"><PersonalTab /></TabPanel>
+          <TabPanel value="1"><PersonalTab /></TabPanel>
+          <TabPanel value="2"><AccountTab /></TabPanel>
         </Box>
       </TabContext>
     </Box>

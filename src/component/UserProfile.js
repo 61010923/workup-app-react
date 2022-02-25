@@ -2,6 +2,7 @@ import React from 'react'
 import { Box } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
+import PropTypes from 'prop-types'
 import AvatarPhoto from './AvatarPhoto'
 
 const useStyles = makeStyles({
@@ -14,21 +15,22 @@ const useStyles = makeStyles({
     color: 'blue',
   },
 })
-function UserProfile() {
+function UserProfile({ data }) {
+  console.log(data)
   const classes = useStyles()
   return (
     <Box className={classes.container}>
-      <AvatarPhoto />
+      <AvatarPhoto profile={data.imgProfile} firstName={data.firstName} />
       <Box sx={{
         display: 'flex', flexDirection: 'column', ml: 8, mt: 4,
       }}
       >
         <Typography variant="h5">
-          Pug dog
+          {`${data.firstName}\u00A0${data.lastName}`}
         </Typography>
         <Typography variant="body2">
 
-          <span className={classes.email}>Pugdog@gmail.com</span>
+          <span className={classes.email}>{data.email}</span>
           &nbsp;- member
         </Typography>
 
@@ -38,3 +40,7 @@ function UserProfile() {
 }
 
 export default UserProfile
+UserProfile.propTypes = {
+  data: PropTypes.objectOf(PropTypes.any).isRequired,
+
+}
