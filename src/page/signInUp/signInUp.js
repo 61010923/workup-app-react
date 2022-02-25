@@ -1,11 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import Box from '@mui/material/Box'
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
+import _get from 'lodash/get'
+import axios from 'axios'
 import TabPanel from '@mui/lab/TabPanel'
 import { makeStyles } from '@mui/styles'
 import { Avatar } from '@mui/material'
+import userDetail from '../../redux/selector/user.selector'
 import SignUp from '../../component/signUp'
 
 const useStyles = makeStyles({
@@ -35,12 +39,25 @@ const useStyles = makeStyles({
   },
 })
 function SignInUp() {
-  const [value, setValue] = React.useState('1')
-
+  const user = useSelector(userDetail)
+  const userToken = _get(user, 'userDetail.userToken')
+  const [value, setValue] = useState('1')
+  const [img, setImg] = useState('')
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
 
+  const getImg = async (email) => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/getImgProfile`, { email })
+      if (response.status === 200) {
+        setImg(_get(response, 'data.data'))
+      }
+    } catch (error) {
+      setImg('')
+      console.log(error)
+    }
+  }
   const classes = useStyles()
   return (
     <Box className={classes.container}>
@@ -64,7 +81,7 @@ function SignInUp() {
             <Box className={classes.avatarWrapper}>
               <Avatar
                 alt="PraYut"
-                src="https://images.uncyc.org/th/thumb/e/e1/%E0%B8%AD%E0%B8%B2%E0%B8%88%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B9%8C%E0%B9%81%E0%B8%94%E0%B8%87.jpg/300px-%E0%B8%AD%E0%B8%B2%E0%B8%88%E0%B8%B2%E0%B8%A3%E0%B8%A2%E0%B9%8C%E0%B9%81%E0%B8%94%E0%B8%87.jpg"
+                srcSet={img}
                 sx={{
                   width: 80, height: 80, border: '3px solid #00000033',
                 }}
@@ -81,7 +98,7 @@ function SignInUp() {
               <Tab label="sIGN UP" value="2" />
             </TabList>
           </Box>
-          <TabPanel value="1"><SignUp type="signIn" /></TabPanel>
+          <TabPanel value="1"><SignUp type="signIn" getImg={getImg} setImg={setImg} /></TabPanel>
           <TabPanel value="2"><SignUp type="signUp" /></TabPanel>
         </TabContext>
       </Box>

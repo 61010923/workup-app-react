@@ -29,9 +29,7 @@ function App() {
   const dispatch = useDispatch()
 
   const alreadyLogin = () => {
-    if (window.localStorage.getItem('userToken')) {
-      dispatch(autoLogin())
-    }
+    dispatch(autoLogin())
   }
 
   useEffect(() => {
