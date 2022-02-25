@@ -7,6 +7,10 @@ import Typography from '@mui/material/Typography'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import { red } from '@mui/material/colors'
 import ImageIcon from '@mui/icons-material/Image'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import _map from 'lodash/map'
+import PropTypes, { any } from 'prop-types'
+import _isEmpty from 'lodash/isEmpty'
 
 const useStyles = makeStyles({
   container: {
@@ -21,6 +25,7 @@ const useStyles = makeStyles({
   button: {
     position: 'absolute',
     right: '0',
+    top: '0',
     zIndex: '5',
   },
   imageSize: {
@@ -32,18 +37,17 @@ const useStyles = makeStyles({
     boxShadow: '0px 0px 10px rgba(0,0,0,.5)',
   },
 })
-function ImageUploader() {
+function ImageUploader({ loading, state, setState }) {
   const classes = useStyles()
-  const [selectedFiles, setSelectedFiles] = useState([])
   const removeImage = (index) => {
-    const data = [...selectedFiles]
+    const data = [...state]
     data.splice(index, 1)
-    setSelectedFiles(data)
+    setState(data)
   }
   const handleImageChange = (e) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files).map((file) => URL.createObjectURL(file))
-      setSelectedFiles((prevImages) => prevImages.concat(filesArray))
+      setState((prevImages) => prevImages.concat(filesArray))
       Array.from(e.target.files).map(
         (file) => URL.revokeObjectURL(file), // avoid memory leak
       )
@@ -51,29 +55,43 @@ function ImageUploader() {
   }
   return (
     <>
-      <Box sx={{ mt: 1 }}>
+      <Box>
         <label htmlFor="file" className="label">
           <input type="file" id="file" accept=".png, .jpg, .jpeg" multiple onChange={handleImageChange} style={{ display: 'none' }} />
           <Button
             variant="outlined"
-            color="primary"
+            color={loading && _isEmpty(state) ? 'error' : 'primary'}
             fullWidth
             component="span"
             endIcon={<ImageIcon />}
           >
             อัปโหลดผลงาน
           </Button>
-          <Typography variant="caption">
-            เฉพาะ PNG, JPG หรือ JPEG
-          </Typography>
+
+          <Box sx={{ display: 'flex', flexDirection: 'column', margin: '3px 14px 0' }}>
+            {loading && _isEmpty(state)
+             && (
+             <Typography
+               variant="caption"
+               color="error"
+             >
+               Please upload image
+             </Typography>
+             )}
+            <Typography
+              variant="caption"
+            >
+              เฉพาะ PNG, JPG หรือ JPEG
+            </Typography>
+          </Box>
         </label>
       </Box>
       <Box className={classes.container}>
-        {selectedFiles.map((photo, index) => (
-          <Box className={classes.image}>
+        {_map(state, (photo, index) => (
+          <Box key={`image${index}`} className={classes.image}>
             <Box className={classes.button}>
-              <IconButton color="primary" onClick={() => removeImage(index)} aria-label="delete">
-                <DeleteForeverIcon />
+              <IconButton color="error" onClick={() => removeImage(index)} aria-label="delete">
+                <RemoveCircleOutlineIcon />
               </IconButton>
 
             </Box>
@@ -87,3 +105,13 @@ function ImageUploader() {
 }
 
 export default ImageUploader
+ImageUploader.propTypes = {
+  loading: PropTypes.bool,
+  state: PropTypes.arrayOf(PropTypes.any),
+  setState: PropTypes.func,
+}
+ImageUploader.defaultProps = {
+  loading: null,
+  state: [],
+  setState: () => {},
+}

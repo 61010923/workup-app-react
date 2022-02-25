@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Box, Avatar, IconButton, Button, Tooltip,
 } from '@mui/material'
@@ -32,13 +32,16 @@ const useStyles = makeStyles({
   },
 })
 
-function AvatarPhoto({ variant }) {
+function AvatarPhoto({ variant, profile, firstName }) {
   const classes = useStyles()
   const [picture, setPicture] = useState(null)
   const [style, setStyle] = useState({ display: 'none' })
   const onChangePicture = (e) => {
     setPicture(URL.createObjectURL(e.target.files[0]))
   }
+  useEffect(() => {
+    setPicture(profile)
+  }, [profile])
   return (
     <>
       <Tooltip title="Change Profile">
@@ -68,7 +71,7 @@ function AvatarPhoto({ variant }) {
             />
             <Avatar
               alt="Profile"
-              src={picture && picture}
+              src={picture}
               sx={{
                 width: '8rem',
                 height: '8rem',
@@ -78,7 +81,7 @@ function AvatarPhoto({ variant }) {
               }}
               variant={variant}
             >
-              P
+              {firstName.charAt(0).toUpperCase()}
             </Avatar>
             <EditIcon
               color="primary"
@@ -101,5 +104,13 @@ function AvatarPhoto({ variant }) {
 
 export default AvatarPhoto
 AvatarPhoto.propTypes = {
-  variant: PropTypes.string.isRequired,
+  variant: PropTypes.string,
+  profile: PropTypes.string,
+  firstName: PropTypes.string,
+
+}
+AvatarPhoto.defaultProps = {
+  variant: '',
+  profile: '',
+  firstName: 'P',
 }
