@@ -150,7 +150,7 @@ export default function DrawerTab() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            JobThai
+            WorkUp
           </Typography>
         </Toolbar>
       </AppBar>

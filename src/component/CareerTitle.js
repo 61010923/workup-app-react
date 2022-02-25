@@ -24,18 +24,32 @@ const useStyles = makeStyles({
       left: 0,
       width: '100%',
       height: '100%',
-      backgroundColor: 'rgb(242, 242, 242)',
-      transform: 'scaleY(0)',
-      transformOrigin: 'bottom',
+      backgroundColor: 'orange',
+      transform: 'scaleX(0)',
+      transformOrigin: 'left',
       transition: 'transform 0.5s',
 
     },
     '&:hover::before': {
-      transform: 'scaleY(1)',
-      transformOrigin: 'top',
+      transform: 'scaleX(1)',
+      transformOrigin: 'left',
       transition: 'transform 0.5s',
-
     },
+    '&:hover': {
+      color: '#fff',
+      '& $changeColor': {
+        color: '#fff',
+      },
+    },
+    '& $changeColor': {
+      color: 'orange',
+    },
+  },
+  changeColor: {
+    fontSize: '1.2rem',
+    fontWeight: 'bold',
+    transition: '0.5s',
+    zIndex: '1',
   },
   numbers: {
     display: 'flex',
@@ -46,7 +60,6 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     width: '25%',
-    // backgroundColor: 'red',
     margin: '4px',
   },
   locationWrapper: {
@@ -66,7 +79,7 @@ function CareerTitle() {
           Feb 3, 2022
         </Typography>
       </Box>
-      <Typography variant="h6" sx={{ zIndex: 1 }}>
+      <Typography className={classes.changeColor}>
         Software Engineer
       </Typography>
       <Box className={classes.locationWrapper} sx={{ zIndex: 1 }}>

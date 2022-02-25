@@ -1,6 +1,8 @@
-import * as React from 'react'
 import ImageList from '@mui/material/ImageList'
+import React, { useState } from 'react'
 import ImageListItem from '@mui/material/ImageListItem'
+import _map from 'lodash/map'
+import ImagePreview from './ImagePreview'
 
 function srcset(image, size, rows = 1, cols = 1) {
   return {
@@ -72,24 +74,41 @@ const itemData = [
 ]
 
 export default function QuiltedImageList() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [initialSlide, setInitialSlide] = useState(0)
+  const handleClick = (index) => {
+    setIsOpen(true)
+    setInitialSlide(index)
+  }
   return (
-    <ImageList
-      sx={{ width: '100%', height: 450 }}
-      variant="quilted"
-      cols={4}
-      rowHeight={121}
-    >
-      {itemData.map((item) => (
-        <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
-          <img
+    <>
+      <ImageList
+        sx={{ width: '100%', height: 450 }}
+        variant="quilted"
+        cols={4}
+        rowHeight={121}
+      >
+        {_map(itemData, (item, i) => (
+          <ImageListItem key={item.img} onClick={() => handleClick(i)} cols={item.cols || 1} rows={item.rows || 1}>
+            <img
             // eslint-disable-next-line react/jsx-props-no-spreading
-            {...srcset(item.img, 121, item.rows, item.cols)}
-            alt={item.title}
-            style={{ cursor: 'pointer' }}
-            loading="lazy"
-          />
-        </ImageListItem>
-      ))}
-    </ImageList>
+              {...srcset(item.img, 121, item.rows, item.cols)}
+              alt={item.title}
+              style={{ cursor: 'pointer' }}
+              loading="lazy"
+            />
+
+          </ImageListItem>
+        ))}
+      </ImageList>
+      <ImagePreview
+        images={_map(itemData, (x) => x.img)}
+        initialSlide={initialSlide}
+        actionType="view"
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
+
+    </>
   )
 }

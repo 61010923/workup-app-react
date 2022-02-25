@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     margin: '8px',
     display: 'flex',
     alignItems: 'center',
-    boxShadow: '5px 10px 15px rgba(0,0,0,0.5)',
+    boxShadow: '3px 5px 8px rgba(0,0,0,0.5)',
     cursor: 'pointer',
     position: 'relative',
     '&::before': {

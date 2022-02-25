@@ -18,10 +18,10 @@ import Career from './page/Career'
 import './App.css'
 import AuthRoute from './utils/AuthRoute'
 import User from './page/User'
-import ImageUploader from './component/ImageUploader'
+import ManagePosition from './page/ManagePosition'
 import CompanyManagement from './page/CompanyManagement'
 import NotFound from './component/NotFound'
-
+import InfoUser from './page/InfoUser'
 // useEffect(() => {
 
 // }, [third])
@@ -58,13 +58,7 @@ function App() {
       <Route
         exact
         path="/user"
-        element={(
-          <Box mt={8.1} ml={9.3}>
-            <DrawerTab />
-
-            <User />
-          </Box>
-        )}
+        element={<AuthRoute loginRequired page={User} />}
       />
       <Route
         exact
@@ -79,9 +73,16 @@ function App() {
       />
       <Route
         exact
-        path="/upload"
+        path="/managePosition"
         element={(
-          <ImageUploader />
+          <ManagePosition />
+)}
+      />
+      <Route
+        exact
+        path="/InfoUser"
+        element={(
+          <InfoUser />
 )}
       />
       <Route

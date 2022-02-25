@@ -6,12 +6,11 @@ import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
-import sony from '../image/sony.png'
 import CompanyInformation from './CompanyInformation'
 import TableCompany from './TableCompany'
 import AccountTab from './AccountTab'
-import AddPosition from './AddPosition'
 import TableCompanyJobApp from './TableCompanyJobApp'
+import ButtonAddPosition from './ButtonAddPosition'
 
 const useStyles = makeStyles({
   tabPanel: {
@@ -50,7 +49,7 @@ function UserForm() {
           <TabPanel value="1"><AccountTab /></TabPanel>
           <TabPanel value="2"><CompanyInformation /></TabPanel>
           <TabPanel value="3">
-            <AddPosition />
+            <ButtonAddPosition />
             <TableCompany />
           </TabPanel>
           <TabPanel value="4">

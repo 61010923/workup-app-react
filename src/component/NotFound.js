@@ -1,6 +1,9 @@
 import React from 'react'
 import { Box, Button } from '@mui/material'
 import Lottie from 'lottie-react-web'
+import {
+  Link,
+} from 'react-router-dom'
 import Animation from '../lotties/404.json'
 
 function NotFound() {
@@ -25,7 +28,9 @@ function NotFound() {
           options={defaultOptions}
           height={500}
         />
-        <Button variant="contained" fullWidth sx={{ mt: 2 }}>GO BACK TO OUR HOMEPAGE</Button>
+        <Link style={{ textDecoration: 'none' }} to="/">
+          <Button variant="contained" fullWidth sx={{ mt: 2 }}>GO BACK TO OUR HOMEPAGE</Button>
+        </Link>
       </Box>
     </Box>
   )
