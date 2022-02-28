@@ -15,12 +15,11 @@ const useStyles = makeStyles({
     color: 'blue',
   },
 })
-function UserProfile({ data }) {
-  console.log(data)
+function UserProfile({ data, state, setState }) {
   const classes = useStyles()
   return (
     <Box className={classes.container}>
-      <AvatarPhoto profile={data.imgProfile} firstName={data.firstName} />
+      <AvatarPhoto profile={data.imgProfile} firstName={data.firstName} state={state} setState={setState} />
       <Box sx={{
         display: 'flex', flexDirection: 'column', ml: 8, mt: 4,
       }}
@@ -42,5 +41,6 @@ function UserProfile({ data }) {
 export default UserProfile
 UserProfile.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
-
+  state: PropTypes.string.isRequired,
+  setState: PropTypes.func.isRequired,
 }

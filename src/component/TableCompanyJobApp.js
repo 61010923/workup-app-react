@@ -8,7 +8,8 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import { Typography, Box, Avatar } from '@mui/material'
-import ButtonActionManageJobApp from './ButtonActionManageJobApp'
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
+import ButtonActionManage from './ButtonActionManage'
 
 const columns = [
   { id: 'name', label: 'Name', minWidth: 150 },
@@ -130,7 +131,7 @@ export default function StickyHeadTable() {
                     </Box>
                   </TableCell>
                   <TableCell align="">
-                    <ButtonActionManageJobApp />
+                    <ButtonActionManage buttonText="info" icon={<HelpOutlineOutlinedIcon />} path="/InfoUser" />
                   </TableCell>
                 </TableRow>
               ))}
