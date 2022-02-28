@@ -8,7 +8,8 @@ import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import { Box, Button } from '@mui/material'
-import ButtonActionManagePosition from './ButtonActionManagePosition'
+import EditIcon from '@mui/icons-material/Edit'
+import ButtonActionManage from './ButtonActionManage'
 
 const columns = [
   { id: 'position', label: 'Position', minWidth: 120 },
@@ -109,7 +110,7 @@ export default function StickyHeadTable() {
                     </Box>
                   </TableCell>
                   <TableCell align="">
-                    <ButtonActionManagePosition />
+                    <ButtonActionManage buttonText="Edit" icon={<EditIcon />} path="/ManagePosition" />
                   </TableCell>
                 </TableRow>
               ))}

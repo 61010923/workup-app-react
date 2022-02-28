@@ -32,18 +32,20 @@ const useStyles = makeStyles({
   },
 })
 
-function AvatarPhoto({ variant, profile, firstName }) {
+function AvatarPhoto({
+  variant, profile, firstName, state, setState,
+}) {
   const classes = useStyles()
-  const [picture, setPicture] = useState(null)
   const uploadImage = useImageUpload()
   const [style, setStyle] = useState({ display: 'none' })
   const onChangePicture = async (e) => {
     const imgUrl = await uploadImage(e)
-    setPicture(imgUrl)
+    setState(imgUrl)
   }
 
   useEffect(() => {
-    setPicture(profile)
+    setState(profile)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile])
   return (
     <>
@@ -73,7 +75,7 @@ function AvatarPhoto({ variant, profile, firstName }) {
             />
             <Avatar
               alt="Profile"
-              src={picture}
+              src={state}
               sx={{
                 width: '8rem',
                 height: '8rem',
@@ -106,6 +108,9 @@ AvatarPhoto.propTypes = {
   variant: PropTypes.string,
   profile: PropTypes.string,
   firstName: PropTypes.string,
+  state: PropTypes.string.isRequired,
+  setState: PropTypes.func.isRequired,
+
 }
 AvatarPhoto.defaultProps = {
   variant: '',
