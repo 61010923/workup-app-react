@@ -26,10 +26,9 @@ export function checkLogin(userToken, userId) {
       const response = await axios.get(
         `${process.env.REACT_APP_BASE_URL}/api/v1/auth/checklogin`,
         {
-          headers: {
-            authorization: userToken,
-          },
+          headers: { authorization: userToken },
         },
+        { withCredentials: true },
       )
       if (response.status === 200 || response.status === 201) {
         localStorage.setItem('userToken', _get(response, 'data.data.userToken'))

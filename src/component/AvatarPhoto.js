@@ -7,9 +7,9 @@ import Typography from '@mui/material/Typography'
 import EditIcon from '@mui/icons-material/Edit'
 import { green, pink } from '@mui/material/colors'
 import PropTypes from 'prop-types'
+import useImageUpload from '../libs/useImageUpload'
 
 const useStyles = makeStyles({
-
   Avatar: {
     position: 'relative',
     zIndex: '1',
@@ -36,10 +36,13 @@ function AvatarPhoto({
   variant, profile, firstName, state, setState,
 }) {
   const classes = useStyles()
+  const uploadImage = useImageUpload()
   const [style, setStyle] = useState({ display: 'none' })
-  const onChangePicture = (e) => {
-    setState(URL.createObjectURL(e.target.files[0]))
+  const onChangePicture = async (e) => {
+    const imgUrl = await uploadImage(e)
+    setState(imgUrl)
   }
+
   useEffect(() => {
     setState(profile)
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,7 +65,6 @@ function AvatarPhoto({
             },
           }}
         >
-
           <label htmlFor="icon-button-profile">
             <input
               accept=".png, .jpg, .jpeg"
@@ -79,7 +81,6 @@ function AvatarPhoto({
                 height: '8rem',
                 bgcolor: green[500],
                 cursor: 'pointer',
-
               }}
               variant={variant}
             >
@@ -95,11 +96,9 @@ function AvatarPhoto({
               className={classes.iconButton}
             />
           </label>
-
         </Box>
       </Tooltip>
       <Box className={classes.avatarBgc} />
-
     </>
   )
 }
