@@ -7,9 +7,9 @@ import Typography from '@mui/material/Typography'
 import EditIcon from '@mui/icons-material/Edit'
 import { green, pink } from '@mui/material/colors'
 import PropTypes from 'prop-types'
+import useImageUpload from '../libs/useImageUpload'
 
 const useStyles = makeStyles({
-
   Avatar: {
     position: 'relative',
     zIndex: '1',
@@ -35,10 +35,13 @@ const useStyles = makeStyles({
 function AvatarPhoto({ variant, profile, firstName }) {
   const classes = useStyles()
   const [picture, setPicture] = useState(null)
+  const uploadImage = useImageUpload()
   const [style, setStyle] = useState({ display: 'none' })
-  const onChangePicture = (e) => {
-    setPicture(URL.createObjectURL(e.target.files[0]))
+  const onChangePicture = async (e) => {
+    const imgUrl = await uploadImage(e)
+    setPicture(imgUrl)
   }
+
   useEffect(() => {
     setPicture(profile)
   }, [profile])
@@ -60,7 +63,6 @@ function AvatarPhoto({ variant, profile, firstName }) {
             },
           }}
         >
-
           <label htmlFor="icon-button-profile">
             <input
               accept=".png, .jpg, .jpeg"
@@ -77,7 +79,6 @@ function AvatarPhoto({ variant, profile, firstName }) {
                 height: '8rem',
                 bgcolor: green[500],
                 cursor: 'pointer',
-
               }}
               variant={variant}
             >
@@ -93,11 +94,9 @@ function AvatarPhoto({ variant, profile, firstName }) {
               className={classes.iconButton}
             />
           </label>
-
         </Box>
       </Tooltip>
       <Box className={classes.avatarBgc} />
-
     </>
   )
 }
@@ -107,7 +106,6 @@ AvatarPhoto.propTypes = {
   variant: PropTypes.string,
   profile: PropTypes.string,
   firstName: PropTypes.string,
-
 }
 AvatarPhoto.defaultProps = {
   variant: '',
