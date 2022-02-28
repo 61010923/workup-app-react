@@ -8,7 +8,7 @@ import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import CompanyInformation from './CompanyInformation'
 import TableCompany from './TableCompany'
-import AccountTab from './AccountTab'
+import AccountTab from '../page/UserAccount'
 import TableCompanyJobApp from './TableCompanyJobApp'
 import ButtonAddPosition from './ButtonAddPosition'
 

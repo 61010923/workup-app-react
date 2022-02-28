@@ -17,11 +17,12 @@ import Company from './page/Company'
 import Career from './page/Career'
 import './App.css'
 import AuthRoute from './utils/AuthRoute'
-import User from './page/User'
 import ManagePosition from './page/ManagePosition'
 import CompanyManagement from './page/CompanyManagement'
 import NotFound from './component/NotFound'
 import InfoUser from './page/InfoUser'
+import UserPersonal from './page/UserPersonal'
+import UserAccount from './page/UserAccount'
 // useEffect(() => {
 
 // }, [third])
@@ -57,8 +58,13 @@ function App() {
       />
       <Route
         exact
-        path="/user"
-        element={<AuthRoute loginRequired page={User} />}
+        path="/UserPersonal"
+        element={<AuthRoute loginRequired page={UserPersonal} />}
+      />
+      <Route
+        exact
+        path="/UserAccount"
+        element={<AuthRoute loginRequired page={UserAccount} />}
       />
       <Route
         exact
