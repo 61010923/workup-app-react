@@ -1,19 +1,15 @@
 const palette = {
   primary: {
-    main: '#181D31',
-    contrastText: '#FFFFFF',
+    main: '#30475E',
+    contrastText: '#FFF',
   },
   secondary: {
-    main: '#678983',
-    contrastText: '#E6DDC4',
-  },
-  default: {
-    main: '#F0E9D2',
-    contrastText: '#E6DDC4',
+    main: '#F05454',
+    contrastText: '#FFF',
   },
   common: {
     white: '#FFFFFF',
-    contrastText: '#181D31',
+    contrastText: '#00040C',
   },
 }
 

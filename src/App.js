@@ -23,9 +23,6 @@ import NotFound from './component/NotFound'
 import InfoUser from './page/InfoUser'
 import UserPersonal from './page/UserPersonal'
 import UserAccount from './page/UserAccount'
-// useEffect(() => {
-
-// }, [third])
 
 function App() {
   const dispatch = useDispatch()
@@ -42,16 +39,7 @@ function App() {
   }, [])
   return (
     <Routes>
-      <Route
-        exact
-        path="/"
-        element={(
-          <Box mt={8.1} ml={9.3}>
-            <DrawerTab />
-            <Home />
-          </Box>
-        )}
-      />
+      <Route exact path="/" element={<AuthRoute loginRequired page={Home} drawer />} />
       <Route exact path="/login" element={<SignInUp />} />
       <Route exact path="/login/verify-account" element={<VerifyAccount />} />
       <Route
@@ -67,12 +55,12 @@ function App() {
       <Route
         exact
         path="/candidatePersonal"
-        element={<AuthRoute loginRequired page={UserPersonal} />}
+        element={<AuthRoute loginRequired drawer page={UserPersonal} />}
       />
       <Route
         exact
         path="/candidateAccount"
-        element={<AuthRoute loginRequired page={UserAccount} />}
+        element={<AuthRoute loginRequired drawer page={UserAccount} />}
       />
       <Route
         exact
@@ -114,7 +102,7 @@ function App() {
         exact
         path="/CompanyManagement"
         element={(
-          <CompanyManagement />
+          <AuthRoute page={CompanyManagement} loginRequired drawer={false} />
 )}
       />
 

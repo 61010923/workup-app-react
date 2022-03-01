@@ -35,6 +35,8 @@ export function checkLogin(userToken, userId) {
         dispatch(loginSuccess(_get(response, 'data.data')))
       }
     } catch (error) {
+      localStorage.removeItem('userToken')
+      dispatch(userLogout())
       console.log(error)
     }
   }

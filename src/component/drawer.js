@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { styled, useTheme } from '@mui/material/styles'
-import { Box, Avatar, Button } from '@mui/material'
+import {
+  Box, Avatar, Button, ListItemButton,
+} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import MuiDrawer from '@mui/material/Drawer'
 import MuiAppBar from '@mui/material/AppBar'
@@ -26,6 +28,7 @@ import _get from 'lodash/get'
 import LogoutIcon from '@mui/icons-material/Logout'
 import axios from 'axios'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
+import { makeStyles } from '@mui/styles'
 import { logout } from '../redux/action/user.action'
 import userDetail from '../redux/selector/user.selector'
 
@@ -96,9 +99,37 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 )
 
+const useStyles = makeStyles({
+  paper: {
+    background: '#30475E',
+  },
+  selected: {
+    '&.Mui-selected': {
+      backgroundColor: '#30475E',
+      color: 'white',
+      '&$selected:hover': {
+        backgroundColor: '#30475E',
+        color: 'white',
+        '& .MuiListItemIcon-root': {
+          color: 'white',
+        },
+      },
+      // fontWeight: 600,
+    },
+    // '&:hover': {
+    //   cursor: 'pointer',
+    //   backgroundColor: 'orange',
+    //   // '& $addIcon': {
+    //   //   color: 'purple',
+    //   // },
+    // },
+  },
+})
 export default function DrawerTab() {
   const theme = useTheme()
-  const [open, setOpen] = useState(false)
+  const classes = useStyles()
+  const [btValue, setBtValue] = useState(null)
+  const [open, setOpen] = React.useState(false)
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
   const userType = _get(user, 'userDetail.userType')
@@ -108,7 +139,8 @@ export default function DrawerTab() {
   const handleDrawerOpen = () => {
     setOpen(true)
   }
-  const handleClick = (path) => {
+  const handleClick = (path, i) => {
+    setBtValue(i)
     if (path === '/logout') {
       dispatch(logout(userToken))
       navigate('/login')
@@ -207,8 +239,8 @@ export default function DrawerTab() {
   }, [userToken])
   return (
     <Box>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      {/* <CssBaseline /> */}
+      <AppBar position="fixed" open={open} color="common">
         <Toolbar>
           <IconButton
             color="inherit"
@@ -222,26 +254,58 @@ export default function DrawerTab() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            WorkUp
-          </Typography>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            flexDirection="column"
+            width="100%"
+            height="100%"
+          >
+            <Box>
+              <Typography variant="h6" noWrap component="div">
+                WorkUp
+              </Typography>
+            </Box>
+            <Box>
+              <Typography variant="body1" noWrap component="div">
+                Let the journey begin
+              </Typography>
+            </Box>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === 'rtl' ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </DrawerHeader>
-        <Divider />
         <List>
           {itemsList.filter((obj) => !obj.isLogin).map(({
             id, menu, link, icon,
-          }) => (
-            <ListItem button key={`listItem${id}`} onClick={() => handleClick(link)}>
-              {icon && <ListItemIcon>{icon}</ListItemIcon>}
-              <ListItemText primary={menu} />
-            </ListItem>
+          }, i) => (
+            <ListItemButton
+              button
+              key={id}
+              onClick={() => handleClick(link, i)}
+              className={classes.selected}
+              selected={btValue === i}
+            >
+              {icon && (
+              <ListItemIcon
+                className={classes.selected}
+                sx={{ color: btValue === i ? 'white' : '#30475E' }}
+              >
+                {icon}
+              </ListItemIcon>
+              )}
+              <ListItemText primary={menu} className={classes.selected} />
+            </ListItemButton>
           ))}
         </List>
         {user.isLogin && (
@@ -256,7 +320,6 @@ export default function DrawerTab() {
                 src={allData.imgProfile}
                 sx={{ width: 40, height: 40, mt: '7px' }}
               />
-
             </ListItemIcon>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography sx={{ fontWeight: 'bold' }}>

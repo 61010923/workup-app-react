@@ -37,7 +37,7 @@ function UserProfile() {
 
       </Box>
       <Box className={classes.profile}>
-        <AvatarPhoto variant="rounded" />
+        <AvatarPhoto variant="rounded" profile="ss" setState={() => {}} />
       </Box>
       <Box sx={{
         display: 'flex', flexDirection: 'column', mt: 5,

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 import { Box } from '@mui/material'
+import Paper from '@mui/material/Paper'
 import DrawerTab from '../../component/drawer'
 import userDetail from '../../redux/selector/user.selector'
 import showMessage from '../../redux/selector/alert.selector'
@@ -13,6 +14,7 @@ function AuthRoute(props) {
   const {
     page: Component,
     loginRequired: isLoginRequired,
+    drawer,
   } = props
   const user = useSelector(userDetail)
   const snackbar = useSelector(showMessage)
@@ -34,10 +36,23 @@ function AuthRoute(props) {
           message={snackbar.message}
           type={snackbar.type}
         />
-        <DrawerTab />
-        <Box mt={8.1} ml={9.3}>
-          <Component />
-        </Box>
+
+        {drawer ? (
+          <>
+            <DrawerTab />
+            <Box mt={8.1} ml={9.3}>
+              <Box padding="2rem" sx={{ backgroundColor: '#F5F5F5' }}>
+                <Paper sx={{ padding: '24px' }}>
+                  <Component />
+                </Paper>
+              </Box>
+            </Box>
+          </>
+        ) : (
+          <Paper sx={{ padding: '16px' }}>
+            <Component />
+          </Paper>
+        )}
       </>
     )
   }
@@ -50,4 +65,5 @@ export default AuthRoute
 AuthRoute.propTypes = {
   page: PropTypes.elementType.isRequired,
   loginRequired: PropTypes.bool.isRequired,
+  drawer: PropTypes.bool.isRequired,
 }
