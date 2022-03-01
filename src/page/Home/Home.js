@@ -1,6 +1,7 @@
 import React from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
+import Paper from '@mui/material/Paper'
 import OwlCarousel from 'react-owl-carousel'
 import Typography from '@mui/material/Typography'
 import Card from '../../component/Cart'
@@ -44,7 +45,6 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
-    padding: '2rem',
   },
   urgentJob: {
     display: 'grid',
@@ -55,7 +55,6 @@ const useStyles = makeStyles({
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
     gridGap: '8px',
-
   },
 })
 function Home() {
@@ -105,6 +104,7 @@ function Home() {
     },
   ]
   return (
+
     <Box className={classes.container}>
       <Typography variant="h6" ml={2}>
         TOP COMPANIES
@@ -146,6 +146,7 @@ function Home() {
         <CompaniesItem />
       </Box>
     </Box>
+
   )
 }
 
