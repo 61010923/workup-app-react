@@ -20,10 +20,12 @@ function alertReducer(state = initialState, action) {
     }
     case CLEAR_MESSAGE: {
       return {
-        open: false,
-        type: '',
-        time: '',
-        message: '',
+        snackBar: {
+          open: false,
+          type: '',
+          time: '',
+          message: '',
+        },
       }
     }
     default: return state

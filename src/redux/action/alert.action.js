@@ -11,3 +11,8 @@ export function alertBar(open, type, time, message) {
     },
   }
 }
+export function clearMessage() {
+  return {
+    type: CLEAR_MESSAGE,
+  }
+}
