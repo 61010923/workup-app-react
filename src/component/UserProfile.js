@@ -47,9 +47,9 @@ function UserProfile({ data, state, setState }) {
           variant="outlined"
           color="info"
           size="small"
-          sx={{ borderRadius: '1rem', width: '70%', mt: 1 }}
+          sx={{ borderRadius: '1rem', width: '100%', mt: 1 }}
         >
-          Account
+          Change password
         </Button>
       </Box>
     </Box>

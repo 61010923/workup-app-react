@@ -11,6 +11,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import _map from 'lodash/map'
 import PropTypes, { any } from 'prop-types'
 import _isEmpty from 'lodash/isEmpty'
+import useImageUpload from '../libs/useImageUpload'
 
 const useStyles = makeStyles({
   container: {
@@ -38,6 +39,12 @@ const useStyles = makeStyles({
   },
 })
 function ImageUploader({ loading, state, setState }) {
+  // const uploadImage = useImageUpload()
+  // const handleImageChange = async (e) => {
+  //   const imgUrl = await uploadImage(e)
+  //   setState(imgUrl)
+  // }
+
   const classes = useStyles()
   const removeImage = (index) => {
     const data = [...state]

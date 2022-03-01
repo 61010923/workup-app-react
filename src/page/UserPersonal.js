@@ -129,29 +129,53 @@ function PersonalTab() {
   }
   const handleSubmit = async () => {
     setLoading(true)
-    const body = {
-      email,
-      firstName,
-      lastName,
-      birthDate: new Date(birthday).toISOString(),
-      gender,
-      marital,
-      address,
-      interestedJob,
-      education,
-      pastWork: skill,
-      pastWorkImg: image,
-      imgProfile: profile,
-    }
-    try {
-      const response = await axios.patch(`${process.env.REACT_APP_BASE_URL}/api/v1/profile`, body)
-      if (response.status === 201) {
-        // history('/login/verify-account')
-        setLoading(false)
+    if (
+      !_isEmpty(email) && emailValidate(email)
+      // && !_isEmpty(firstName)
+      // && !_isEmpty(lastName)
+      // && !_isEmpty(birthday)
+      // && !_isEmpty(gender)
+      // && !_isEmpty(marital)
+      // && !_isEmpty(address)
+      // && !_isEmpty(interestedJob)
+      // && !_isEmpty(education)
+      // && !_isEmpty(skill)
+      // && !_isEmpty(image)
+      // && !_isEmpty(profile)
+    ) {
+      const body = {
+        email,
+        firstName,
+        lastName,
+        birthDate: new Date(birthday).toISOString(),
+        gender,
+        marital,
+        address,
+        interestedJob,
+        education,
+        pastWork: skill,
+        pastWorkImg: image,
+        imgProfile: profile,
       }
-    } catch (error) {
+      try {
+        const response = await axios.patch(`${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/profile`, body, {
+          headers: {
+            authorization: userToken,
+            'Content-type': 'application/json',
+          },
+        })
+        if (response.status === 201 || response.status === 200) {
+          // history('/login/verify-account')
+          setLoading(false)
+        }
+      } catch (error) {
+        setLoading(false)
+        console.log(error)
+      }
+    } else {
       setLoading(false)
-      console.log(error)
+
+      alert('null')
     }
   }
   const setBody = (data) => {
@@ -159,7 +183,16 @@ function PersonalTab() {
     setFirstName(data.firstName)
     setLastName(data.lastName)
     setBirthday(data.birthDate)
-    setAge(data.birthDate)
+    if (!_isEmpty(data.birthDate)) {
+      setAge(CalculateAge(new Date(data.birthDate)))
+    }
+    setGender(data.gender)
+    setMarital(data.marital)
+    setAddress(data.address)
+    setInterestedJob(data.interestedJob)
+    setEducation(data.education)
+    setSkill(data.skill)
+    setImage(data.image)
     setProfile(data.imgProfile)
   }
   async function fetchData() {
