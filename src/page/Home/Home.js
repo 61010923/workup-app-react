@@ -1,7 +1,6 @@
 import React from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
-import Paper from '@mui/material/Paper'
 import OwlCarousel from 'react-owl-carousel'
 import Typography from '@mui/material/Typography'
 import Card from '../../component/Cart'
@@ -103,6 +102,7 @@ function Home() {
       describe: 'รับสมัคร Process engineer',
     },
   ]
+
   return (
 
     <Box className={classes.container}>
