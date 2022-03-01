@@ -1,15 +1,20 @@
 import React from 'react'
-import { Box } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
+import { useNavigate } from 'react-router-dom'
 import AvatarPhoto from './AvatarPhoto'
+import userDetail from '../redux/selector/user.selector'
 
 const useStyles = makeStyles({
   container: {
     display: 'flex',
     padding: '2rem',
-    height: 'auto',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   email: {
     color: 'blue',
@@ -17,11 +22,13 @@ const useStyles = makeStyles({
 })
 function UserProfile({ data, state, setState }) {
   const classes = useStyles()
+  const navigate = useNavigate()
+  const user = useSelector(userDetail)
   return (
     <Box className={classes.container}>
       <AvatarPhoto profile={data.imgProfile} firstName={data.firstName} state={state} setState={setState} />
       <Box sx={{
-        display: 'flex', flexDirection: 'column', ml: 8, mt: 4,
+        display: 'flex', flexDirection: 'column', ml: 6,
       }}
       >
         <Typography variant="h5">
@@ -30,9 +37,20 @@ function UserProfile({ data, state, setState }) {
         <Typography variant="body2">
 
           <span className={classes.email}>{data.email}</span>
-          &nbsp;- member
+          &nbsp;-
+          {' '}
+          {user.userDetail.userType}
         </Typography>
-
+        <Button
+          onClick={() => navigate(`/${user.userDetail.userType}Account`)}
+          startIcon={<ManageAccountsOutlinedIcon />}
+          variant="outlined"
+          color="info"
+          size="small"
+          sx={{ borderRadius: '1rem', width: '70%', mt: 1 }}
+        >
+          Account
+        </Button>
       </Box>
     </Box>
   )

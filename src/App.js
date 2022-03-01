@@ -28,7 +28,9 @@ function App() {
   const dispatch = useDispatch()
 
   const alreadyLogin = () => {
-    dispatch(autoLogin())
+    if (window.localStorage.getItem('userToken')) {
+      dispatch(autoLogin())
+    }
   }
 
   useEffect(() => {
@@ -46,19 +48,18 @@ function App() {
         element={(
           <Box mt={8.1} ml={9.3}>
             <DrawerTab />
-
             <Company />
           </Box>
         )}
       />
       <Route
         exact
-        path="/UserPersonal"
+        path="/candidatePersonal"
         element={<AuthRoute loginRequired drawer page={UserPersonal} />}
       />
       <Route
         exact
-        path="/UserAccount"
+        path="/candidateAccount"
         element={<AuthRoute loginRequired drawer page={UserAccount} />}
       />
       <Route

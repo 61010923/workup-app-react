@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled, useTheme } from '@mui/material/styles'
-import { Box, Avatar, ListItemButton } from '@mui/material'
+import {
+  Box, Avatar, Button, ListItemButton,
+} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import MuiDrawer from '@mui/material/Drawer'
 import MuiAppBar from '@mui/material/AppBar'
@@ -23,6 +25,9 @@ import LoginIcon from '@mui/icons-material/Login'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import { useNavigate } from 'react-router-dom'
 import _get from 'lodash/get'
+import LogoutIcon from '@mui/icons-material/Logout'
+import axios from 'axios'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { makeStyles } from '@mui/styles'
 import { logout } from '../redux/action/user.action'
 import userDetail from '../redux/selector/user.selector'
@@ -127,6 +132,8 @@ export default function DrawerTab() {
   const [open, setOpen] = React.useState(false)
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
+  const userType = _get(user, 'userDetail.userType')
+  const [allData, setAllData] = useState({})
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const handleDrawerOpen = () => {
@@ -134,15 +141,47 @@ export default function DrawerTab() {
   }
   const handleClick = (path, i) => {
     setBtValue(i)
-    if (path === '/login') {
+    if (path === '/logout') {
       dispatch(logout(userToken))
+      navigate('/login')
+    } else {
+      navigate(path)
     }
-    navigate(path)
   }
   const handleDrawerClose = () => {
     setOpen(false)
   }
-  const itemsList = [
+  const itemsListCandidate = [
+    {
+      id: 1,
+      menu: 'Home',
+      link: '/',
+      icon: <HomeIcon />,
+    },
+
+    {
+      id: 2,
+      menu: 'Jop applying',
+      link: '/eeee',
+      icon: <ManageAccountsIcon />,
+      isLogin: !user.isLogin,
+    },
+    {
+      id: 3,
+      menu: 'login',
+      link: '/login',
+      icon: <LoginIcon />,
+      isLogin: user.isLogin,
+    },
+    {
+      id: 4,
+      menu: 'Logout',
+      link: '/logout',
+      icon: <LogoutIcon />,
+      isLogin: !user.isLogin,
+    },
+  ]
+  const itemsListCompany = [
     {
       id: 1,
       menu: 'home',
@@ -154,14 +193,50 @@ export default function DrawerTab() {
       menu: 'login',
       link: '/login',
       icon: <LoginIcon />,
+      isLogin: user.isLogin,
     },
     {
       id: 3,
       menu: 'management',
       link: '/management',
       icon: <ManageAccountsIcon />,
+      isLogin: !user.isLogin,
+    },
+    {
+      id: 4,
+      menu: 'logout',
+      link: '/logout',
+      icon: <LogoutIcon />,
+      isLogin: !user.isLogin,
     },
   ]
+  let itemsList
+  if (userType === 'company') {
+    itemsList = itemsListCompany
+  } else {
+    itemsList = itemsListCandidate
+  }
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/getUserProfile`,
+          {
+            headers: {
+              authorization: userToken,
+            },
+          },
+        )
+        if (response.status === 200 || response.status === 201) {
+          setAllData(_get(response, 'data.data'))
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userToken])
   return (
     <Box>
       {/* <CssBaseline /> */}
@@ -211,7 +286,7 @@ export default function DrawerTab() {
           </IconButton>
         </DrawerHeader>
         <List>
-          {itemsList.map(({
+          {itemsList.filter((obj) => !obj.isLogin).map(({
             id, menu, link, icon,
           }, i) => (
             <ListItemButton
@@ -233,36 +308,39 @@ export default function DrawerTab() {
             </ListItemButton>
           ))}
         </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+        {user.isLogin && (
         <List style={{ marginTop: 'auto' }}>
-          <ListItem button key="user" onClick={() => handleClick('/user')}>
+          <ListItem
+            button
+            key="user"
+          >
             <ListItemIcon>
               <Avatar
                 alt="N"
-                src="https://scontent.fbkk7-2.fna.fbcdn.net/v/t1.6435-9/83554419_106210414280175_3006330223613444096_n.jpg?_nc_cat=102&ccb=1-5&_nc_sid=09cbfe&_nc_eui2=AeFhlvqzGStqZBAFdkhlBkQ3N8O_W_p-RZg3w79b-n5FmOoQxkPUoZM01pikcdtbyH2jPS-FIgckXfpq2_Xkjocm&_nc_ohc=XxPFHROGU58AX8oG9CK&_nc_ht=scontent.fbkk7-2.fna&oh=00_AT9baaCF4Wfjr1ECOHmlQ5y1jU1WAhXIRYwytA-E67ugJQ&oe=6238D2BA"
-                sx={{ width: 40, height: 40 }}
+                src={allData.imgProfile}
+                sx={{ width: 40, height: 40, mt: '7px' }}
               />
             </ListItemIcon>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                Meaw Meaw
+              <Typography sx={{ fontWeight: 'bold' }}>
+                {allData.firstName}
+                {' '}
+                {allData.lastName}
               </Typography>
-              <Typography variant="body2" sx={{ color: 'blue' }}>
-                Member
-              </Typography>
+              <Button
+                onClick={() => handleClick(`/${userType}Personal`)}
+                startIcon={<SettingsOutlinedIcon />}
+                variant="outlined"
+                color="info"
+                size="small"
+                sx={{ borderRadius: '1rem', fontSize: '8px', fontWeight: 'bold' }}
+              >
+                Profile Settings
+              </Button>
             </Box>
           </ListItem>
         </List>
+        )}
       </Drawer>
     </Box>
   )
