@@ -61,11 +61,11 @@ const Maritals = [
 ]
 const genders = [
   {
-    id: 'men',
+    id: 'male',
     value: 'ชาย',
   },
   {
-    id: 'women',
+    id: 'female',
     value: 'หญิง',
   },
   {
@@ -133,23 +133,20 @@ function PersonalTab() {
       email,
       firstName,
       lastName,
-      birthday: new Date(birthday).toISOString(),
-      age,
+      birthDate: new Date(birthday).toISOString(),
       gender,
       marital,
       address,
       interestedJob,
       education,
-      skill,
-      image,
-      profile,
+      pastWork: skill,
+      pastWorkImg: image,
+      imgProfile: profile,
     }
-    console.log(body)
-
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/register`, body)
+      const response = await axios.patch(`${process.env.REACT_APP_BASE_URL}/api/v1/profile`, body)
       if (response.status === 201) {
-        history('/login/verify-account')
+        // history('/login/verify-account')
         setLoading(false)
       }
     } catch (error) {
@@ -157,24 +154,34 @@ function PersonalTab() {
       console.log(error)
     }
   }
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/getUserProfile`,
-          {
-            headers: {
-              authorization: userToken,
-            },
+  const setBody = (data) => {
+    setEmail(data.email)
+    setFirstName(data.firstName)
+    setLastName(data.lastName)
+    setBirthday(data.birthDate)
+    setAge(data.birthDate)
+    setProfile(data.imgProfile)
+  }
+  async function fetchData() {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/getUserProfile`,
+        {
+          headers: {
+            authorization: userToken,
           },
-        )
-        if (response.status === 200 || response.status === 201) {
-          setAllData(_get(response, 'data.data'))
-        }
-      } catch (error) {
-        console.log(error)
+        },
+      )
+      if (response.status === 200 || response.status === 201) {
+        setBody(_get(response, 'data.data'))
+        console.log(_get(response, 'data.data'))
       }
+    } catch (error) {
+      console.log(error)
     }
+  }
+
+  useEffect(() => {
     fetchData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

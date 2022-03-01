@@ -31,7 +31,9 @@ function App() {
   const dispatch = useDispatch()
 
   const alreadyLogin = () => {
-    dispatch(autoLogin())
+    if (window.localStorage.getItem('userToken')) {
+      dispatch(autoLogin())
+    }
   }
 
   useEffect(() => {
@@ -40,7 +42,16 @@ function App() {
   }, [])
   return (
     <Routes>
-      <Route exact path="/" element={<AuthRoute loginRequired page={Home} />} />
+      <Route
+        exact
+        path="/"
+        element={(
+          <Box mt={8.1} ml={9.3}>
+            <DrawerTab />
+            <Home />
+          </Box>
+        )}
+      />
       <Route exact path="/login" element={<SignInUp />} />
       <Route exact path="/login/verify-account" element={<VerifyAccount />} />
       <Route
@@ -49,19 +60,18 @@ function App() {
         element={(
           <Box mt={8.1} ml={9.3}>
             <DrawerTab />
-
             <Company />
           </Box>
         )}
       />
       <Route
         exact
-        path="/UserPersonal"
+        path="/candidatePersonal"
         element={<AuthRoute loginRequired page={UserPersonal} />}
       />
       <Route
         exact
-        path="/UserAccount"
+        path="/candidateAccount"
         element={<AuthRoute loginRequired page={UserAccount} />}
       />
       <Route
