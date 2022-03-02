@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
-  Box, MenuItem, Button, TextField, IconButton,
+  Box, MenuItem, Button, IconButton,
 } from '@mui/material'
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined'
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined'
 import _map from 'lodash/map'
 import PropTypes, { any } from 'prop-types'
 import _isEmpty from 'lodash/isEmpty'
+import TextField from './Textfield'
 
 function App({
-  loading, label, keyText, state, setState,
+  loading, label, keyText, state, setState, error,
 }) {
   // handle input change
   const handleInputChange = (e, index) => {
@@ -29,8 +30,24 @@ function App({
   // handle click event of the Add Button
   const handleAddClick = () => {
     setState([...state, ''])
+    // setError([...error, false])
   }
-
+  // const setDefaultError = () => {
+  //   _map(state, (item, i) => {
+  //     const data = [...error]
+  //     data.push(false)
+  //     setError(data)
+  //   })
+  // }
+  // const handleChangeError = (i) => {
+  //   const data = [...error]
+  //   data[i] = true
+  //   setError(data)
+  // }
+  // useEffect(() => {
+  //   setDefaultError()
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
   return (
     <>
       {_map(state, (value, i) => (
@@ -53,16 +70,20 @@ function App({
             </IconButton>
           )}
           <TextField
+            loading={loading}
             sx={{ ml: 0.2 }}
             required
             label={label}
             autoComplete="off"
             value={value}
-            error={loading && _isEmpty(value)}
+            error={error && _isEmpty(value[i])}
             helperText={
-                    loading && _isEmpty(value) && `please fill ${label}`
+              error && _isEmpty(value[i]) && `please fill ${label}`
                   }
-            onChange={(e) => handleInputChange(e, i)}
+            onChange={(e) => {
+              handleInputChange(e, i)
+              // handleChangeError(i)
+            }}
             fullWidth
           />
 
@@ -79,6 +100,8 @@ App.propTypes = {
   keyText: PropTypes.string,
   state: PropTypes.arrayOf(PropTypes.any),
   setState: PropTypes.func,
+  error: PropTypes.arrayOf(PropTypes.any),
+
 }
 App.defaultProps = {
   loading: null,
@@ -86,4 +109,5 @@ App.defaultProps = {
   keyText: '',
   state: [],
   setState: () => {},
+  error: [],
 }

@@ -83,19 +83,6 @@ function AccountTab() {
           ACCOUNT
         </Typography>
         <TextField
-          required
-          id="demo-helper-text-aligned"
-          label="Email"
-          value={email}
-          error={
-          (loading && !emailValidate(email)) || (loading && _isEmpty(email))
-        }
-          helperText={checkEmail(email)}
-          onChange={(e) => handleChange(e, setEmail)}
-          autoComplete="off"
-          fullWidth
-        />
-        <TextField
           sx={{ mt: 2 }}
           required
           id="demo-helper-text-aligned"

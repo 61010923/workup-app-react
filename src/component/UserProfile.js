@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button } from '@mui/material'
+import { Box, Button, Skeleton } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import PropTypes from 'prop-types'
@@ -20,13 +20,21 @@ const useStyles = makeStyles({
     color: 'blue',
   },
 })
-function UserProfile({ data, state, setState }) {
+function UserProfile({
+  loading, data, state, setState,
+}) {
   const classes = useStyles()
   const navigate = useNavigate()
   const user = useSelector(userDetail)
   return (
     <Box className={classes.container}>
-      <AvatarPhoto profile={data.imgProfile} firstName={data.firstName} state={state} setState={setState} />
+      {
+          loading ? (
+            <Skeleton animation="wave" variant="circular" width={128} height={128} />
+          ) : (
+            <AvatarPhoto profile={data.imgProfile} firstName={data.firstName} state={state} setState={setState} />
+          )
+}
       <Box sx={{
         display: 'flex', flexDirection: 'column', ml: 6,
       }}
@@ -36,7 +44,7 @@ function UserProfile({ data, state, setState }) {
         </Typography>
         <Typography variant="body2">
 
-          <span className={classes.email}>{data.email}</span>
+          <span className={classes.email}>{data.emailAuth}</span>
           &nbsp;-
           {' '}
           {user.userDetail.userType}
@@ -47,9 +55,9 @@ function UserProfile({ data, state, setState }) {
           variant="outlined"
           color="info"
           size="small"
-          sx={{ borderRadius: '1rem', width: '70%', mt: 1 }}
+          sx={{ borderRadius: '1rem', width: '100%', mt: 1 }}
         >
-          Account
+          Change password
         </Button>
       </Box>
     </Box>
@@ -61,4 +69,5 @@ UserProfile.propTypes = {
   data: PropTypes.objectOf(PropTypes.any).isRequired,
   state: PropTypes.string.isRequired,
   setState: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 }
