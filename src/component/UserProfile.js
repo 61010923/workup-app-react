@@ -36,7 +36,7 @@ function UserProfile({ data, state, setState }) {
         </Typography>
         <Typography variant="body2">
 
-          <span className={classes.email}>{data.email}</span>
+          <span className={classes.email}>{data.emailAuth}</span>
           &nbsp;-
           {' '}
           {user.userDetail.userType}

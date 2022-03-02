@@ -39,7 +39,7 @@ const useStyles = makeStyles({
   },
 })
 
-function ImageUploader({ loading, state, setState }) {
+function ImageUploader({ error, state, setState }) {
   // const uploadImage = useImageUpload()
   // const handleImageChange = async (e) => {
   //   const imgUrl = await uploadImage(e)
@@ -66,7 +66,7 @@ function ImageUploader({ loading, state, setState }) {
           <input type="file" id="file" accept=".png, .jpg, .jpeg" multiple onChange={handleImageChange} style={{ display: 'none' }} />
           <Button
             variant="outlined"
-            color={loading && _isEmpty(state) ? 'error' : 'primary'}
+            color={error && _isEmpty(state) ? 'error' : 'primary'}
             fullWidth
             component="span"
             endIcon={<ImageIcon />}
@@ -75,7 +75,7 @@ function ImageUploader({ loading, state, setState }) {
           </Button>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', margin: '3px 14px 0' }}>
-            {loading && _isEmpty(state)
+            {error && _isEmpty(state)
              && (
              <Typography
                variant="caption"
@@ -112,12 +112,12 @@ function ImageUploader({ loading, state, setState }) {
 
 export default ImageUploader
 ImageUploader.propTypes = {
-  loading: PropTypes.bool,
+  error: PropTypes.bool,
   state: PropTypes.arrayOf(PropTypes.any),
   setState: PropTypes.func,
 }
 ImageUploader.defaultProps = {
-  loading: null,
+  error: null,
   state: [],
   setState: () => {},
 }

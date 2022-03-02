@@ -42,7 +42,7 @@ const educationSelect = [
     label: 'ระดับปริญญาเอก',
   },
 ]
-function App({ loading, state, setState }) {
+function App({ error, state, setState }) {
   // handle input change
   const handleInputChange = (e, index) => {
     const { name, value } = e.target
@@ -89,9 +89,9 @@ function App({ loading, state, setState }) {
             select
             label="Education"
             value={object.education}
-            error={loading && _isEmpty(object.education)}
+            error={error && _isEmpty(object.education)}
             helperText={
-                    loading && _isEmpty(object.education) && 'please select education'
+                    error && _isEmpty(object.education) && 'please select education'
                   }
             onChange={(e) => handleInputChange(e, i)}
             fullWidth
@@ -110,13 +110,14 @@ function App({ loading, state, setState }) {
             label="Major/Program"
             autoComplete="off"
             value={object.major}
-            error={loading && _isEmpty(object.major)}
+            error={error && _isEmpty(object.major)}
             helperText={
-                    loading && _isEmpty(object.major) && 'please fill major/program'
+                    error && _isEmpty(object.major) && 'please fill major/program'
                   }
             onChange={(e) => handleInputChange(e, i)}
             fullWidth
           />
+          {console.log(error)}
           <TextField
             sx={{ ml: 2 }}
             name="university"
@@ -125,9 +126,9 @@ function App({ loading, state, setState }) {
             label="University/School"
             autoComplete="off"
             value={object.university}
-            error={loading && _isEmpty(object.university)}
+            error={error && _isEmpty(object.university)}
             helperText={
-                    loading && _isEmpty(object.university) && 'please fill university/school'
+                    error && _isEmpty(object.university) && 'please fill university/school'
                   }
             onChange={(e) => handleInputChange(e, i)}
             fullWidth
@@ -142,12 +143,12 @@ function App({ loading, state, setState }) {
 
 export default App
 App.propTypes = {
-  loading: PropTypes.bool,
+  error: PropTypes.bool,
   state: PropTypes.arrayOf(PropTypes.any),
   setState: PropTypes.func,
 }
 App.defaultProps = {
-  loading: null,
+  error: null,
   state: [],
   setState: () => {},
 }
