@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Box, MenuItem, Button, TextField, IconButton,
+  Box, MenuItem, Button, IconButton,
 } from '@mui/material'
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined'
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined'
 import _map from 'lodash/map'
 import PropTypes, { any } from 'prop-types'
 import _isEmpty from 'lodash/isEmpty'
+import TextField from './Textfield'
 
 function App({
   loading, label, keyText, state, setState, error,
@@ -69,6 +70,7 @@ function App({
             </IconButton>
           )}
           <TextField
+            loading={loading}
             sx={{ ml: 0.2 }}
             required
             label={label}

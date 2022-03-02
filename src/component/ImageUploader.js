@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  Box, Button, IconButton,
+  Box, Button, IconButton, Skeleton,
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
@@ -38,7 +38,9 @@ const useStyles = makeStyles({
   },
 })
 
-function ImageUploader({ error, state, setState }) {
+function ImageUploader({
+  loading, error, state, setState,
+}) {
   // const uploadImage = useImageUpload()
   // const handleImageChange = async (e) => {
   //   const imgUrl = await uploadImage(e)
@@ -93,16 +95,21 @@ function ImageUploader({ error, state, setState }) {
       </Box>
       <Box className={classes.container}>
         {_map(state, (photo, index) => (
-          <Box key={`image${index}`} className={classes.image}>
-            <Box className={classes.button}>
-              <IconButton color="error" onClick={() => removeImage(index)} aria-label="delete">
-                <RemoveCircleOutlineIcon />
-              </IconButton>
+          loading ? (
+            <Skeleton variant="rectangular" height={240} sx={{ borderRadius: '8px' }} />
+          ) : (
+            <Box key={`image${index}`} className={classes.image}>
+              <Box className={classes.button}>
+                <IconButton color="error" onClick={() => removeImage(index)} aria-label="delete">
+                  <RemoveCircleOutlineIcon />
+                </IconButton>
+
+              </Box>
+              <img className={classes.imageSize} src={photo} alt="" key={photo} />
 
             </Box>
-            <img className={classes.imageSize} src={photo} alt="" key={photo} />
+          )
 
-          </Box>
         ))}
       </Box>
     </>
@@ -112,11 +119,13 @@ function ImageUploader({ error, state, setState }) {
 export default ImageUploader
 ImageUploader.propTypes = {
   error: PropTypes.bool,
+  loading: PropTypes.bool,
   state: PropTypes.arrayOf(PropTypes.any),
   setState: PropTypes.func,
 }
 ImageUploader.defaultProps = {
   error: null,
+  loading: null,
   state: [],
   setState: () => {},
 }
