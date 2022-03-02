@@ -4,22 +4,21 @@ import {
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
-import { red } from '@mui/material/colors'
 import ImageIcon from '@mui/icons-material/Image'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import _map from 'lodash/map'
-import PropTypes, { any } from 'prop-types'
+import PropTypes from 'prop-types'
 import _isEmpty from 'lodash/isEmpty'
 import useImageUpload from '../libs/useImageUpload'
 
 const useStyles = makeStyles({
   container: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
   },
   image: {
     margin: '1rem',
+    maxHeight: '240px',
     position: 'relative',
     display: 'inline-block',
   },
@@ -33,7 +32,7 @@ const useStyles = makeStyles({
     width: '100%',
     height: '100%',
     objectFit: 'cover',
-    borderRadius: '1rem',
+    borderRadius: '8px',
     // border: '1px solid #fff',
     boxShadow: '0px 0px 10px rgba(0,0,0,.5)',
   },
