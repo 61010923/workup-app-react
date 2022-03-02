@@ -10,6 +10,7 @@ import AvatarPhoto from './AvatarPhoto'
 const useStyles = makeStyles({
   container: {
     padding: '1rem',
+    position: 'relative',
     // height: '20rem',
     // alignItems: 'center',
   },
@@ -21,8 +22,8 @@ const useStyles = makeStyles({
   },
   profile: {
     position: 'absolute',
-    top: '12rem',
-    left: '8rem',
+    top: '45%',
+    left: '5%',
     zIndex: '10',
   },
 
