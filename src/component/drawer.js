@@ -100,10 +100,13 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 )
 
 const useStyles = makeStyles({
-  paper: {
-    background: '#30475E',
-  },
+  // paper: {
+  //   background: '#30475E',
+  // },
   selected: {
+    '&.css-1crvzwi-MuiButtonBase-root-MuiListItemButton-root.Mui-selected': {
+      backgroundColor: '#30475E',
+    },
     '&.Mui-selected': {
       backgroundColor: '#30475E',
       color: 'white',
@@ -114,15 +117,7 @@ const useStyles = makeStyles({
           color: 'white',
         },
       },
-      // fontWeight: 600,
     },
-    // '&:hover': {
-    //   cursor: 'pointer',
-    //   backgroundColor: 'orange',
-    //   // '& $addIcon': {
-    //   //   color: 'purple',
-    //   // },
-    // },
   },
 })
 export default function DrawerTab() {
@@ -197,7 +192,7 @@ export default function DrawerTab() {
     },
     {
       id: 3,
-      menu: 'management',
+      menu: 'Annoucement',
       link: '/management',
       icon: <ManageAccountsIcon />,
       isLogin: !user.isLogin,
