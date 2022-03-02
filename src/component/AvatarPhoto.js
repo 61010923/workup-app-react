@@ -48,7 +48,7 @@ function AvatarPhoto({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile])
   return (
-    <>
+    <Box>
       <Tooltip title="Change Profile">
         <Box
           className={classes.Avatar}
@@ -98,8 +98,10 @@ function AvatarPhoto({
           </label>
         </Box>
       </Tooltip>
+      {variant !== '' && (
       <Box className={classes.avatarBgc} />
-    </>
+      )}
+    </Box>
   )
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {
-  Box, Button, IconButton,
+  Box, Button, IconButton, Skeleton,
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
@@ -38,7 +38,15 @@ const useStyles = makeStyles({
   },
 })
 
-function ImageUploader({ loading, state, setState }) {
+function ImageUploader({
+  loading, error, state, setState,
+}) {
+  // const uploadImage = useImageUpload()
+  // const handleImageChange = async (e) => {
+  //   const imgUrl = await uploadImage(e)
+  //   setState(imgUrl)
+  // }
+
   const classes = useStyles()
   const uploadImage = useImageUpload()
   const removeImage = (index) => {
@@ -59,7 +67,7 @@ function ImageUploader({ loading, state, setState }) {
           <input type="file" id="file" accept=".png, .jpg, .jpeg" multiple onChange={handleImageChange} style={{ display: 'none' }} />
           <Button
             variant="outlined"
-            color={loading && _isEmpty(state) ? 'error' : 'primary'}
+            color={error && _isEmpty(state) ? 'error' : 'primary'}
             fullWidth
             component="span"
             endIcon={<ImageIcon />}
@@ -68,7 +76,7 @@ function ImageUploader({ loading, state, setState }) {
           </Button>
 
           <Box sx={{ display: 'flex', flexDirection: 'column', margin: '3px 14px 0' }}>
-            {loading && _isEmpty(state)
+            {error && _isEmpty(state)
              && (
              <Typography
                variant="caption"
@@ -87,16 +95,21 @@ function ImageUploader({ loading, state, setState }) {
       </Box>
       <Box className={classes.container}>
         {_map(state, (photo, index) => (
-          <Box key={`image${index}`} className={classes.image}>
-            <Box className={classes.button}>
-              <IconButton color="error" onClick={() => removeImage(index)} aria-label="delete">
-                <RemoveCircleOutlineIcon />
-              </IconButton>
+          loading ? (
+            <Skeleton variant="rectangular" height={240} sx={{ borderRadius: '8px' }} />
+          ) : (
+            <Box key={`image${index}`} className={classes.image}>
+              <Box className={classes.button}>
+                <IconButton color="error" onClick={() => removeImage(index)} aria-label="delete">
+                  <RemoveCircleOutlineIcon />
+                </IconButton>
+
+              </Box>
+              <img className={classes.imageSize} src={photo} alt="" key={photo} />
 
             </Box>
-            <img className={classes.imageSize} src={photo} alt="" key={photo} />
+          )
 
-          </Box>
         ))}
       </Box>
     </>
@@ -105,11 +118,13 @@ function ImageUploader({ loading, state, setState }) {
 
 export default ImageUploader
 ImageUploader.propTypes = {
+  error: PropTypes.bool,
   loading: PropTypes.bool,
   state: PropTypes.arrayOf(PropTypes.any),
   setState: PropTypes.func,
 }
 ImageUploader.defaultProps = {
+  error: null,
   loading: null,
   state: [],
   setState: () => {},

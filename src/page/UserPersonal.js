@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Box, Button, TextField, MenuItem,
+  Box, Button, MenuItem,
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
@@ -17,11 +17,14 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import _get from 'lodash/get'
+import _every from 'lodash/every'
 import ImageUploader from '../component/ImageUploader'
 import AddOrRemoveEducation from '../component/AddOrRemoveEducation'
 import AddOrRemoveInput from '../component/AddOrRemoveInput'
 import UserProfile from '../component/UserProfile'
 import userDetail from '../redux/selector/user.selector'
+import { alertBar } from '../redux/action/alert.action'
+import TextField from '../component/Textfield'
 
 const useStyles = makeStyles({
   formContainer: {
@@ -32,7 +35,7 @@ const useStyles = makeStyles({
   },
   container: {
     display: 'flex',
-    margin: '6rem 5rem',
+    margin: '6rem 3rem',
     justifyContent: 'center',
     flexDirection: 'column',
   },
@@ -83,6 +86,7 @@ function PersonalTab() {
   const classes = useStyles()
   const history = useNavigate()
   const [email, setEmail] = useState('')
+  const [emailAuth, setEmailAuth] = useState('')
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [birthday, setBirthday] = useState(null)
@@ -96,23 +100,25 @@ function PersonalTab() {
   const [image, setImage] = useState([])
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [openError, setOpenError] = useState(false)
+  const [openSkeleton, setOpenSkeleton] = useState(true)
   const newDate = new Date()
   const newDateMax = new Date()
   const decreaseDateMin = new Date(newDate.setFullYear(newDate.getFullYear() - 60))
   const decreaseDateMax = new Date(newDateMax.setFullYear(newDateMax.getFullYear() - 15))
+  const dispatch = useDispatch()
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
-  const [allData, setAllData] = useState({})
   const emailValidate = (e) => {
     const re = /\S+@\S+\.\S+/
     return re.test(e)
   }
   const checkEmail = (e) => {
     let errorMessage = ''
-    if (loading && !emailValidate(email)) {
+    if (openError && !emailValidate(email)) {
       errorMessage = 'please check email'
     }
-    if (loading && _isEmpty(email)) {
+    if (openError && _isEmpty(email)) {
       errorMessage = 'please fill email'
     }
     return errorMessage
@@ -129,37 +135,78 @@ function PersonalTab() {
   }
   const handleSubmit = async () => {
     setLoading(true)
-    const body = {
-      email,
-      firstName,
-      lastName,
-      birthDate: new Date(birthday).toISOString(),
-      gender,
-      marital,
-      address,
-      interestedJob,
-      education,
-      pastWork: skill,
-      pastWorkImg: image,
-      imgProfile: profile,
-    }
-    try {
-      const response = await axios.patch(`${process.env.REACT_APP_BASE_URL}/api/v1/profile`, body)
-      if (response.status === 201) {
-        // history('/login/verify-account')
-        setLoading(false)
+    setOpenError(true)
+    if (
+      !_isEmpty(email) && emailValidate(email)
+      && !_isEmpty(firstName)
+      && !_isEmpty(lastName)
+      && !_isEmpty(birthday)
+      && !_isEmpty(gender)
+      && !_isEmpty(marital)
+      && !_isEmpty(address)
+      && _every(interestedJob, (item) => item.length > 0)
+      && _every(education, (item) => item.education.length > 0 && item.major.length > 0 && item.university.length > 0)
+      && _every(skill, (item) => item.length > 0)
+      && _every(image, (item) => item.length > 0)
+    ) {
+      const body = {
+        email,
+        firstName,
+        lastName,
+        birthDate: new Date(birthday).toISOString(),
+        gender,
+        marital,
+        address,
+        interestedJob,
+        education,
+        pastWork: skill,
+        pastWorkImg: image,
+        imgProfile: profile,
       }
-    } catch (error) {
+      try {
+        const response = await axios.patch(`${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/profile`, body, {
+          headers: {
+            authorization: userToken,
+            'Content-type': 'application/json',
+          },
+        })
+        if (response.status === 201 || response.status === 200) {
+          // history('/login/verify-account')
+          dispatch(alertBar(true, 'success', 3000, 'Update Complete'))
+          setLoading(false)
+        }
+      } catch (error) {
+        dispatch(alertBar(true, 'warning', 3000, 'Something went wrong'))
+        setLoading(false)
+        console.log(error)
+      }
+    } else {
+      dispatch(alertBar(true, 'warning', 3000, 'Please fill all the fields'))
       setLoading(false)
-      console.log(error)
     }
   }
   const setBody = (data) => {
     setEmail(data.email)
+    setEmailAuth(data.emailAuth)
     setFirstName(data.firstName)
     setLastName(data.lastName)
     setBirthday(data.birthDate)
-    setAge(data.birthDate)
+    if (!_isEmpty(data.birthDate)) {
+      setAge(CalculateAge(new Date(data.birthDate)))
+    }
+    setGender(data.gender)
+    setMarital(data.marital)
+    setAddress(data.address)
+    if (!_isEmpty(data.interestedJob)) {
+      setInterestedJob(data.interestedJob)
+    }
+    if (!_isEmpty(data.education)) {
+      setEducation(data.education)
+    }
+    if (!_isEmpty(data.pastWork)) {
+      setSkill(data.pastWork)
+    }
+    setImage(data.pastWorkImg)
     setProfile(data.imgProfile)
   }
   async function fetchData() {
@@ -174,7 +221,7 @@ function PersonalTab() {
       )
       if (response.status === 200 || response.status === 201) {
         setBody(_get(response, 'data.data'))
-        console.log(_get(response, 'data.data'))
+        setOpenSkeleton(true)
       }
     } catch (error) {
       console.log(error)
@@ -190,13 +237,11 @@ function PersonalTab() {
       <Box sx={{
         backgroundColor: 'rgb(248 248 248)',
         borderRadius: 2,
-        display: 'flex',
-        justifyContent: 'center',
         boxShadow: '5px 10px 15px rgba(0,0,0,0.5)',
 
       }}
       >
-        <UserProfile data={allData} state={profile} setState={setProfile} />
+        <UserProfile loading={openSkeleton} data={{ firstName, lastName, emailAuth }} state={profile} setState={setProfile} />
       </Box>
       <Box sx={{
         backgroundColor: 'rgb(248 248 248)',
@@ -211,46 +256,57 @@ function PersonalTab() {
             PERSONAL INFORMATION
           </Typography>
           <TextField
+            loading={openSkeleton}
             required
             id="demo-helper-text-aligned"
             label="Email"
             value={email}
             error={
-          (loading && !emailValidate(email)) || (loading && _isEmpty(email))
+          (openError && !emailValidate(email)) || (openError && _isEmpty(email))
         }
             helperText={checkEmail(email)}
-            onChange={(e) => handleChange(e, setEmail)}
+            onChange={(e) => {
+              handleChange(e, setEmail)
+            }}
             autoComplete="off"
             fullWidth
           />
           <Box sx={{ mt: 2, display: 'flex' }}>
             <TextField
+              loading={openSkeleton}
               required
               id="demo-helper-text-aligned"
               label="Fist Name"
               value={firstName}
-              error={loading && _isEmpty(firstName)}
+              error={openError && _isEmpty(firstName)}
               helperText={
-                  loading && _isEmpty(firstName) && 'please fill First name'
+                  openError && _isEmpty(firstName) && 'please fill First name'
                 }
-              onChange={(e) => handleChange(e, setFirstName)}
+              onChange={(e) => {
+                handleChange(e, setFirstName)
+              }}
               autoComplete="off"
               fullWidth
             />
-            <TextField
-              sx={{ ml: 2 }}
-              required
-              id="demo-helper-text-aligned"
-              label="Last Name"
-              value={lastName}
-              error={loading && _isEmpty(lastName)}
-              helperText={
-                  loading && _isEmpty(lastName) && 'please fill Last name'
+
+            <Box sx={{ ml: 2, width: '100%' }}>
+              <TextField
+                loading={openSkeleton}
+                required
+                id="demo-helper-text-aligned"
+                label="Last Name"
+                value={lastName}
+                error={openError && _isEmpty(lastName)}
+                helperText={
+                  openError && _isEmpty(lastName) && 'please fill Last name'
                 }
-              onChange={(e) => handleChange(e, setLastName)}
-              autoComplete="off"
-              fullWidth
-            />
+                onChange={(e) => {
+                  handleChange(e, setLastName)
+                }}
+                autoComplete="off"
+                fullWidth
+              />
+            </Box>
           </Box>
           <Box sx={{ mt: 2, display: 'flex' }}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -271,42 +327,49 @@ function PersonalTab() {
                 }}
                 renderInput={(params) => (
                   <TextField
+                    loading={openSkeleton}
                     {...params}
-                    error={loading && !_isDate(birthday)}
+                    error={openError && _isEmpty(birthday)}
                     helperText={
-                    loading && !_isDate(birthday) && 'please select birthday'
+                    openError && _isEmpty(birthday) && 'please select birthday'
                   }
                     fullWidth
                   />
                 )}
               />
             </LocalizationProvider>
-            <TextField
-              sx={{ ml: 2 }}
-              required
-              type="number"
-              id="demo-helper-text-aligned"
-              InputProps={{
-                readOnly: true,
-              }}
-              label="Age"
-              value={age}
-              autoComplete="off"
-              fullWidth
-            />
+            <Box sx={{ ml: 2, width: '100%' }}>
+              <TextField
+                loading={openSkeleton}
+                required
+                type="number"
+                id="demo-helper-text-aligned"
+                InputProps={{
+                  readOnly: true,
+                }}
+                label="Age"
+                value={age}
+                autoComplete="off"
+                fullWidth
+              />
+            </Box>
+
           </Box>
 
           <Box sx={{ mt: 2, display: 'flex' }}>
             <TextField
+              loading={openSkeleton}
               id="outlined-select-currency"
               select
               label="Gender"
               value={gender}
-              error={loading && _isEmpty(gender)}
+              error={openError && _isEmpty(gender)}
               helperText={
-                  loading && _isEmpty(gender) && 'please select gender'
+                  openError && _isEmpty(gender) && 'please select gender'
                 }
-              onChange={handleChangeGender}
+              onChange={(e) => {
+                handleChangeGender(e)
+              }}
         //   helperText="Please select your currency"
               fullWidth
             >
@@ -316,56 +379,65 @@ function PersonalTab() {
                 </MenuItem>
               ))}
             </TextField>
-            <TextField
-              sx={{ ml: 2 }}
-              id="outlined-select-currency"
-              select
-              label="Marital Status"
-              value={marital}
-              error={loading && _isEmpty(marital)}
-              helperText={
-                  loading && _isEmpty(marital) && 'please select marital'
+            <Box sx={{ ml: 2, width: '100%' }}>
+              <TextField
+                loading={openSkeleton}
+                id="outlined-select-currency"
+                select
+                label="Marital Status"
+                value={marital}
+                error={openError && _isEmpty(marital)}
+                helperText={
+                  openError && _isEmpty(marital) && 'please select marital'
                 }
-              onChange={handleChangeMarital}
+                onChange={(e) => {
+                  handleChangeMarital(e)
+                }}
+                autoComplete="off"
+                fullWidth
+              >
+                {_map(Maritals, (option, index) => (
+                  <MenuItem key={`marital${index}`} value={option.id}>
+                    {option.value}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Box>
+
+          </Box>
+          <Box sx={{ mt: 2 }}>
+            <TextField
+              loading={openSkeleton}
+              required
+              id="demo-helper-text-aligned"
+              label="ที่อยู่ปัจจุบัน"
+              value={address}
+              error={openError && _isEmpty(address)}
+              helperText={
+                  openError && _isEmpty(address) && 'please fill address'
+                }
+              onChange={(e) => {
+                handleChange(e, setAddress)
+              }}
               autoComplete="off"
               fullWidth
-            >
-              {_map(Maritals, (option, index) => (
-                <MenuItem key={`marital${index}`} value={option.id}>
-                  {option.value}
-                </MenuItem>
-              ))}
-            </TextField>
+            />
           </Box>
-          <TextField
-            sx={{ mt: 2 }}
-            required
-            id="demo-helper-text-aligned"
-            label="ที่อยู่ปัจจุบัน"
-            value={address}
-            error={loading && _isEmpty(address)}
-            helperText={
-                  loading && _isEmpty(address) && 'please fill address'
-                }
-            onChange={(e) => handleChange(e, setAddress)}
-            autoComplete="off"
-            fullWidth
-          />
           <Typography sx={{ fontWeight: 'bold', mt: 2 }}>
             ลักษณะงานที่สนใจ
           </Typography>
-          <AddOrRemoveInput loading={loading} keyText="interestedJob" label="Interested Job" state={interestedJob} setState={setInterestedJob} />
+          <AddOrRemoveInput loading={openSkeleton} error={openError} keyText="interestedJob" label="Interested Job" state={interestedJob} setState={setInterestedJob} />
           <Typography sx={{ fontWeight: 'bold', mt: 2 }}>
             การศึกษา
           </Typography>
-          <AddOrRemoveEducation loading={loading} state={education} setState={setEducation} />
+          <AddOrRemoveEducation loading={openSkeleton} error={openError} state={education} setState={setEducation} />
           <Typography sx={{ fontWeight: 'bold', mt: 2 }}>
             ความสามารถ/ผลงาน
           </Typography>
-          <AddOrRemoveInput loading={loading} keyText="skill" label="Skill/Past work" state={skill} setState={setSkill} />
+          <AddOrRemoveInput loading={openSkeleton} error={openError} keyText="skill" label="Skill/Past work" state={skill} setState={setSkill} />
 
           <Box sx={{ mt: 2 }}>
-            <ImageUploader loading={loading} state={image} setState={setImage} />
+            <ImageUploader loading={openSkeleton} error={openError} state={image} setState={setImage} />
           </Box>
           <Button
             sx={{ mt: 2 }}

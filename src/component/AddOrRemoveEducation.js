@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import {
-  Box, MenuItem, Button, TextField, IconButton,
+  Box, MenuItem, Button, IconButton,
 } from '@mui/material'
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined'
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined'
 import _map from 'lodash/map'
 import PropTypes, { any } from 'prop-types'
 import _isEmpty from 'lodash/isEmpty'
+import TextField from './Textfield'
 
 const educationSelect = [
   {
@@ -42,7 +43,9 @@ const educationSelect = [
     label: 'ระดับปริญญาเอก',
   },
 ]
-function App({ loading, state, setState }) {
+function App({
+  loading, error, state, setState,
+}) {
   // handle input change
   const handleInputChange = (e, index) => {
     const { name, value } = e.target
@@ -83,15 +86,16 @@ function App({ loading, state, setState }) {
           </IconButton>
           )}
           <TextField
+            loading={loading}
             sx={{ ml: 0.2 }}
             name="education"
             id="outlined-select-currency"
             select
             label="Education"
             value={object.education}
-            error={loading && _isEmpty(object.education)}
+            error={error && _isEmpty(object.education)}
             helperText={
-                    loading && _isEmpty(object.education) && 'please select education'
+                    error && _isEmpty(object.education) && 'please select education'
                   }
             onChange={(e) => handleInputChange(e, i)}
             fullWidth
@@ -102,37 +106,40 @@ function App({ loading, state, setState }) {
               </MenuItem>
             ))}
           </TextField>
-          <TextField
-            sx={{ ml: 2 }}
-            name="major"
-            required
-            id="demo-helper-text-aligned"
-            label="Major/Program"
-            autoComplete="off"
-            value={object.major}
-            error={loading && _isEmpty(object.major)}
-            helperText={
-                    loading && _isEmpty(object.major) && 'please fill major/program'
+          <Box sx={{ ml: 2, width: '100%' }}>
+            <TextField
+              loading={loading}
+              name="major"
+              required
+              id="demo-helper-text-aligned"
+              label="Major/Program"
+              autoComplete="off"
+              value={object.major}
+              error={error && _isEmpty(object.major)}
+              helperText={
+                    error && _isEmpty(object.major) && 'please fill major/program'
                   }
-            onChange={(e) => handleInputChange(e, i)}
-            fullWidth
-          />
-          <TextField
-            sx={{ ml: 2 }}
-            name="university"
-            required
-            id="demo-helper-text-aligned"
-            label="University/School"
-            autoComplete="off"
-            value={object.university}
-            error={loading && _isEmpty(object.university)}
-            helperText={
-                    loading && _isEmpty(object.university) && 'please fill university/school'
+              onChange={(e) => handleInputChange(e, i)}
+              fullWidth
+            />
+          </Box>
+          <Box sx={{ ml: 2, width: '100%' }}>
+            <TextField
+              loading={loading}
+              name="university"
+              required
+              id="demo-helper-text-aligned"
+              label="University/School"
+              autoComplete="off"
+              value={object.university}
+              error={error && _isEmpty(object.university)}
+              helperText={
+                    error && _isEmpty(object.university) && 'please fill university/school'
                   }
-            onChange={(e) => handleInputChange(e, i)}
-            fullWidth
-          />
-
+              onChange={(e) => handleInputChange(e, i)}
+              fullWidth
+            />
+          </Box>
         </Box>
       ))}
 
@@ -142,11 +149,13 @@ function App({ loading, state, setState }) {
 
 export default App
 App.propTypes = {
+  error: PropTypes.bool,
   loading: PropTypes.bool,
   state: PropTypes.arrayOf(PropTypes.any),
   setState: PropTypes.func,
 }
 App.defaultProps = {
+  error: null,
   loading: null,
   state: [],
   setState: () => {},

@@ -11,7 +11,7 @@ function Textfield(props) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {loading ? (
-        <Skeleton variant="text" width="100%" sx={{ paddingTop: '0' }} height={56} />
+        <Skeleton variant="text" sx={{ paddingTop: '0' }} width="100%" height={40} />
       )
         : (<TextField {...props} />
         )}
