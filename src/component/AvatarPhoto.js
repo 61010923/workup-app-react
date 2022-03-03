@@ -33,7 +33,7 @@ const useStyles = makeStyles({
 })
 
 function AvatarPhoto({
-  variant, profile, firstName, state, setState,
+  variant, firstName, state, setState,
 }) {
   const classes = useStyles()
   const uploadImage = useImageUpload()
@@ -42,11 +42,6 @@ function AvatarPhoto({
     const imgUrl = await uploadImage(e)
     setState(imgUrl)
   }
-
-  useEffect(() => {
-    setState(profile)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile])
   return (
     <Box>
       <Tooltip title="Change Profile">
@@ -67,7 +62,7 @@ function AvatarPhoto({
         >
           <label htmlFor="icon-button-profile">
             <input
-              accept=".png, .jpg, .jpeg"
+              accept=".png, .jpg, .jpeg, .gif"
               id="icon-button-profile"
               type="file"
               style={{ display: 'none' }}
@@ -79,7 +74,7 @@ function AvatarPhoto({
               sx={{
                 width: '8rem',
                 height: '8rem',
-                bgcolor: green[500],
+                bgcolor: 'primary.main',
                 cursor: 'pointer',
               }}
               variant={variant}
@@ -87,11 +82,11 @@ function AvatarPhoto({
               {firstName.charAt(0).toUpperCase()}
             </Avatar>
             <EditIcon
-              color="primary"
               sx={{
                 ...style,
                 fontSize: 50,
                 cursor: 'pointer',
+                color: '#fff',
               }}
               className={classes.iconButton}
             />
@@ -108,7 +103,6 @@ function AvatarPhoto({
 export default AvatarPhoto
 AvatarPhoto.propTypes = {
   variant: PropTypes.string,
-  profile: PropTypes.string,
   firstName: PropTypes.string,
   state: PropTypes.string.isRequired,
   setState: PropTypes.func.isRequired,
@@ -116,6 +110,5 @@ AvatarPhoto.propTypes = {
 }
 AvatarPhoto.defaultProps = {
   variant: '',
-  profile: '',
   firstName: 'P',
 }
