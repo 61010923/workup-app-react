@@ -231,8 +231,27 @@ export default function DrawerTab() {
       console.log(error)
     }
   }
+  const getCompanyProfile = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/companyProfile/profile`, {
+        headers: {
+          authorization: userToken,
+        },
+      })
+      if (response.status === 200) {
+        setAllData(_get(response, 'data.data'))
+        setLoading(false)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   useEffect(() => {
-    fetchData()
+    if (userType === 'company') {
+      getCompanyProfile()
+    } else if (userType === 'candidate') {
+      fetchData()
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userToken])
   return (
@@ -328,9 +347,8 @@ export default function DrawerTab() {
             </ListItemIcon>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <TypographyLoading heightSkeleton={20} loading={loading} sx={{ fontWeight: 'bold' }}>
-                {allData.firstName}
-                {' '}
-                {allData.lastName}
+                {userType === 'company'
+                  ? allData?.companyName : `${`${allData?.firstName} ${allData.lastName}`}`}
               </TypographyLoading>
               <Button
                 onClick={() => handleClick(`/${userType}Personal`)}

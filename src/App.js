@@ -11,6 +11,7 @@ import { autoLogin, logout } from './redux/action/user.action'
 // import { BrowserRouter as Router, Route } from 'react-router-dom'
 import SignInUp from './page/signInUp'
 import VerifyAccount from './page/verifyAccount'
+import CompanyProfile from './page/CompanyProfile'
 import Home from './page/Home'
 import DrawerTab from './component/drawer'
 import Company from './page/Company'
@@ -85,6 +86,8 @@ function App() {
         element={<AuthRoute loginRequired drawer page={ManagePosition} />}
 
       />
+      <Route exact path="/companyPersonal" element={<AuthRoute loginRequired drawer page={CompanyProfile} />} />
+
       <Route
         exact
         path="/InfoUser"
