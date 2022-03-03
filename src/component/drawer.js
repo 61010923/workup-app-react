@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { styled, useTheme } from '@mui/material/styles'
 import {
-  Box, Avatar, Button, ListItemButton,
+  Box, Avatar, Button, ListItemButton, Skeleton,
 } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import MuiDrawer from '@mui/material/Drawer'
@@ -31,9 +31,10 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { makeStyles } from '@mui/styles'
 import { logout } from '../redux/action/user.action'
 import userDetail from '../redux/selector/user.selector'
+import TypographyLoading from './Typography'
+import AvatarLoading from './Avatar'
 
 const drawerWidth = 240
-
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -124,6 +125,7 @@ export default function DrawerTab() {
   const theme = useTheme()
   const classes = useStyles()
   const [btValue, setBtValue] = useState(null)
+  const [loading, setLoading] = useState(true)
   const [open, setOpen] = React.useState(false)
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
@@ -157,7 +159,7 @@ export default function DrawerTab() {
     {
       id: 2,
       menu: 'Jop applying',
-      link: '/eeee',
+      link: '/candidateTable',
       icon: <ManageAccountsIcon />,
       isLogin: !user.isLogin,
     },
@@ -223,6 +225,7 @@ export default function DrawerTab() {
       )
       if (response.status === 200 || response.status === 201) {
         setAllData(_get(response, 'data.data'))
+        setLoading(false)
       }
     } catch (error) {
       console.log(error)
@@ -237,6 +240,7 @@ export default function DrawerTab() {
       })
       if (response.status === 200) {
         setAllData(_get(response, 'data.data'))
+        setLoading(false)
       }
     } catch (error) {
       console.log(error)
@@ -328,17 +332,24 @@ export default function DrawerTab() {
             key="user"
           >
             <ListItemIcon>
-              <Avatar
-                alt="N"
+              <AvatarLoading
+                loading={loading}
+                heightSkeleton={40}
+                widthSkeleton={40}
+                alt="avatar"
                 src={allData.imgProfile}
-                sx={{ width: 40, height: 40, mt: '7px' }}
-              />
+                sx={{
+                  width: 40, height: 40, mt: '7px', backgroundColor: 'primary.main',
+                }}
+              >
+                {allData?.firstName?.charAt(0).toUpperCase()}
+              </AvatarLoading>
             </ListItemIcon>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 'bold' }}>
+              <TypographyLoading heightSkeleton={20} loading={loading} sx={{ fontWeight: 'bold' }}>
                 {userType === 'company'
                   ? allData?.companyName : `${`${allData?.firstName} ${allData.lastName}`}`}
-              </Typography>
+              </TypographyLoading>
               <Button
                 onClick={() => handleClick(`/${userType}Personal`)}
                 startIcon={<SettingsOutlinedIcon />}

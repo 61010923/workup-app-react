@@ -43,6 +43,7 @@ function SignInUp() {
   const userToken = _get(user, 'userDetail.userToken')
   const [value, setValue] = useState('1')
   const [img, setImg] = useState('')
+  const [name, setName] = useState('')
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
@@ -51,7 +52,8 @@ function SignInUp() {
     try {
       const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/getImgProfile`, { email })
       if (response.status === 200) {
-        setImg(_get(response, 'data.data'))
+        setImg(_get(response, 'data.data.imgProfile'))
+        setName(_get(response, 'data.data.name'))
       }
     } catch (error) {
       setImg('')
@@ -80,12 +82,14 @@ function SignInUp() {
             { value === '1' && (
             <Box className={classes.avatarWrapper}>
               <Avatar
-                alt="PraYut"
-                srcSet={img}
+                alt="profile"
+                src={img}
                 sx={{
                   width: 80, height: 80, border: '3px solid #00000033',
                 }}
-              />
+              >
+                {name.charAt(0).toUpperCase()}
+              </Avatar>
             </Box>
             )}
             <TabList

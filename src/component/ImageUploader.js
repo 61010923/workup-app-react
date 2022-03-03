@@ -94,10 +94,10 @@ function ImageUploader({
         </label>
       </Box>
       <Box className={classes.container}>
-        {_map(state, (photo, index) => (
-          loading ? (
-            <Skeleton variant="rectangular" height={240} sx={{ borderRadius: '8px' }} />
-          ) : (
+        {loading ? (
+          <Skeleton key="skeleton" variant="rectangular" height={240} sx={{ borderRadius: '8px' }} />
+        ) : (
+          _map(state, (photo, index) => (
             <Box key={`image${index}`} className={classes.image}>
               <Box className={classes.button}>
                 <IconButton color="error" onClick={() => removeImage(index)} aria-label="delete">
@@ -108,9 +108,7 @@ function ImageUploader({
               <img className={classes.imageSize} src={photo} alt="" key={photo} />
 
             </Box>
-          )
-
-        ))}
+          )))}
       </Box>
     </>
   )
