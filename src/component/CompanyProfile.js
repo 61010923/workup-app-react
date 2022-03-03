@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import {
   Box,
 } from '@mui/material'
+import PropTypes from 'prop-types'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import CoverPhoto from './CoverPhoto'
@@ -29,7 +30,10 @@ const useStyles = makeStyles({
 
 })
 
-function UserProfile() {
+function UserProfile(props) {
+  const {
+    name, imgProfile, imgCover, email,
+  } = props
   const classes = useStyles()
   return (
     <Box className={classes.container}>
@@ -38,18 +42,18 @@ function UserProfile() {
 
       </Box>
       <Box className={classes.profile}>
-        <AvatarPhoto variant="rounded" profile="ss" setState={() => {}} />
+        <AvatarPhoto variant="rounded" profile={name} setState={() => {}} />
       </Box>
       <Box sx={{
         display: 'flex', flexDirection: 'column', mt: 5,
       }}
       >
         <Typography variant="h5">
-          Pug Dog Company
+          {name}
         </Typography>
         <Typography variant="body2">
 
-          <span className={classes.email}>PugCompany@gmail.com</span>
+          <span className={classes.email}>{email}</span>
           &nbsp;- Company
         </Typography>
 
@@ -60,3 +64,10 @@ function UserProfile() {
 }
 
 export default UserProfile
+
+UserProfile.propTypes = {
+  name: PropTypes.string.isRequired,
+  imgProfile: PropTypes.string.isRequired,
+  imgCover: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+}
