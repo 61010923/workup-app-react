@@ -8,6 +8,7 @@ import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlin
 import { useNavigate } from 'react-router-dom'
 import AvatarPhoto from './AvatarPhoto'
 import userDetail from '../redux/selector/user.selector'
+import TypographyLoading from './Typography'
 
 const useStyles = makeStyles({
   container: {
@@ -39,16 +40,16 @@ function UserProfile({
         display: 'flex', flexDirection: 'column', ml: 6,
       }}
       >
-        <Typography variant="h5">
+        <TypographyLoading heightSkeleton={20} loading={loading} variant="h5">
           {`${data.firstName}\u00A0${data.lastName}`}
-        </Typography>
-        <Typography variant="body2">
+        </TypographyLoading>
+        <TypographyLoading heightSkeleton={20} loading={loading} variant="body2">
 
           <span className={classes.email}>{data.emailAuth}</span>
           &nbsp;-
           {' '}
           {user.userDetail.userType}
-        </Typography>
+        </TypographyLoading>
         <Button
           onClick={() => navigate(`/${user.userDetail.userType}Account`)}
           startIcon={<ManageAccountsOutlinedIcon />}

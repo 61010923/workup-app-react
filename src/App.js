@@ -23,6 +23,7 @@ import NotFound from './component/NotFound'
 import InfoUser from './page/InfoUser'
 import UserPersonal from './page/UserPersonal'
 import UserAccount from './page/UserAccount'
+import UserTable from './page/UserTable'
 
 function App() {
   const dispatch = useDispatch()
@@ -64,6 +65,11 @@ function App() {
       />
       <Route
         exact
+        path="/candidateTable"
+        element={<AuthRoute loginRequired drawer page={UserTable} />}
+      />
+      <Route
+        exact
         path="/company"
         element={(
           <Box mt={8.1} ml={9.3}>
@@ -76,9 +82,8 @@ function App() {
       <Route
         exact
         path="/managePosition"
-        element={(
-          <ManagePosition />
-)}
+        element={<AuthRoute loginRequired drawer page={ManagePosition} />}
+
       />
       <Route
         exact

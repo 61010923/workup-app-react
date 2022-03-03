@@ -5,7 +5,10 @@ import {
 import { makeStyles } from '@mui/styles'
 import _isEmpty from 'lodash/isEmpty'
 import axios from 'axios'
-import { fontWeight } from '@mui/system'
+import _every from 'lodash/every'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import CancelIcon from '@mui/icons-material/Cancel'
+import ValidatePassword from '../component/ValidatePassword'
 
 const useStyles = makeStyles({
   formContainer: {
@@ -19,7 +22,7 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: '90vh',
+    minHeight: '77vh',
   },
 })
 
@@ -29,16 +32,17 @@ function AccountTab() {
   const [password, setPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [openError, setOpenError] = useState(false)
   const emailValidate = (e) => {
     const re = /\S+@\S+\.\S+/
     return re.test(e)
   }
   const checkEmail = (e) => {
     let errorMessage = ''
-    if (loading && !emailValidate(email)) {
+    if (openError && !emailValidate(email)) {
       errorMessage = 'please check email'
     }
-    if (loading && _isEmpty(email)) {
+    if (openError && _isEmpty(email)) {
       errorMessage = 'please fill email'
     }
     return errorMessage
@@ -48,8 +52,18 @@ function AccountTab() {
     // const name = e.target.value
     setValue(value)
   }
+  function validatePassword(pw) {
+    // eslint-disable-next-line no-new-object
+    const checkPassword = new Object()
+    checkPassword.upper = /[A-Z]/.test(pw)
+    checkPassword.lower = /[a-z]/.test(pw)
+    checkPassword.number = /[0-9]/.test(pw)
+    checkPassword.length = pw.length > 8
+    return checkPassword
+  }
   const handleSubmit = async () => {
     setLoading(true)
+    setOpenError(true)
     const body = {
       email,
       password,
@@ -89,9 +103,9 @@ function AccountTab() {
           label="Old Password"
           type="password"
           value={password}
-          error={loading && _isEmpty(password)}
+          error={openError && _isEmpty(password)}
           helperText={
-                  loading && _isEmpty(password) && 'please fill password'
+                  openError && _isEmpty(password) && 'please fill password'
                 }
           onChange={(e) => handleChange(e, setPassword)}
           autoComplete="off"
@@ -104,15 +118,18 @@ function AccountTab() {
           label="New Password"
           type="password"
           value={newPassword}
-          error={loading && _isEmpty(newPassword)}
-          helperText={
-                  loading && _isEmpty(newPassword) && 'please fill password'
-                }
+          error={openError && !_every(validatePassword(newPassword), (item) => item === true)}
+          // helperText={
+          //         openError && _isEmpty(newPassword) && 'please fill password'
+          //       }
           onChange={(e) => handleChange(e, setNewPassword)}
           autoComplete="off"
           fullWidth
         />
-
+        {openError
+      && (
+      <ValidatePassword password={newPassword} />
+      )}
         <Button sx={{ mt: 2 }} onClick={() => handleSubmit()} fullWidth variant="contained">save</Button>
 
       </Box>

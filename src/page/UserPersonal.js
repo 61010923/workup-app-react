@@ -172,8 +172,12 @@ function PersonalTab() {
         })
         if (response.status === 201 || response.status === 200) {
           // history('/login/verify-account')
+
           dispatch(alertBar(true, 'success', 3000, 'Update Complete'))
           setLoading(false)
+          // setInterval(() => {
+          //   window.location.reload()
+          // }, 3000)
         }
       } catch (error) {
         dispatch(alertBar(true, 'warning', 3000, 'Something went wrong'))
@@ -221,7 +225,7 @@ function PersonalTab() {
       )
       if (response.status === 200 || response.status === 201) {
         setBody(_get(response, 'data.data'))
-        setOpenSkeleton(true)
+        setOpenSkeleton(false)
       }
     } catch (error) {
       console.log(error)

@@ -16,15 +16,13 @@ const styleModal = {
   display: 'flex',
   justifyContent: 'center',
   bgcolor: 'background.paper',
-  boxShadow: 24,
+  boxShadow: '5px 10px 15px rgba(0,0,0,0.5)',
   p: 4,
+  borderRadius: 2,
 
 }
 function AddPosition() {
   const classes = useStyles()
-  const [open, setOpen] = React.useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
   return (
     <Box sx={{
       margin: ' 2rem 5rem',
@@ -32,6 +30,9 @@ function AddPosition() {
     >
       <Box sx={styleModal}>
         <Box>
+          <Typography sx={{ fontWeight: 'bold' }}>
+            Manage Position
+          </Typography>
           <TextField
             sx={{ mt: 2 }}
             required
@@ -88,8 +89,8 @@ function AddPosition() {
               defaultValue="female"
               name="radio-buttons-group"
             >
-              <FormControlLabel value="interview" control={<Radio />} label="สัมภาษณ์งานออนไลน์ (Online Interview)" />
-              <FormControlLabel value="onSite" control={<Radio />} label="on-site interview" />
+              <FormControlLabel value="Online Interview" control={<Radio />} label="Online Interview" />
+              <FormControlLabel value="On-site interview" control={<Radio />} label="On-site interview" />
             </RadioGroup>
           </FormControl>
           <Button variant="contained" fullWidth color="success">
