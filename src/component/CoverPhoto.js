@@ -3,8 +3,9 @@ import {
   Box, Avatar, IconButton, Button, Tooltip,
 } from '@mui/material'
 import { makeStyles } from '@mui/styles'
-import Typography from '@mui/material/Typography'
 import EditIcon from '@mui/icons-material/Edit'
+import PropTypes from 'prop-types'
+import useImageUpload from '../libs/useImageUpload'
 
 const useStyles = makeStyles({
 
@@ -19,12 +20,14 @@ const useStyles = makeStyles({
   },
 })
 
-function UserProfile() {
+function UserProfile(props) {
+  const { imgCover, setImgCover } = props
   const classes = useStyles()
-  const [picture, setPicture] = useState(null)
+  const imageUpload = useImageUpload()
   const [style, setStyle] = useState({ display: 'none' })
-  const onChangePicture = (e) => {
-    setPicture(URL.createObjectURL(e.target.files[0]))
+  const onChangePicture = async (e) => {
+    const imgUpload = await imageUpload(e)
+    setImgCover(imgUpload)
   }
   return (
     <Tooltip title="Change cover photo">
@@ -55,11 +58,15 @@ function UserProfile() {
           />
           <Avatar
             alt="Profile"
-            src={picture && picture}
+            src={imgCover}
+            component="image"
             sx={{
               width: '100%',
-              height: '15rem',
+              minHeight: '15rem',
+              height: 'auto',
+              maxHeight: '400px',
               cursor: 'pointer',
+              objectFit: 'contain',
 
             }}
             variant="rounded"
@@ -83,3 +90,8 @@ function UserProfile() {
 }
 
 export default UserProfile
+
+UserProfile.propTypes = {
+  imgCover: PropTypes.string.isRequired,
+  setImgCover: PropTypes.func.isRequired,
+}

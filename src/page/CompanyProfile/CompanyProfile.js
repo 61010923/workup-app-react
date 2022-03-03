@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
@@ -15,6 +15,7 @@ import Textfield from '../../component/Textfield'
 import AddOrRemoveInput from '../../component/AddOrRemoveInput'
 import Profile from '../../component/CompanyProfile'
 import ImageUploader from '../../component/ImageUploader'
+import { alertBar } from '../../redux/action/alert.action'
 
 const useStyles = makeStyles({
   container: {
@@ -25,21 +26,39 @@ const useStyles = makeStyles({
 function CompanyProfile() {
   const classes = useStyles()
   const user = useSelector(userDetail)
+  const dispatch = useDispatch()
   const userToken = _get(user, 'userDetail.userToken')
   const [welfare, setWelfare] = useState([''])
   const [travel, setTravel] = useState([''])
   const [companyName, setCompanyName] = useState('')
   const [companyDetail, setCompanyDetail] = useState('')
   const [address, setAddress] = useState('')
-  const [phone, setPhone] = useState('')
-  const [emailContact, setEmailContact] = useState('')
-  const [img, setImg] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [email, setEmail] = useState('')
+  const [imgProfile, setImgProfile] = useState('')
   const [imgAbout, setImgAbout] = useState([])
   const [errorCheck, setErrorCheck] = useState([])
+  const [imgCover, setImgCover] = useState('')
   const [loading, setLoading] = useState(false)
+  const [btLoading, setBtLoading] = useState(false)
+
   const handleChangeText = (e, setValue) => {
     const data = e.target.value
     setValue(data)
+  }
+  const handleSubmit = async (body) => {
+    setBtLoading(true)
+    try {
+      const response = await axios.patch(`${process.env.REACT_APP_BASE_URL}/api/v1/companyProfile/profile`, body, { headers: { authorization: userToken, 'Content-type': 'application/json' } })
+      if (response.status === 200 || response.status === 201) {
+        dispatch(alertBar(true, 'success', 3000, 'Update Complete'))
+        setBtLoading(false)
+      }
+    } catch (error) {
+      console.log(error)
+      dispatch(alertBar(true, 'error', 3000, 'Something went wrong'))
+      setBtLoading(false)
+    }
   }
   const handleCheck = () => {
     const body = {
@@ -48,9 +67,11 @@ function CompanyProfile() {
       companyName,
       companyDetail,
       address,
-      phone,
-      emailContact,
-      imgAbout,
+      phoneNumber,
+      email,
+      imgCover,
+      imgProfile,
+      // imgAbout,
     }
     const arrErr = []
     _forIn(body, (value, key) => {
@@ -66,9 +87,12 @@ function CompanyProfile() {
     })
     if (!_isEmpty(arrErr)) {
       setErrorCheck({ ...arrErr })
-      return false
+      dispatch(alertBar(true, 'error', 3000, 'Please fill all Field'))
+    } else {
+      body.imgAbout = imgAbout
+      body.detail = companyDetail
+      handleSubmit(body)
     }
-    return body
   }
   const setData = (data) => {
     if (!_isEmpty(data.welfare)) {
@@ -79,24 +103,30 @@ function CompanyProfile() {
     }
     setCompanyName(data.companyName)
     setCompanyDetail(data.detail)
-    setPhone(data.phoneNumber)
-
-    setEmailContact(data.email)
+    setPhoneNumber(data.phoneNumber)
+    setImgProfile(data.imgProfile)
+    setEmail(data.email)
     setAddress(data.address)
     setImgAbout(data.imgAbout)
+    setImgCover(data.imgCover)
   }
   const getAllData = async () => {
+    setLoading(true)
     try {
       const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/companyProfile/profile`, { headers: { authorization: userToken } })
       if (response.status === 200) {
         setData(_get(response, 'data.data'))
+        setLoading(false)
       }
     } catch (error) {
       console.log(error)
+      setLoading(false)
     }
   }
+
   useEffect(() => {
     getAllData()
+    setErrorCheck({})
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -108,7 +138,14 @@ function CompanyProfile() {
           borderRadius: '4px',
         }}
       >
-        <Profile />
+        <Profile
+          name={companyName}
+          imgProfile={imgProfile}
+          setImgProfile={setImgProfile}
+          imgCover={imgCover}
+          setImgCover={setImgCover}
+          email={email}
+        />
       </Box>
       <Box>
         <Box className={classes.container}>
@@ -124,7 +161,12 @@ function CompanyProfile() {
               fullWidth
               value={companyName}
               onChange={(e) => handleChangeText(e, setCompanyName)}
-              // loading
+              loading={loading}
+              helperText={
+                _includes(errorCheck, 'companyName')
+                && _isEmpty(companyName)
+                && 'Please fill Company Name'
+              }
               error={
                 _includes(errorCheck, 'companyName') && _isEmpty(companyName)
               }
@@ -142,7 +184,12 @@ function CompanyProfile() {
                 _includes(errorCheck, 'companyDetail')
                 && _isEmpty(companyDetail)
               }
-              // loading
+              helperText={
+                _includes(errorCheck, 'companyDetail')
+                && _isEmpty(companyDetail)
+                && 'Please fill Company Detail'
+              }
+              loading={loading}
               height={112}
             />
           </Box>
@@ -157,6 +204,7 @@ function CompanyProfile() {
               state={welfare}
               setState={setWelfare}
               error={_includes(errorCheck, 'welfare')}
+              loading={loading}
               key="welfare"
             />
           </Box>
@@ -174,7 +222,12 @@ function CompanyProfile() {
               value={address}
               onChange={(e) => handleChangeText(e, setAddress)}
               error={_includes(errorCheck, 'address') && _isEmpty(address)}
-              // loading
+              helperText={
+                _includes(errorCheck, 'address')
+                && _isEmpty(address)
+                && 'Please fill Address'
+              }
+              loading={loading}
               height={112}
             />
           </Box>
@@ -187,10 +240,15 @@ function CompanyProfile() {
             <Textfield
               type="number"
               className={classes.input}
-              value={phone}
-              onChange={(e) => handleChangeText(e, setPhone)}
-              error={_includes(errorCheck, 'phone') && _isEmpty(phone)}
-              // loading
+              value={phoneNumber}
+              onChange={(e) => handleChangeText(e, setPhoneNumber)}
+              error={_includes(errorCheck, 'phoneNumber') && _isEmpty(phoneNumber)}
+              helperText={
+                _includes(errorCheck, 'phoneNumber')
+                && _isEmpty(phoneNumber)
+                && 'Please fill Phone Number'
+              }
+              loading={loading}
               required
               id="demo-helper-text-aligned"
               label="โทรศัพท์"
@@ -206,11 +264,16 @@ function CompanyProfile() {
               autoComplete="off"
               fullWidth
               error={
-                _includes(errorCheck, 'emailContact') && _isEmpty(companyName)
+                _includes(errorCheck, 'email') && _isEmpty(email)
               }
-              // loading
-              value={emailContact}
-              onChange={(e) => handleChangeText(e, setEmailContact)}
+              helperText={
+                _includes(errorCheck, 'email')
+                && _isEmpty(email)
+                && 'Please fill Contact'
+              }
+              loading={loading}
+              value={email}
+              onChange={(e) => handleChangeText(e, setEmail)}
             />
           </Box>
           <Box mt={3}>
@@ -224,6 +287,7 @@ function CompanyProfile() {
               state={travel}
               setState={setTravel}
               error={_includes(errorCheck, 'travel')}
+              loading={loading}
             />
           </Box>
           <Box mt={3}>
@@ -240,6 +304,7 @@ function CompanyProfile() {
             onClick={handleCheck}
             fullWidth
             variant="contained"
+            disabled={btLoading}
           >
             save
           </Button>

@@ -32,17 +32,22 @@ const useStyles = makeStyles({
 
 function UserProfile(props) {
   const {
-    name, imgProfile, imgCover, email,
+    name, imgProfile, setImgProfile, imgCover, setImgCover, email,
   } = props
   const classes = useStyles()
   return (
     <Box className={classes.container}>
       <Box className={classes.profileContainer}>
-        <CoverPhoto />
+        <CoverPhoto imgCover={imgCover} setImgCover={setImgCover} />
 
       </Box>
       <Box className={classes.profile}>
-        <AvatarPhoto variant="rounded" profile={name} setState={() => {}} />
+        <AvatarPhoto
+          variant="rounded"
+          firstName={name}
+          state={imgProfile}
+          setState={setImgProfile}
+        />
       </Box>
       <Box sx={{
         display: 'flex', flexDirection: 'column', mt: 5,
@@ -70,4 +75,6 @@ UserProfile.propTypes = {
   imgProfile: PropTypes.string.isRequired,
   imgCover: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
+  setImgCover: PropTypes.func.isRequired,
+  setImgProfile: PropTypes.func.isRequired,
 }
