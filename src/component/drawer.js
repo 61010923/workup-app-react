@@ -211,25 +211,43 @@ export default function DrawerTab() {
   } else {
     itemsList = itemsListCandidate
   }
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/getUserProfile`,
-          {
-            headers: {
-              authorization: userToken,
-            },
+  async function fetchData() {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/getUserProfile`,
+        {
+          headers: {
+            authorization: userToken,
           },
-        )
-        if (response.status === 200 || response.status === 201) {
-          setAllData(_get(response, 'data.data'))
-        }
-      } catch (error) {
-        console.log(error)
+        },
+      )
+      if (response.status === 200 || response.status === 201) {
+        setAllData(_get(response, 'data.data'))
       }
+    } catch (error) {
+      console.log(error)
     }
-    fetchData()
+  }
+  const getCompanyProfile = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/companyProfile/profile`, {
+        headers: {
+          authorization: userToken,
+        },
+      })
+      if (response.status === 200) {
+        setAllData(_get(response, 'data.data'))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    if (userType === 'company') {
+      getCompanyProfile()
+    } else if (userType === 'candidate') {
+      fetchData()
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userToken])
   return (
@@ -318,9 +336,8 @@ export default function DrawerTab() {
             </ListItemIcon>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography sx={{ fontWeight: 'bold' }}>
-                {allData.firstName}
-                {' '}
-                {allData.lastName}
+                {userType === 'company'
+                  ? allData?.companyName : `${`${allData?.firstName} ${allData.lastName}`}`}
               </Typography>
               <Button
                 onClick={() => handleClick(`/${userType}Personal`)}
