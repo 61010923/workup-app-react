@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 })
 
 function UserProfile(props) {
-  const { imgCover, setImgCover, actionType } = props
+  const { imgCover, setImgCover } = props
   const classes = useStyles()
   const imageUpload = useImageUpload()
   const [style, setStyle] = useState({ display: 'none' })
@@ -30,83 +30,62 @@ function UserProfile(props) {
     setImgCover(imgUpload)
   }
   return (
-    <>
-      { actionType === 'edit' && (
-      <Tooltip title="Change cover photo">
-        <Box
-          className={classes.Avatar}
-          onMouseEnter={(e) => {
-            setStyle({ display: 'block' })
-          }}
-          onMouseLeave={(e) => {
-            setStyle({ display: 'none' })
-          }}
-          sx={{
-            transition: 'opacity 0.5s',
-            cursor: 'pointer',
-            '&:hover': {
-              opacity: '0.7',
-            },
-          }}
-        >
-          <label htmlFor="icon-button-cover-photo">
-            <input
-              accept=".png, .jpg, .jpeg"
-              id="icon-button-cover-photo"
-              type="file"
-              style={{ display: 'none' }}
-              onChange={onChangePicture}
-            />
-            <Avatar
-              alt="Profile"
-              src={imgCover}
-              component="image"
-              sx={{
-                width: '100%',
-                minHeight: '15rem',
-                height: 'auto',
-                maxHeight: '400px',
-                cursor: 'pointer',
-                objectFit: 'contain',
-              }}
-              variant="rounded"
-            >
-              P
-            </Avatar>
-          </label>
-          <EditIcon
-            color="primary"
-            sx={{
-              ...style,
-              fontSize: 50,
-            }}
-            className={classes.iconButton}
-          />
-        </Box>
-      </Tooltip>
-      )}
-      { actionType === 'view' && (
+    <Tooltip title="Change cover photo">
       <Box
         className={classes.Avatar}
+        onMouseEnter={(e) => {
+          setStyle({ display: 'block' })
+        }}
+        onMouseLeave={(e) => {
+          setStyle({ display: 'none' })
+        }}
+        sx={{
+          transition: 'opacity 0.5s',
+          cursor: 'pointer',
+          '&:hover': {
+            opacity: '0.7',
+          },
+        }}
       >
-        <Avatar
-          alt="Profile"
-          src={imgCover}
-          component="image"
+
+        <label htmlFor="icon-button-cover-photo">
+          <input
+            accept=".png, .jpg, .jpeg"
+            id="icon-button-cover-photo"
+            type="file"
+            style={{ display: 'none' }}
+            onChange={onChangePicture}
+          />
+          <Avatar
+            alt="Profile"
+            src={imgCover}
+            component="image"
+            sx={{
+              width: '100%',
+              minHeight: '15rem',
+              height: 'auto',
+              maxHeight: '400px',
+              cursor: 'pointer',
+              objectFit: 'contain',
+
+            }}
+            variant="rounded"
+          >
+            P
+          </Avatar>
+
+        </label>
+        <EditIcon
+          color="primary"
           sx={{
-            width: '100%',
-            minHeight: '15rem',
-            height: 'auto',
-            maxHeight: '400px',
-            objectFit: 'contain',
+            ...style,
+            fontSize: 50,
           }}
-          variant="rounded"
-        >
-          P
-        </Avatar>
+          className={classes.iconButton}
+        />
       </Box>
-      )}
-    </>
+    </Tooltip>
+
   )
 }
 
@@ -115,9 +94,4 @@ export default UserProfile
 UserProfile.propTypes = {
   imgCover: PropTypes.string.isRequired,
   setImgCover: PropTypes.func.isRequired,
-  actionType: PropTypes.string,
-}
-
-UserProfile.defaultProps = {
-  actionType: 'view',
 }
