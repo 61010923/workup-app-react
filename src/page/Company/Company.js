@@ -1,10 +1,9 @@
 import React from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
-import ReactDOM from 'react-dom'
 import Typography from '@mui/material/Typography'
-import sony from '../image/sony.png'
-import CareerTitle from '../component/CareerTitle'
+import sony from '../../image/sony.png'
+import CareerTitle from '../../component/CareerTitle'
 
 const useStyles = makeStyles({
   container: {

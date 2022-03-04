@@ -14,7 +14,7 @@ function AuthRoute(props) {
   const {
     page: Component,
     loginRequired: isLoginRequired,
-    drawer,
+    drawer, footer,
   } = props
   const user = useSelector(userDetail)
   const snackbar = useSelector(showMessage)
@@ -42,7 +42,7 @@ function AuthRoute(props) {
             <DrawerTab />
             <Box mt={8.1} ml={9.3}>
               <Box padding="2rem" sx={{ backgroundColor: '#F5F5F5' }}>
-                <Paper sx={{ padding: '24px' }}>
+                <Paper sx={{ padding: '24px', marginBottom: footer && ('48px') }}>
                   <Component />
                 </Paper>
               </Box>
@@ -66,4 +66,5 @@ AuthRoute.propTypes = {
   page: PropTypes.elementType.isRequired,
   loginRequired: PropTypes.bool.isRequired,
   drawer: PropTypes.bool.isRequired,
+  footer: PropTypes.bool.isReuireed,
 }
