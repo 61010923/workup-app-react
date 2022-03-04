@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import {
-  Box,
+  Box, Button,
 } from '@mui/material'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
+import Skeleton from '@mui/material/Skeleton'
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
+import { useNavigate } from 'react-router-dom'
 import CoverPhoto from './CoverPhoto'
 import AvatarPhoto from './AvatarPhoto'
+import TypographyLoading from './Typography'
 
 const useStyles = makeStyles({
   container: {
@@ -23,8 +27,10 @@ const useStyles = makeStyles({
   },
   profile: {
     position: 'absolute',
-    top: '45%',
-    left: '5%',
+    top: '13.5rem',
+    left: '100px',
+    transform: 'translate(-50%, -50%)',
+
     zIndex: '10',
   },
 
@@ -33,40 +39,89 @@ const useStyles = makeStyles({
 function UserProfile(props) {
   const {
     name, imgProfile, setImgProfile, imgCover, setImgCover, email, haveEmail, actionType,
+    loading,
   } = props
+  // console.log(loading)
   const classes = useStyles()
+  const navigate = useNavigate()
   return (
     <Box className={classes.container}>
       <Box className={classes.profileContainer}>
-        <CoverPhoto imgCover={imgCover} setImgCover={setImgCover} actionType={actionType} />
-
-      </Box>
-      <Box className={classes.profile}>
-        <AvatarPhoto
-          variant="rounded"
-          firstName={name}
-          state={imgProfile}
-          setState={setImgProfile}
-          actionType={actionType}
-        />
-      </Box>
-      <Box sx={{
-        display: 'flex', flexDirection: 'column', mt: 5,
-      }}
-      >
-        <Typography variant="h5">
-          {name}
-        </Typography>
-        { haveEmail && (
-        <Typography variant="body2">
-
-          <span className={classes.email}>{email}</span>
-          &nbsp;- Company
-        </Typography>
-
+        {loading ? (
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={240}
+            sx={{
+              borderRadius: '8px',
+            }}
+          />
+        ) : (
+          <CoverPhoto
+            imgCover={imgCover}
+            setImgCover={setImgCover}
+            actionType={actionType}
+          />
         )}
       </Box>
-
+      <Box className={classes.profile}>
+        {loading ? (
+          <Skeleton
+            variant="rectangular"
+            width={128}
+            height={128}
+            sx={{
+              borderRadius: '8px',
+            }}
+          />
+        ) : (
+          <AvatarPhoto
+            variant="rounded"
+            firstName={name}
+            state={imgProfile}
+            setState={setImgProfile}
+            actionType={actionType}
+          />
+        )}
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          mt: 5,
+          maxWidth: '300px',
+        }}
+      >
+        <TypographyLoading
+          loading={loading}
+          heightSkeleton={20}
+          variant="h5"
+        >
+          {name}
+        </TypographyLoading>
+        {haveEmail && (
+          <TypographyLoading
+            loading={loading}
+            heightSkeleton={20}
+            variant="body2"
+          >
+            <span className={classes.email}>{email}</span>
+            &nbsp;- Company
+          </TypographyLoading>
+        )}
+        {actionType === 'edit' && (
+          <Button
+            onClick={() => navigate('/CompanyAccount')}
+            startIcon={<ManageAccountsOutlinedIcon />}
+            variant="outlined"
+            color="info"
+            size="small"
+            sx={{ borderRadius: '1rem', width: '80%', mt: 1 }}
+          >
+            Change password
+          </Button>
+        )}
+      </Box>
     </Box>
   )
 }
@@ -75,6 +130,7 @@ export default UserProfile
 
 UserProfile.propTypes = {
   name: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
   imgProfile: PropTypes.string.isRequired,
   imgCover: PropTypes.string.isRequired,
   haveEmail: PropTypes.bool,

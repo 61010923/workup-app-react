@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: '77vh',
+    minHeight: '76.5vh',
   },
 })
 
@@ -92,7 +92,8 @@ function AccountTab() {
         }}
       >
         <Typography
-          sx={{ fontWeight: 'bold', mb: 2 }}
+          variant="h6"
+          color="primary"
         >
           ACCOUNT
         </Typography>
@@ -119,9 +120,6 @@ function AccountTab() {
           type="password"
           value={newPassword}
           error={openError && !_every(validatePassword(newPassword), (item) => item === true)}
-          // helperText={
-          //         openError && _isEmpty(newPassword) && 'please fill password'
-          //       }
           onChange={(e) => handleChange(e, setNewPassword)}
           autoComplete="off"
           fullWidth

@@ -25,6 +25,7 @@ import InfoUser from './page/InfoUser'
 import UserPersonal from './page/UserPersonal'
 import UserAccount from './page/UserAccount'
 import UserTable from './page/UserTable'
+import CompanyTablePosition from './page/CompanyTablePosition'
 
 function App() {
   const dispatch = useDispatch()
@@ -61,11 +62,29 @@ function App() {
         path="/candidateAccount"
         element={<AuthRoute loginRequired drawer page={UserAccount} />}
       />
+
       <Route
         exact
         path="/candidateTable"
         element={<AuthRoute loginRequired drawer page={UserTable} />}
       />
+      <Route
+        exact
+        path="/companyAccount"
+        element={<AuthRoute loginRequired drawer page={UserAccount} />}
+      />
+      <Route
+        exact
+        path="/announcement"
+        element={<AuthRoute loginRequired drawer page={CompanyTablePosition} />}
+      />
+      <Route
+        exact
+        path="/managePosition"
+        element={<AuthRoute loginRequired drawer page={ManagePosition} />}
+
+      />
+      <Route exact path="/companyPersonal" element={<AuthRoute loginRequired drawer page={CompanyProfile} />} />
       <Route
         exact
         path="/company"

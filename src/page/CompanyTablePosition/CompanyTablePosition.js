@@ -9,7 +9,8 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import { Box, Button } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
-import ButtonActionManage from './ButtonActionManage'
+import ButtonActionManage from '../../component/ButtonActionManage'
+import ButtonAddPosition from '../../component/ButtonAddPosition'
 
 const columns = [
   { id: 'position', label: 'Position', minWidth: 120 },
@@ -62,7 +63,8 @@ export default function StickyHeadTable() {
   }
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+    <Box sx={{ width: '100%', overflow: 'hidden', minHeight: '76.5vh' }}>
+      <ButtonAddPosition />
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -98,7 +100,7 @@ export default function StickyHeadTable() {
                       ((row.status === 'ประกาศ' && 'green')
                       || (row.status === 'ไม่ประกาศ' && 'orange')
                       ),
-                      padding: '0.3rem',
+                      padding: '0.5rem',
                       borderRadius: '0.5rem',
                       display: 'inline-block',
                       color: '#fff',
@@ -126,6 +128,6 @@ export default function StickyHeadTable() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </Paper>
+    </Box>
   )
 }
