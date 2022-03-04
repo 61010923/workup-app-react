@@ -18,7 +18,7 @@ function ValidatePassword({ password }) {
   }
   return (
     <Box
-      sx={{ display: 'flex', flexWrap: 'wrap' }}
+      sx={{ display: 'grid', gridTemplateColumns: 'repeat( auto-fit, minmax(200px, 1fr) )' }}
     >
       {validatePassword(password).upper
         ? (

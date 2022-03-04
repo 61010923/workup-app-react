@@ -15,7 +15,10 @@ function ButtonAddPosition() {
       position: 'relative',
     }}
     >
-      <Typography variant="h6">
+      <Typography
+        variant="h6"
+        color="primary"
+      >
         จัดการตำแหน่งงาน
       </Typography>
       <Button onClick={() => { history('/managePosition') }} variant="contained" color="success" startIcon={<AddIcon sx={{ fontSize: 40 }} />}>
