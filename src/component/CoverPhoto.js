@@ -62,9 +62,9 @@ function UserProfile(props) {
             component="image"
             sx={{
               width: '100%',
-              minHeight: '15rem',
-              height: 'auto',
-              maxHeight: '400px',
+              height: '15rem',
+              // height: 'auto',
+              // maxHeight: '400px',
               cursor: 'pointer',
               objectFit: 'contain',
 

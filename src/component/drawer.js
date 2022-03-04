@@ -195,7 +195,7 @@ export default function DrawerTab() {
     {
       id: 3,
       menu: 'Annoucement',
-      link: '/management',
+      link: '/announcement',
       icon: <ManageAccountsIcon />,
       isLogin: !user.isLogin,
     },

@@ -123,7 +123,6 @@ function CompanyProfile() {
       setLoading(false)
     }
   }
-
   useEffect(() => {
     getAllData()
     setErrorCheck({})
@@ -139,6 +138,7 @@ function CompanyProfile() {
         }}
       >
         <Profile
+          loading={loading}
           name={companyName}
           imgProfile={imgProfile}
           setImgProfile={setImgProfile}
