@@ -32,13 +32,13 @@ const useStyles = makeStyles({
 
 function UserProfile(props) {
   const {
-    name, imgProfile, setImgProfile, imgCover, setImgCover, email,
+    name, imgProfile, setImgProfile, imgCover, setImgCover, email, haveEmail, actionType,
   } = props
   const classes = useStyles()
   return (
     <Box className={classes.container}>
       <Box className={classes.profileContainer}>
-        <CoverPhoto imgCover={imgCover} setImgCover={setImgCover} />
+        <CoverPhoto imgCover={imgCover} setImgCover={setImgCover} actionType={actionType} />
 
       </Box>
       <Box className={classes.profile}>
@@ -47,6 +47,7 @@ function UserProfile(props) {
           firstName={name}
           state={imgProfile}
           setState={setImgProfile}
+          actionType={actionType}
         />
       </Box>
       <Box sx={{
@@ -56,12 +57,14 @@ function UserProfile(props) {
         <Typography variant="h5">
           {name}
         </Typography>
+        { haveEmail && (
         <Typography variant="body2">
 
           <span className={classes.email}>{email}</span>
           &nbsp;- Company
         </Typography>
 
+        )}
       </Box>
 
     </Box>
@@ -74,7 +77,14 @@ UserProfile.propTypes = {
   name: PropTypes.string.isRequired,
   imgProfile: PropTypes.string.isRequired,
   imgCover: PropTypes.string.isRequired,
+  haveEmail: PropTypes.bool,
   email: PropTypes.string.isRequired,
   setImgCover: PropTypes.func.isRequired,
   setImgProfile: PropTypes.func.isRequired,
+  actionType: PropTypes.string,
+}
+
+UserProfile.defaultProps = {
+  haveEmail: false,
+  actionType: 'view',
 }

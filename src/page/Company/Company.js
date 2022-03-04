@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import sony from '../../image/sony.png'
 import CareerTitle from '../../component/CareerTitle'
+import Profile from '../../component/CompanyProfile'
 
 const useStyles = makeStyles({
   container: {
@@ -26,7 +27,7 @@ const useStyles = makeStyles({
     position: 'absolute',
 
     top: '270px',
-    left: '160px',
+    left: '10%',
     width: '180px',
     boxShadow: '0 0 3px 2px white',
     borderRadius: '20px',
@@ -51,6 +52,9 @@ const useStyles = makeStyles({
 })
 function Company() {
   const classes = useStyles()
+  const [companyName, setCompanyName] = useState('Kasuya Company')
+  const [imgProfile, setImgProfile] = useState('')
+  const [imgCover, setImgCover] = useState('')
   const itemsList = [
     {
       id: 1,
@@ -97,22 +101,26 @@ function Company() {
   ]
   return (
     <Box className={classes.container}>
-      <Box className={classes.CoverImage}>
-        <img
-          className={classes.imageSize}
-          src="https://i3.wp.com/knowsara.com/wp-content/uploads/2020/02/%E0%B9%82%E0%B8%8B%E0%B8%99%E0%B8%B5%E0%B9%88-735x400-1.jpg"
-          alt="sony"
-        />
-        <img
-          className={classes.imageLogo}
-          src={sony}
-          alt="sony"
-        />
-        <Typography variant="h5" className={classes.CompanyName}>Sony technology</Typography>
-      </Box>
+      <Profile
+        name={companyName}
+        imgProfile={sony}
+        setImgProfile={setImgProfile}
+        imgCover="https://res.cloudinary.com/myprojectbyatipat/image/upload/v1646287734/workup-upload/tmp-2-1646287734442_nrpbk3.jpg"
+        setImgCover={setImgCover}
+        email=""
+      />
       <Typography variant="body2" mt={8} mx={2}>
-        Sony Technology (Thailand) Co., Ltd is the manufacturing base located in Amata City Chonburi, Chonburi province producing world-leading products such as Digital Camera, Car Audio, and other key parts under the renowned “Sony” brand. Our brands vision is to use our unlimited passion for technology, content and services to deliver ground breaking new excitement and entertainment as only Sony can.
-        To enhance future growth by introducing XperiaTM mobile phone production in Thailand, we are strengthening our workforce at our factory located in Bangkadi Industrial Park and we welcome people with professionalism, initiative and curiosity, and who are driven to take on new challenges to join our team for the following positions:
+        Sony Technology (Thailand) Co., Ltd is the manufacturing base located in
+        Amata City Chonburi, Chonburi province producing world-leading products
+        such as Digital Camera, Car Audio, and other key parts under the
+        renowned “Sony” brand. Our brands vision is to use our unlimited passion
+        for technology, content and services to deliver ground breaking new
+        excitement and entertainment as only Sony can. To enhance future growth
+        by introducing XperiaTM mobile phone production in Thailand, we are
+        strengthening our workforce at our factory located in Bangkadi
+        Industrial Park and we welcome people with professionalism, initiative
+        and curiosity, and who are driven to take on new challenges to join our
+        team for the following positions:
       </Typography>
       <Box className={classes.barPositions}>
         <Typography variant="body2" mr={2}>
@@ -120,25 +128,19 @@ function Company() {
         </Typography>
       </Box>
       <Box className={classes.positionWrapper}>
-
         <CareerTitle />
         <CareerTitle />
         <CareerTitle />
         <CareerTitle />
-
       </Box>
       <Box mt={2} mx={2}>
-        <Typography variant="h6">
-          Contact
-        </Typography>
+        <Typography variant="h6">Contact</Typography>
         <Typography variant="body2">
-          ฝ่ายบริหารทรัพยากรมนุษย์
-          Sony Technology (Thailand) Co., Ltd.
-          700 / 402 หมู่ 7 อมตะซิตี้ ชลบุรี เฟส 4
+          ฝ่ายบริหารทรัพยากรมนุษย์ Sony Technology (Thailand) Co., Ltd. 700 /
+          402 หมู่ 7 อมตะซิตี้ ชลบุรี เฟส 4
         </Typography>
       </Box>
     </Box>
-
   )
 }
 // const rootElement = document.getElementById('root')

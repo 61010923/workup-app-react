@@ -146,6 +146,8 @@ function CompanyProfile() {
           imgCover={imgCover}
           setImgCover={setImgCover}
           email={email}
+          haveEmail
+          actionType="edit"
         />
       </Box>
       <Box>
