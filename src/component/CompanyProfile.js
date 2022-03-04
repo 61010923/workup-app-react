@@ -38,7 +38,8 @@ const useStyles = makeStyles({
 
 function UserProfile(props) {
   const {
-    name, imgProfile, setImgProfile, imgCover, setImgCover, email, loading,
+    name, imgProfile, setImgProfile, imgCover, setImgCover, email, haveEmail, actionType,
+    loading,
   } = props
   // console.log(loading)
   const classes = useStyles()
@@ -53,11 +54,14 @@ function UserProfile(props) {
             height={240}
             sx={{
               borderRadius: '8px',
-
             }}
           />
         ) : (
-          <CoverPhoto imgCover={imgCover} setImgCover={setImgCover} />
+          <CoverPhoto
+            imgCover={imgCover}
+            setImgCover={setImgCover}
+            actionType={actionType}
+          />
         )}
       </Box>
       <Box className={classes.profile}>
@@ -68,7 +72,6 @@ function UserProfile(props) {
             height={128}
             sx={{
               borderRadius: '8px',
-
             }}
           />
         ) : (
@@ -77,33 +80,48 @@ function UserProfile(props) {
             firstName={name}
             state={imgProfile}
             setState={setImgProfile}
+            actionType={actionType}
           />
         )}
       </Box>
-      <Box sx={{
-        display: 'flex', flexDirection: 'column', mt: 5, maxWidth: '300px',
-      }}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          mt: 5,
+          maxWidth: '300px',
+        }}
       >
-        <TypographyLoading loading={loading} heightSkeleton={20} variant="h5">
+        <TypographyLoading
+          loading={loading}
+          heightSkeleton={20}
+          variant="h5"
+        >
           {name}
         </TypographyLoading>
-        <TypographyLoading loading={loading} heightSkeleton={20} variant="body2">
-
-          <span className={classes.email}>{email}</span>
-          &nbsp;- Company
-        </TypographyLoading>
-        <Button
-          onClick={() => navigate('/CompanyAccount')}
-          startIcon={<ManageAccountsOutlinedIcon />}
-          variant="outlined"
-          color="info"
-          size="small"
-          sx={{ borderRadius: '1rem', width: '80%', mt: 1 }}
-        >
-          Change password
-        </Button>
+        {haveEmail && (
+          <TypographyLoading
+            loading={loading}
+            heightSkeleton={20}
+            variant="body2"
+          >
+            <span className={classes.email}>{email}</span>
+            &nbsp;- Company
+          </TypographyLoading>
+        )}
+        {actionType === 'edit' && (
+          <Button
+            onClick={() => navigate('/CompanyAccount')}
+            startIcon={<ManageAccountsOutlinedIcon />}
+            variant="outlined"
+            color="info"
+            size="small"
+            sx={{ borderRadius: '1rem', width: '80%', mt: 1 }}
+          >
+            Change password
+          </Button>
+        )}
       </Box>
-
     </Box>
   )
 }
@@ -115,7 +133,14 @@ UserProfile.propTypes = {
   loading: PropTypes.bool.isRequired,
   imgProfile: PropTypes.string.isRequired,
   imgCover: PropTypes.string.isRequired,
+  haveEmail: PropTypes.bool,
   email: PropTypes.string.isRequired,
   setImgCover: PropTypes.func.isRequired,
   setImgProfile: PropTypes.func.isRequired,
+  actionType: PropTypes.string,
+}
+
+UserProfile.defaultProps = {
+  haveEmail: false,
+  actionType: 'view',
 }

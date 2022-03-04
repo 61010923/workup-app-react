@@ -33,7 +33,7 @@ const useStyles = makeStyles({
 })
 
 function AvatarPhoto({
-  variant, firstName, state, setState,
+  variant, firstName, state, setState, actionType,
 }) {
   const classes = useStyles()
   const uploadImage = useImageUpload()
@@ -44,57 +44,84 @@ function AvatarPhoto({
   }
   return (
     <Box>
-      <Tooltip title="Change Profile">
+      {actionType === 'edit' && (
+      <>
+        <Tooltip title="Change Profile">
+          <Box
+            className={classes.Avatar}
+            onMouseEnter={(e) => {
+              setStyle({ display: 'block' })
+            }}
+            onMouseLeave={(e) => {
+              setStyle({ display: 'none' })
+            }}
+            sx={{
+              transition: 'opacity 0.5s',
+              '&:hover': {
+                opacity: '0.7',
+              },
+            }}
+          >
+            <label htmlFor="icon-button-profile">
+              <input
+                accept=".png, .jpg, .jpeg, .gif"
+                id="icon-button-profile"
+                type="file"
+                style={{ display: 'none' }}
+                onChange={onChangePicture}
+              />
+              <Avatar
+                alt="Profile"
+                src={state}
+                sx={{
+                  width: '8rem',
+                  height: '8rem',
+                  bgcolor: 'primary.main',
+                  cursor: 'pointer',
+                }}
+                variant={variant}
+              >
+                {firstName.charAt(0).toUpperCase()}
+              </Avatar>
+              <EditIcon
+                sx={{
+                  ...style,
+                  fontSize: 50,
+                  cursor: 'pointer',
+                  color: '#fff',
+                }}
+                className={classes.iconButton}
+              />
+            </label>
+          </Box>
+        </Tooltip>
+        <Box className={classes.avatarBgc} />
+      </>
+      )}
+
+      { actionType === 'view' && (
+      <>
         <Box
           className={classes.Avatar}
-          onMouseEnter={(e) => {
-            setStyle({ display: 'block' })
-          }}
-          onMouseLeave={(e) => {
-            setStyle({ display: 'none' })
-          }}
-          sx={{
-            transition: 'opacity 0.5s',
-            '&:hover': {
-              opacity: '0.7',
-            },
-          }}
         >
-          <label htmlFor="icon-button-profile">
-            <input
-              accept=".png, .jpg, .jpeg, .gif"
-              id="icon-button-profile"
-              type="file"
-              style={{ display: 'none' }}
-              onChange={onChangePicture}
-            />
-            <Avatar
-              alt="Profile"
-              src={state}
-              sx={{
-                width: '8rem',
-                height: '8rem',
-                bgcolor: 'primary.main',
-                cursor: 'pointer',
-              }}
-              variant={variant}
-            >
-              {firstName.charAt(0).toUpperCase()}
-            </Avatar>
-            <EditIcon
-              sx={{
-                ...style,
-                fontSize: 50,
-                cursor: 'pointer',
-                color: '#fff',
-              }}
-              className={classes.iconButton}
-            />
-          </label>
+
+          <Avatar
+            alt="Profile"
+            src={state}
+            sx={{
+              width: '8rem',
+              height: '8rem',
+              bgcolor: 'primary.main',
+              cursor: 'default',
+            }}
+            variant={variant}
+          >
+            {firstName.charAt(0).toUpperCase()}
+          </Avatar>
+
         </Box>
-      </Tooltip>
-      {variant !== '' && (
-      <Box className={classes.avatarBgc} />
+        <Box className={classes.avatarBgc} />
+      </>
       )}
     </Box>
   )
@@ -102,13 +129,13 @@ function AvatarPhoto({
 
 export default AvatarPhoto
 AvatarPhoto.propTypes = {
-  variant: PropTypes.string,
+  variant: PropTypes.string.isRequired,
   firstName: PropTypes.string,
   state: PropTypes.string.isRequired,
   setState: PropTypes.func.isRequired,
-
+  actionType: PropTypes.string,
 }
 AvatarPhoto.defaultProps = {
-  variant: '',
   firstName: 'P',
+  actionType: 'view',
 }
