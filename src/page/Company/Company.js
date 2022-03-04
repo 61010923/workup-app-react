@@ -108,6 +108,7 @@ function Company() {
         imgCover="https://res.cloudinary.com/myprojectbyatipat/image/upload/v1646287734/workup-upload/tmp-2-1646287734442_nrpbk3.jpg"
         setImgCover={setImgCover}
         email=""
+        loading={false}
       />
       <Typography variant="body2" mt={8} mx={2}>
         Sony Technology (Thailand) Co., Ltd is the manufacturing base located in
