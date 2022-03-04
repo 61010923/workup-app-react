@@ -5,7 +5,7 @@ import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import _get from 'lodash/get'
 import { makeStyles } from '@mui/styles'
-import { Typography } from '@mui/material'
+import { AppBar, Typography } from '@mui/material'
 import _isEmpty from 'lodash/isEmpty'
 import _isArray from 'lodash/isArray'
 import _forIn from 'lodash/forIn'
@@ -16,6 +16,7 @@ import AddOrRemoveInput from '../../component/AddOrRemoveInput'
 import Profile from '../../component/CompanyProfile'
 import ImageUploader from '../../component/ImageUploader'
 import { alertBar } from '../../redux/action/alert.action'
+import Footer from '../../component/Footer'
 
 const useStyles = makeStyles({
   container: {
@@ -298,7 +299,7 @@ function CompanyProfile() {
           <Box mt={3}>
             <ImageUploader state={imgAbout} setState={setImgAbout} />
           </Box>
-
+          {/*
           <Button
             sx={{ mt: 2 }}
             onClick={handleCheck}
@@ -307,9 +308,13 @@ function CompanyProfile() {
             disabled={btLoading}
           >
             save
-          </Button>
+          </Button> */}
         </Box>
       </Box>
+      <Footer
+        submitFunc={handleCheck}
+        loading={btLoading}
+      />
     </>
   )
 }

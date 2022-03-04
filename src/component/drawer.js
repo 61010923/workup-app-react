@@ -144,6 +144,7 @@ export default function DrawerTab() {
     } else {
       navigate(path)
     }
+    setOpen(false)
   }
   const handleDrawerClose = () => {
     setOpen(false)

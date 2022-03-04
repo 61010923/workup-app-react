@@ -47,12 +47,9 @@ function App() {
       <Route exact path="/login/verify-account" element={<VerifyAccount />} />
       <Route
         exact
-        path="/company"
+        path="/company/:id"
         element={(
-          <Box mt={8.1} ml={9.3}>
-            <DrawerTab />
-            <Company />
-          </Box>
+          <AuthRoute loginRequired page={Company} drawer />
         )}
       />
       <Route
@@ -99,6 +96,13 @@ function App() {
           </Box>
         )}
       />
+      <Route
+        exact
+        path="/managePosition"
+        element={<AuthRoute loginRequired drawer page={ManagePosition} />}
+
+      />
+      <Route exact path="/companyPersonal" element={<AuthRoute loginRequired drawer page={CompanyProfile} footer />} />
 
       <Route
         exact
