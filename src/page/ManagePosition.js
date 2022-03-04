@@ -17,6 +17,8 @@ import _every from 'lodash/every'
 import PropTypes from 'prop-types'
 import AddOrRemoveInput from '../component/AddOrRemoveInput'
 import TextField from '../component/Textfield'
+import userDetail from '../redux/selector/user.selector'
+import { alertBar } from '../redux/action/alert.action'
 
 const useStyles = makeStyles({
 
@@ -208,13 +210,70 @@ function AddPosition({ id }) {
   const [property, setProperty] = useState([''])
   const [interview, setInterview] = useState('')
 
+  const [loading, setLoading] = useState(false)
   const [openError, setOpenError] = useState(false)
   const [openSkeleton, setOpenSkeleton] = useState(true)
 
+  const dispatch = useDispatch()
+  const user = useSelector(userDetail)
+  const userToken = _get(user, 'userDetail.userToken')
   const handleChange = (e, setValue) => {
     const { value } = e.target
     setValue(value)
   }
+  const checkId = () => {
+    if (_isEmpty(id)) {
+      setOpenSkeleton(false)
+    }
+  }
+  const handleSubmit = async () => {
+    setLoading(true)
+    setOpenError(true)
+    if (!_isEmpty(jobType)
+      && !_isEmpty(position)
+      && !_isEmpty(positionTotal)
+      && !_isEmpty(salary)
+      && _every(role, (item) => item.length > 0)
+      && !_isEmpty(location)
+      && _every(property, (item) => item.length > 0)
+      && !_isEmpty(interview)
+
+    ) {
+      const body = {
+        jobType,
+        position,
+        positionTotal,
+        salary,
+        role,
+        location,
+        property,
+        interview,
+      }
+      try {
+        const response = await axios.patch(`${process.env.REACT_APP_BASE_URL}/api/v1/....`, body, {
+          headers: {
+            authorization: userToken,
+            'Content-type': 'application/json',
+          },
+        })
+        if (response.status === 201 || response.status === 200) {
+          dispatch(alertBar(true, 'success', 3000, 'Update Complete'))
+          setLoading(false)
+        }
+      } catch (error) {
+        dispatch(alertBar(true, 'warning', 3000, 'Something went wrong'))
+        setLoading(false)
+        console.log(error)
+      }
+    } else {
+      dispatch(alertBar(true, 'warning', 3000, 'Please fill all the fields'))
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    checkId()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
     <Box sx={{
       margin: ' 2rem 5rem',
@@ -355,19 +414,40 @@ function AddPosition({ id }) {
             state={property}
             setState={setProperty}
           />
+          <Typography
+            variant="h6"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
+            สัมภาษณ์งาน
+          </Typography>
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               defaultValue="female"
               name="radio-buttons-group"
-              value="Online Interview"
+              value={interview}
+              error={openError && _isEmpty(interview)}
+              helperText={
+                    openError && _isEmpty(interview) && 'please select interview'
+                  }
+              onChange={(e) => {
+                handleChange(e, setInterview)
+              }}
             >
               <FormControlLabel value="Online Interview" control={<Radio />} label="Online Interview" />
               <FormControlLabel value="On-site interview" control={<Radio />} label="On-site interview" />
             </RadioGroup>
           </FormControl>
-          <Button variant="contained" fullWidth color="success">
+          <Button
+            sx={{ mt: 2 }}
+            onClick={(e) => handleSubmit()}
+            disabled={loading}
+            fullWidth
+            variant="contained"
+          >
             เพิ่มตำแหน่งงาน
+
           </Button>
         </Box>
       </Box>

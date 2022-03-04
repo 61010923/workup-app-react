@@ -85,17 +85,7 @@ function App() {
 
       />
       <Route exact path="/companyPersonal" element={<AuthRoute loginRequired drawer page={CompanyProfile} />} />
-      <Route
-        exact
-        path="/company"
-        element={(
-          <Box mt={8.1} ml={9.3}>
-            <DrawerTab />
-
-            <Company />
-          </Box>
-        )}
-      />
+      <Route exact path="/company" element={<AuthRoute loginRequired drawer page={Company} />} />
       <Route
         exact
         path="/managePosition"
@@ -111,17 +101,7 @@ function App() {
           <InfoUser />
 )}
       />
-      <Route
-        exact
-        path="/career"
-        element={(
-          <Box mt={8.1} ml={9.3}>
-            <DrawerTab />
-
-            <Career />
-          </Box>
-        )}
-      />
+      <Route exact path="/companyCareer" element={<AuthRoute loginRequired drawer page={Career} footer />} />
       <Route
         exact
         path="/CompanyManagement"
