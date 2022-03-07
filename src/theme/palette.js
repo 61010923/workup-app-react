@@ -4,7 +4,7 @@ const palette = {
     contrastText: '#FFF',
   },
   secondary: {
-    main: '#F05454',
+    main: '#F5F5F5',
     contrastText: '#FFF',
   },
   common: {
