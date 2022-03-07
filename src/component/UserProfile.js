@@ -33,7 +33,13 @@ function UserProfile({
           loading ? (
             <Skeleton animation="wave" variant="circular" width={128} height={128} />
           ) : (
-            <AvatarPhoto profile={data.imgProfile} firstName={data.firstName} state={state} setState={setState} />
+            <AvatarPhoto
+              profile={data.imgProfile}
+              firstName={data.firstName}
+              state={state}
+              setState={setState}
+              actionType="edit"
+            />
           )
 }
       <Box sx={{

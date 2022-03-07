@@ -30,15 +30,15 @@ const useStyles = makeStyles({
       transition: 'transform 0.5s',
 
     },
-    '&:hover::before': {
-      transform: 'scaleX(1)',
-      transformOrigin: 'left',
-      transition: 'transform 0.5s',
-    },
     '&:hover': {
       color: '#fff',
       '& $changeColor': {
         color: '#fff',
+      },
+      '&::before': {
+        transform: 'scaleX(1)',
+        transformOrigin: 'left',
+        transition: 'transform 0.5s',
       },
     },
     '& $changeColor': {

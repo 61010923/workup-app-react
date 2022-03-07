@@ -7,11 +7,16 @@ import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOut
 import _map from 'lodash/map'
 import PropTypes, { any } from 'prop-types'
 import _isEmpty from 'lodash/isEmpty'
+import { makeStyles } from '@mui/styles'
 import TextField from './Textfield'
 
+const useStyles = makeStyles((theme) => ({
+
+}))
 function App({
   loading, label, keyText, state, setState, error,
 }) {
+  const classes = useStyles()
   // handle input change
   const handleInputChange = (e, index) => {
     const { name, value } = e.target
@@ -51,43 +56,55 @@ function App({
   return (
     <>
       {_map(state, (value, i) => (
-        <Box
-          key={keyText + i}
-          sx={{
-            display: 'flex',
-            mt: 2,
-          }}
-        >
-          {state.length - 1 === i
-           && (
-             <IconButton aria-label="add" onClick={handleAddClick} color="success">
-               <AddCircleOutlineOutlinedIcon />
-             </IconButton>
-           )}
-          {state.length !== i + 1 && (
-            <IconButton aria-label="delete" onClick={() => handleRemoveClick(i)} color="error">
-              <RemoveCircleOutlineOutlinedIcon />
+        <>
+          <Box
+            key={keyText + i}
+            sx={{
+              display: 'flex',
+              mt: 2,
+            }}
+          >
+
+            {/* {state.length !== i + 1 && ( */}
+            {state.length !== 1 && (
+            <IconButton aria-label="delete" size="small" onClick={() => handleRemoveClick(i)} color="error">
+              <RemoveCircleOutlineOutlinedIcon sx={{ fontSize: '20px' }} />
             </IconButton>
-          )}
-          <TextField
-            loading={loading}
-            sx={{ ml: 0.2 }}
-            required
-            label={label}
-            autoComplete="off"
-            value={value}
-            error={error && _isEmpty(value[i])}
-            helperText={
+            )}
+            <TextField
+              loading={loading}
+              sx={{ ml: 0.2 }}
+              required
+              label={label}
+              autoComplete="off"
+              value={value}
+              error={error && _isEmpty(value[i])}
+              helperText={
               error && _isEmpty(value[i]) && `please fill ${label}`
                   }
-            onChange={(e) => {
-              handleInputChange(e, i)
-              // handleChangeError(i)
-            }}
-            fullWidth
-          />
+              onChange={(e) => {
+                handleInputChange(e, i)
+                // handleChangeError(i)
+              }}
+              fullWidth
+            />
 
-        </Box>
+          </Box>
+          {state.length - 1 === i
+            && (
+              <Button
+                sx={{ mt: 1, ml: '1px', textTransform: 'none' }}
+                startIcon={<AddCircleOutlineOutlinedIcon />}
+                onClick={handleAddClick}
+                variant="text"
+                color="success"
+              >
+                เพิ่ม
+                {' '}
+                {label}
+              </Button>
+            )}
+        </>
       ))}
     </>
   )

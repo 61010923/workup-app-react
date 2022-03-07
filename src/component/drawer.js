@@ -29,6 +29,7 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import axios from 'axios'
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { makeStyles } from '@mui/styles'
+import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined'
 import { logout } from '../redux/action/user.action'
 import userDetail from '../redux/selector/user.selector'
 import TypographyLoading from './Typography'
@@ -202,6 +203,13 @@ export default function DrawerTab() {
     },
     {
       id: 4,
+      menu: 'Job Application',
+      link: '/JobApplication',
+      icon: <CampaignOutlinedIcon />,
+      isLogin: !user.isLogin,
+    },
+    {
+      id: 5,
       menu: 'logout',
       link: '/logout',
       icon: <LogoutIcon />,

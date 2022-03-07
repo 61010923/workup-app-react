@@ -1,16 +1,11 @@
-import * as React from 'react'
-import Paper from '@mui/material/Paper'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TablePagination from '@mui/material/TablePagination'
-import TableRow from '@mui/material/TableRow'
-import { Box, Button } from '@mui/material'
-import EditIcon from '@mui/icons-material/Edit'
-import ButtonActionManage from '../../component/ButtonActionManage'
-import ButtonAddPosition from '../../component/ButtonAddPosition'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { Box } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import _get from 'lodash/get'
+import _isEmpty from 'lodash/isEmpty'
+import CompanyTablePosition from '../../component/CompanyTablePosition'
+import userDetail from '../../redux/selector/user.selector'
 
 const columns = [
   { id: 'position', label: 'Position', minWidth: 120 },
@@ -21,113 +16,57 @@ const columns = [
     minWidth: 70,
   },
   { id: 'created', label: 'Created', minWidth: 80 },
-  { id: 'status', label: 'Status', minWidth: 80 },
+  {
+    id: 'salary', label: 'Salary', align: 'right', minWidth: 80,
+  },
+  { id: 'status', label: 'Status', minWidth: 90 },
   { id: 'action', label: 'Action' },
 ]
 
-function createData(position, positionNumber, created, status) {
-  return {
-    position, positionNumber, created, status,
-  }
-}
-
-const rows = [
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ไม่ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ไม่ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ไม่ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ไม่ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-  createData('Software Engineer', 2, '16-02-2021', 'ประกาศ'),
-]
-
 export default function StickyHeadTable() {
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
+  const [body, setBody] = useState([])
+  const [loading, setLoading] = useState(true)
+  const user = useSelector(userDetail)
+  const userToken = _get(user, 'userDetail.userToken')
+  const checkData = () => {
+    if (_isEmpty(body)) {
+      setLoading(false)
+    }
+  }
+  async function fetchData() {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/api/v1/announcement/companyAnnounce`,
+        {
+          headers: {
+            authorization: userToken,
+          },
+        },
+      )
+      if (response.status === 200 || response.status === 201) {
+        setBody(_get(response, 'data.data'))
+        setLoading(false)
+      }
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
+    }
+    checkData()
   }
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value)
-    setPage(0)
-  }
+  useEffect(() => {
+    fetchData()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
-    <Box sx={{ width: '100%', overflow: 'hidden', minHeight: '76.5vh' }}>
-      <ButtonAddPosition />
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth, fontWeight: 600 }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.position}>
-                  <TableCell align="">
-                    {row.position}
-                  </TableCell>
-                  <TableCell align="right">
-                    {row.positionNumber}
-                  </TableCell>
-                  <TableCell align="">
-                    {row.created}
-                  </TableCell>
-                  <TableCell align="">
-                    <Box sx={{
-                      backgroundColor:
-                      ((row.status === 'ประกาศ' && 'green')
-                      || (row.status === 'ไม่ประกาศ' && 'orange')
-                      ),
-                      padding: '0.5rem',
-                      borderRadius: '0.5rem',
-                      display: 'inline-block',
-                      color: '#fff',
-                      fontWeight: 'bold',
-                      boxShadow: '0 0 5px 2px #c8c7c6',
-                    }}
-                    >
-                      {row.status}
-                    </Box>
-                  </TableCell>
-                  <TableCell align="">
-                    <ButtonActionManage buttonText="Edit" icon={<EditIcon />} path="/ManagePosition" />
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+    <Box sx={{
+      minHeight: '76.5vh',
+      display: 'flex',
+      alignItems: 'center',
+    }}
+    >
+      <CompanyTablePosition columns={columns} body={body} loading={loading} />
     </Box>
   )
 }

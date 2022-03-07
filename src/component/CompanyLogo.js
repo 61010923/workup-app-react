@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import { Link } from '@mui/material'
-import sony from '../image/sony.png'
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles({
   container: {
@@ -20,18 +20,18 @@ const useStyles = makeStyles({
 
   },
 })
-function CompanyLogo() {
+function CompanyLogo({ data }) {
   const classes = useStyles()
 
   return (
     <Box className={classes.container}>
-      <img src={sony} alt="logo" className={classes.logo} />
+      <img src={data.imgProfile} alt="logo" className={classes.logo} />
       <Box sx={{
         display: 'flex', flexDirection: 'column', ml: 2,
       }}
       >
         <Typography variant="h6">
-          Sony Technology (Thailand) Co., Ltd.
+          {data.companyName}
         </Typography>
         <Link
           href="/#"
@@ -47,3 +47,9 @@ function CompanyLogo() {
 }
 
 export default CompanyLogo
+CompanyLogo.propTypes = {
+  data: PropTypes.objectOf(PropTypes.any),
+}
+CompanyLogo.defaultProps = {
+  data: [],
+}

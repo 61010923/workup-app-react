@@ -41,7 +41,6 @@ function UserProfile(props) {
     name, imgProfile, setImgProfile, imgCover, setImgCover, email, haveEmail, actionType,
     loading,
   } = props
-  // console.log(loading)
   const classes = useStyles()
   const navigate = useNavigate()
   return (
