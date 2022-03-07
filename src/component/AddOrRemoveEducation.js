@@ -70,77 +70,86 @@ function App({
   return (
     <>
       {_map(state, (object, i) => (
-        <Box
-          key={`state${i}`}
-          sx={{ display: 'flex', mt: 2 }}
-        >
-          {state.length - 1 === i
-           && (
-           <IconButton aria-label="add" onClick={handleAddClick} color="success">
-             <AddCircleOutlineOutlinedIcon />
-           </IconButton>
-           )}
-          {state.length !== i + 1 && (
-          <IconButton aria-label="delete" onClick={() => handleRemoveClick(i)} color="error">
-            <RemoveCircleOutlineOutlinedIcon />
-          </IconButton>
-          )}
-          <TextField
-            loading={loading}
-            sx={{ ml: 0.2 }}
-            name="education"
-            id="outlined-select-currency"
-            select
-            label="Education"
-            value={object.education}
-            error={error && _isEmpty(object.education)}
-            helperText={
+        <>
+          <Box
+            key={`state${i}`}
+            sx={{ display: 'flex', mt: 2 }}
+          >
+            {state.length !== i && (
+            <IconButton aria-label="delete" onClick={() => handleRemoveClick(i)} color="error">
+              <RemoveCircleOutlineOutlinedIcon sx={{ fontSize: '20px' }} />
+            </IconButton>
+            )}
+            <TextField
+              loading={loading}
+              sx={{ ml: 0.2 }}
+              name="education"
+              id="outlined-select-currency"
+              select
+              label="Education"
+              value={object.education}
+              error={error && _isEmpty(object.education)}
+              helperText={
                     error && _isEmpty(object.education) && 'please select education'
                   }
-            onChange={(e) => handleInputChange(e, i)}
-            fullWidth
-          >
-            {_map(educationSelect, (option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Box sx={{ ml: 2, width: '100%' }}>
-            <TextField
-              loading={loading}
-              name="major"
-              required
-              id="demo-helper-text-aligned"
-              label="Major/Program"
-              autoComplete="off"
-              value={object.major}
-              error={error && _isEmpty(object.major)}
-              helperText={
+              onChange={(e) => handleInputChange(e, i)}
+              fullWidth
+            >
+              {_map(educationSelect, (option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+            <Box sx={{ ml: 2, width: '100%' }}>
+              <TextField
+                loading={loading}
+                name="major"
+                required
+                id="demo-helper-text-aligned"
+                label="Major/Program"
+                autoComplete="off"
+                value={object.major}
+                error={error && _isEmpty(object.major)}
+                helperText={
                     error && _isEmpty(object.major) && 'please fill major/program'
                   }
-              onChange={(e) => handleInputChange(e, i)}
-              fullWidth
-            />
-          </Box>
-          <Box sx={{ ml: 2, width: '100%' }}>
-            <TextField
-              loading={loading}
-              name="university"
-              required
-              id="demo-helper-text-aligned"
-              label="University/School"
-              autoComplete="off"
-              value={object.university}
-              error={error && _isEmpty(object.university)}
-              helperText={
-                    error && _isEmpty(object.university) && 'please fill university/school'
+                onChange={(e) => handleInputChange(e, i)}
+                fullWidth
+              />
+            </Box>
+            <Box sx={{ ml: 2, width: '100%' }}>
+              <TextField
+                loading={loading}
+                name="university"
+                required
+                id="demo-helper-text-aligned"
+                label="University/School"
+                autoComplete="off"
+                value={object.university}
+                error={error && _isEmpty(object.university)}
+                helperText={
+                    error && _isEmpty(object.university) && 'please fill University/School'
                   }
-              onChange={(e) => handleInputChange(e, i)}
-              fullWidth
-            />
+                onChange={(e) => handleInputChange(e, i)}
+                fullWidth
+              />
+            </Box>
           </Box>
-        </Box>
+          {state.length - 1 === i
+          && (
+            <Button
+              sx={{ mt: 1, ml: '3px', textTransform: 'none' }}
+              startIcon={<AddCircleOutlineOutlinedIcon />}
+              onClick={handleAddClick}
+              variant="text"
+              color="success"
+            >
+              เพิ่ม University/School
+            </Button>
+          )}
+
+        </>
       ))}
 
     </>

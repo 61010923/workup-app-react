@@ -7,6 +7,7 @@ const theme = createMuiTheme({
   shape: {
     borderRadius: 8,
   },
+
   palette,
   typography,
   shadows,

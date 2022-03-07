@@ -43,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
       '& $changeColor': {
         color: '#fff',
       },
+      '&::before': {
+        transform: 'scaleX(1)',
+        transformOrigin: 'left',
+        transition: 'transform 0.5s',
+      },
     },
     '& $changeColor': {
       color: theme.palette.primary.main,

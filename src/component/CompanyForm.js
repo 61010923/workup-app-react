@@ -9,7 +9,6 @@ import TabPanel from '@mui/lab/TabPanel'
 import CompanyInformation from './CompanyInformation'
 import TableCompany from '../page/CompanyTablePosition'
 import AccountTab from '../page/UserAccount'
-import TableCompanyJobApp from './TableCompanyJobApp'
 import ButtonAddPosition from './ButtonAddPosition'
 
 const useStyles = makeStyles({
@@ -56,7 +55,6 @@ function UserForm() {
             <Typography variant="h6" sx={{ m: 3 }}>
               ใบสมัครงาน
             </Typography>
-            <TableCompanyJobApp />
           </TabPanel>
         </Box>
       </TabContext>

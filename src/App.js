@@ -15,7 +15,7 @@ import CompanyProfile from './page/CompanyProfile'
 import Home from './page/Home'
 import DrawerTab from './component/drawer'
 import Company from './page/Company'
-import Career from './page/Career'
+import Career from './page/CompanyCareer'
 import './App.css'
 import AuthRoute from './utils/AuthRoute'
 import ManagePosition from './page/ManagePosition'
@@ -26,6 +26,7 @@ import UserPersonal from './page/UserPersonal'
 import UserAccount from './page/UserAccount'
 import UserTable from './page/UserTable'
 import CompanyTablePosition from './page/CompanyTablePosition'
+import CompanyTableJobApp from './page/CompanyTableJobApp'
 
 function App() {
   const dispatch = useDispatch()
@@ -80,6 +81,11 @@ function App() {
       />
       <Route
         exact
+        path="/JobApplication"
+        element={<AuthRoute loginRequired drawer page={CompanyTableJobApp} />}
+      />
+      <Route
+        exact
         path="/managePosition"
         element={<AuthRoute loginRequired drawer page={ManagePosition} />}
 
@@ -93,14 +99,7 @@ function App() {
 
       />
       <Route exact path="/companyPersonal" element={<AuthRoute loginRequired drawer page={CompanyProfile} footer />} />
-
-      <Route
-        exact
-        path="/InfoUser"
-        element={(
-          <InfoUser />
-)}
-      />
+      <Route exact path="/InfoUser" element={<AuthRoute loginRequired drawer page={InfoUser} footer />} />
       <Route exact path="/companyCareer" element={<AuthRoute loginRequired drawer page={Career} footer />} />
       <Route
         exact
