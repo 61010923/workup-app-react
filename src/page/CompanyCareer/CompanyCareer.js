@@ -34,7 +34,6 @@ function Company() {
   const { state } = useLocation()
   const { id } = state
   const [data, setData] = useState([])
-  // console.log(data)
   const [loading, setLoading] = useState(true)
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
@@ -71,7 +70,7 @@ function Company() {
         <Box mb={3}>
 
           <CareerAbout data={{
-            createdAt: format(new Date(_get(data, 'announce.createdAt', new Date())), 'dd/MM/yyyy'),
+            createdAt: format(new Date(_get(data, 'announce.createdAt', new Date())), 'MMM dd, yyyy'),
             position: data?.announce?.position,
             location: data?.announce?.location,
             salary: data?.announce?.salary,

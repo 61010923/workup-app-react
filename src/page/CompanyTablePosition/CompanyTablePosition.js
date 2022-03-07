@@ -25,7 +25,6 @@ const columns = [
 
 export default function StickyHeadTable() {
   const [body, setBody] = useState([])
-  console.log(body)
   const [loading, setLoading] = useState(true)
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')

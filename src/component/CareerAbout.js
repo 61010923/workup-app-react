@@ -62,7 +62,6 @@ const useStyles = makeStyles({
 })
 function CareerAbout({ data }) {
   const classes = useStyles()
-  console.log(data)
   const mediaQuery = useMediaQuery('(min-width:600px)')
   return (
     <Box className={classes.container}>
