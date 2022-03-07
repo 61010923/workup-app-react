@@ -7,12 +7,13 @@ import Typography from '@mui/material/Typography'
 import EditIcon from '@mui/icons-material/Edit'
 import { green, pink } from '@mui/material/colors'
 import PropTypes from 'prop-types'
+import _isEmpty from 'lodash/isEmpty'
 import useImageUpload from '../libs/useImageUpload'
 
 const useStyles = makeStyles({
   Avatar: {
     position: 'relative',
-    zIndex: '1',
+    zIndex: '10',
     cursor: 'pointer',
   },
   avatarBgc: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles({
     position: 'absolute',
     top: '0',
     left: '0',
-    borderRadius: '8px',
+    zIndex: '-10',
   },
   iconButton: {
     position: 'absolute',
@@ -93,9 +94,14 @@ function AvatarPhoto({
                 className={classes.iconButton}
               />
             </label>
+
           </Box>
         </Tooltip>
-        <Box className={classes.avatarBgc} />
+        <Box
+          className={classes.avatarBgc}
+          sx={{ borderRadius: _isEmpty(variant) ? '50%' : '8px' }}
+        />
+
       </>
       )}
 
@@ -120,7 +126,9 @@ function AvatarPhoto({
           </Avatar>
 
         </Box>
-        <Box className={classes.avatarBgc} />
+        <Box
+          className={classes.avatarBgc}
+        />
       </>
       )}
     </Box>
@@ -129,13 +137,14 @@ function AvatarPhoto({
 
 export default AvatarPhoto
 AvatarPhoto.propTypes = {
-  variant: PropTypes.string.isRequired,
+  variant: PropTypes.string,
   firstName: PropTypes.string,
   state: PropTypes.string.isRequired,
   setState: PropTypes.func.isRequired,
   actionType: PropTypes.string,
 }
 AvatarPhoto.defaultProps = {
+  variant: '',
   firstName: 'P',
   actionType: 'view',
 }

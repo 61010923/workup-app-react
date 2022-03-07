@@ -15,6 +15,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import _get from 'lodash/get'
 import _every from 'lodash/every'
 import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import AddOrRemoveInput from '../component/AddOrRemoveInput'
 import TextField from '../component/Textfield'
 import userDetail from '../redux/selector/user.selector'
@@ -27,9 +29,6 @@ const styleModal = {
   display: 'flex',
   justifyContent: 'center',
   bgcolor: 'background.paper',
-  // boxShadow: '5px 10px 15px rgba(0,0,0,0.5)',
-  // p: 4,
-  // borderRadius: 2,
 
 }
 const jobTypeArray = [
@@ -186,10 +185,6 @@ const jobTypeArray = [
     value: 'อาหาร/เครื่องดื่ม/กุ๊ก/บาร์เทนเดอร์/พนักงานเสิร์ฟ',
   },
   {
-    id: 'Other',
-    value: 'อื่นๆ',
-  },
-  {
     id: 'Parttime',
     value: 'งาน Part-time/พนักงานชั่วคราว',
   },
@@ -201,6 +196,7 @@ const jobTypeArray = [
 ]
 function AddPosition({ id }) {
   const classes = useStyles()
+  const navigate = useNavigate()
   const [jobType, setJobType] = useState('')
   const [position, setPosition] = useState('')
   const [positionTotal, setPositionTotal] = useState('')
@@ -219,7 +215,16 @@ function AddPosition({ id }) {
   const userToken = _get(user, 'userDetail.userToken')
   const handleChange = (e, setValue) => {
     const { value } = e.target
-    setValue(value)
+    if (setValue === setPositionTotal) {
+      if (value < 0) {
+        // eslint-disable-next-line no-const-assign
+        value = 0
+      } else {
+        setValue(value)
+      }
+    } else {
+      setValue(value)
+    }
   }
   const checkId = () => {
     if (_isEmpty(id)) {
@@ -242,7 +247,7 @@ function AddPosition({ id }) {
       const body = {
         jobType,
         position,
-        positionTotal,
+        positionTotal: Number(positionTotal),
         salary,
         role,
         location,
@@ -250,15 +255,18 @@ function AddPosition({ id }) {
         interview,
       }
       try {
-        const response = await axios.patch(`${process.env.REACT_APP_BASE_URL}/api/v1/....`, body, {
+        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/announcement`, body, {
           headers: {
             authorization: userToken,
             'Content-type': 'application/json',
           },
         })
         if (response.status === 201 || response.status === 200) {
-          dispatch(alertBar(true, 'success', 3000, 'Update Complete'))
+          dispatch(alertBar(true, 'success', 3000, 'Add Complete'))
           setLoading(false)
+          setInterval(() => {
+            navigate('/announcement')
+          }, 3000)
         }
       } catch (error) {
         dispatch(alertBar(true, 'warning', 3000, 'Something went wrong'))
@@ -276,9 +284,15 @@ function AddPosition({ id }) {
   }, [])
   return (
     <Box sx={{
+      // display: 'reletive',
       margin: ' 2rem 5rem',
     }}
     >
+
+      <Button startIcon={<ArrowBackIcon />} onClick={() => window.history.back()}>
+        back
+
+      </Button>
       <Box sx={styleModal}>
         <Box>
 
@@ -351,7 +365,6 @@ function AddPosition({ id }) {
           <TextField
             loading={openSkeleton}
             sx={{ mt: 2 }}
-            type="number"
             required
             id="demo-helper-text-aligned"
             label="เงินเดือน"
@@ -427,10 +440,6 @@ function AddPosition({ id }) {
               defaultValue="female"
               name="radio-buttons-group"
               value={interview}
-              error={openError && _isEmpty(interview)}
-              helperText={
-                    openError && _isEmpty(interview) && 'please select interview'
-                  }
               onChange={(e) => {
                 handleChange(e, setInterview)
               }}
@@ -439,6 +448,12 @@ function AddPosition({ id }) {
               <FormControlLabel value="On-site interview" control={<Radio />} label="On-site interview" />
             </RadioGroup>
           </FormControl>
+          {openError && _isEmpty(interview) && (
+            <Typography sx={{ fontSize: '13.714285714285714px', margin: '0 14px 0', color: '#d32f2f' }}>
+              please select รูปแบบการสัมภาษณ์งาน
+            </Typography>
+          )}
+
           <Button
             sx={{ mt: 2 }}
             onClick={(e) => handleSubmit()}

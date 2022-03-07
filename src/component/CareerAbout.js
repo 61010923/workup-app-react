@@ -10,6 +10,10 @@ import PersonIcon from '@mui/icons-material/Person'
 import SendIcon from '@mui/icons-material/Send'
 import EmailIcon from '@mui/icons-material/Email'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import PropTypes from 'prop-types'
+import { format, parseISO } from 'date-fns'
+import BusinessIcon from '@mui/icons-material/Business'
+import _get from 'lodash/get'
 import sony from '../image/sony.png'
 
 const useStyles = makeStyles({
@@ -42,9 +46,9 @@ const useStyles = makeStyles({
     // backgroundColor: 'red',
     margin: '5px',
     padding: '5px',
-    backgroundColor: 'rgb(22 137 1 / 25%)',
-    border: '2px solid rgb(22 137 1)',
-    color: 'rgb(22 137 1)',
+    backgroundColor: 'orange',
+    boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)',
+    color: '#fff',
     borderRadius: '8px',
   },
   careerDes: {
@@ -56,18 +60,20 @@ const useStyles = makeStyles({
     display: 'flex',
   },
 })
-function CareerAbout() {
+function CareerAbout({ data }) {
   const classes = useStyles()
+  console.log(data)
   const mediaQuery = useMediaQuery('(min-width:600px)')
   return (
     <Box className={classes.container}>
       <Box className={classes.dateBox}>
         <Typography variant="body2">
-          FEB 3, 2022
+          {_get(data, 'createdAt')}
+
         </Typography>
       </Box>
       <Typography variant="h6">
-        Electronic Engineer-Pathum Thani Plant
+        {data?.position}
       </Typography>
       <Box className={classes.locationWrapper}>
         <Box className={classes.careerItems}>
@@ -78,7 +84,7 @@ function CareerAbout() {
         </Box>
         <Box className={classes.careerDes}>
           <Typography variant="body2">
-            Bangkadi Industrial Park Pathum Thani
+            {data?.location}
           </Typography>
         </Box>
       </Box>
@@ -91,7 +97,7 @@ function CareerAbout() {
         </Box>
         <Box className={classes.careerDes}>
           <Typography variant="body2">
-            1000000
+            {data?.salary}
           </Typography>
         </Box>
       </Box>
@@ -104,14 +110,23 @@ function CareerAbout() {
         </Box>
         <Box className={classes.careerDes}>
           <Typography variant="body2">
-            2 positions
+            {data?.positionTotal}
+            {' '}
+            positions
           </Typography>
         </Box>
       </Box>
       <Box className={classes.careerBox}>
-        <HeadsetMicIcon />
+        {data?.interview === 'Online Interview'
+          ? (
+            <HeadsetMicIcon />
+
+          ) : (
+            <BusinessIcon />
+
+          )}
         <Typography variant="body2">
-          Online Interview
+          {data?.interview}
         </Typography>
       </Box>
       <Box className={classes.dateBox}>
@@ -141,3 +156,9 @@ function CareerAbout() {
 }
 
 export default CareerAbout
+CareerAbout.propTypes = {
+  data: PropTypes.objectOf(PropTypes.any),
+}
+CareerAbout.defaultProps = {
+  data: [],
+}
