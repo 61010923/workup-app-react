@@ -42,12 +42,12 @@ export default function StickyHeadTable({ columns, body, loading }) {
         {
           loading ? (
             <>
-              <Skeleton height={30} sx={{ minWidth: '100%' }} />
-              <Skeleton height={30} sx={{ minWidth: '100%' }} />
-              <Skeleton height={30} sx={{ minWidth: '100%' }} />
-              <Skeleton height={30} sx={{ minWidth: '100%' }} />
-              <Skeleton height={30} sx={{ minWidth: '100%' }} />
-              <Skeleton height={30} sx={{ minWidth: '100%' }} />
+              <Skeleton height={40} sx={{ minWidth: '100%', mt: 2 }} />
+              <Skeleton height={40} sx={{ minWidth: '100%', mt: 2 }} />
+              <Skeleton height={40} sx={{ minWidth: '100%', mt: 2 }} />
+              <Skeleton height={40} sx={{ minWidth: '100%', mt: 2 }} />
+              <Skeleton height={40} sx={{ minWidth: '100%', mt: 2 }} />
+              <Skeleton height={40} sx={{ minWidth: '100%', mt: 2 }} />
 
             </>
           ) : (
