@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add'
 import ImageListItem from '@mui/material/ImageListItem'
 import Box from '@mui/material/Box'
 import _map from 'lodash/map'
-import { Typography } from '@mui/material'
+import { Skeleton, Typography } from '@mui/material'
 import ImagePreview from './ImagePreview'
 
 function srcset(image, size, rows = 1, cols = 1) {
@@ -101,7 +101,7 @@ const useStyle = makeStyles((theme) => ({
 
 export default function QuiltedImageList(props) {
   const classes = useStyle()
-  const { imgList } = props
+  const { imgList, loading } = props
   const [itemData, setItemData] = useState([])
   const [style, setStyle] = useState({ display: 'none' })
   const [isOpen, setIsOpen] = useState(false)
@@ -114,10 +114,12 @@ export default function QuiltedImageList(props) {
   const formatImgList = () => {
     const myArr = []
     imgList.forEach((data, i) => {
+      const pic = imgList.length
       myArr.push({
         img: data,
-        cols: i % 5 === 0 ? 2 : 1,
-        rows: i % 5 === 0 ? 2 : 1,
+        cols: i % 5 === 0
+        || (i === 1 && pic === 2) || (i === 1 && pic === 3) || i === (pic - 1 && pic !== 5) ? 2 : 1,
+        rows: i % 5 === 0 || (i === 1 && pic === 2) ? 2 : 1,
       })
     })
     setItemData(myArr)
@@ -127,51 +129,54 @@ export default function QuiltedImageList(props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imgList])
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      <ImageList
-        sx={{ width: '100%', height: '100%', borderRadius: '6px' }}
-        variant="quilted"
-        cols={4}
-        gap={2}
-        rowHeight={200}
-      >
-        {_map(itemData, (item, i) => (
-          // eslint-disable-next-line react/jsx-no-useless-fragment
-          <>
-            {i < 5 && (
-              <ImageListItem
-                key={item.img}
-                component="image"
-                onMouseEnter={() => {
-                  if (i === 4) {
-                    setStyle({ display: 'block' })
-                  }
-                }}
-                onMouseLeave={() => {
-                  if (i === 4) {
-                    setStyle({ display: 'none' })
-                  }
-                }}
-                sx={{
-                  transition: 'opacity 0.5s',
-                  cursor: 'pointer',
-                  '&:hover': {
-                    opacity: '0.8',
-                  },
-                }}
-                onClick={() => handleClick(i)}
-                cols={item.cols || 1}
-                rows={item.rows || 1}
-                className={classes.hover}
-              >
-                <img
+      {!loading ? (
+        <>
+          <ImageList
+            sx={{ width: '100%', height: '100%', borderRadius: '6px' }}
+            variant="quilted"
+            cols={4}
+            gap={2}
+            rowHeight={200}
+          >
+            {_map(itemData, (item, i) => (
+              // eslint-disable-next-line react/jsx-no-useless-fragment
+              <>
+                {i < 5 && (
+                <ImageListItem
+                  key={item.img}
+                  component="image"
+                  onMouseEnter={() => {
+                    if (i === 4) {
+                      setStyle({ display: 'block' })
+                    }
+                  }}
+                  onMouseLeave={() => {
+                    if (i === 4) {
+                      setStyle({ display: 'none' })
+                    }
+                  }}
+                  sx={{
+                    transition: 'opacity 0.5s',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      opacity: '0.8',
+                    },
+                  }}
+                  onClick={() => handleClick(i)}
+                  cols={item.cols || 1}
+                  rows={item.rows || 1}
+                  className={classes.hover}
+                >
+                  <img
                   // eslint-disable-next-line react/jsx-props-no-spreading
-                  {...srcset(item.img, 121, item.cols, item.rows)}
-                  alt={item.title}
-                  style={{ cursor: 'pointer' }}
-                  loading="lazy"
-                />
-                {i === 4 && (
+                    {...srcset(item.img, 121, item.cols, item.rows)}
+                    alt={item.title}
+                    style={{ cursor: 'pointer' }}
+                    loading="lazy"
+                  />
+                  {i > 4 && (
                   <Box className={classes.text} sx={{ ...style }}>
                     <Box display="flex" alignItems="center">
                       <AddIcon fontSize="small" color="primary" />
@@ -180,23 +185,33 @@ export default function QuiltedImageList(props) {
                       </Typography>
                     </Box>
                   </Box>
+                  )}
+                </ImageListItem>
                 )}
-              </ImageListItem>
-            )}
-          </>
-        ))}
-      </ImageList>
-      <ImagePreview
-        images={_map(itemData, (data) => data.img)}
-        initialSlide={initialSlide}
-        actionType="view"
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-      />
+              </>
+            ))}
+          </ImageList>
+          <ImagePreview
+            images={_map(itemData, (data) => data.img)}
+            initialSlide={initialSlide}
+            actionType="view"
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+          />
+        </>
+      ) : (
+        <Skeleton height={200} />
+      )}
     </>
+
   )
 }
 
 QuiltedImageList.propTypes = {
   imgList: PropTypes.arrayOf(PropTypes.any).isRequired,
+  loading: PropTypes.bool,
+}
+
+QuiltedImageList.defaultProps = {
+  loading: false,
 }
