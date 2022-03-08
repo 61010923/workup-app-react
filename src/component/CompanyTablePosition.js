@@ -18,6 +18,7 @@ import { format } from 'date-fns'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import _startCase from 'lodash/startCase'
 import ButtonActionManage from './ButtonActionManage'
 import ButtonAddPosition from './ButtonAddPosition'
 
@@ -78,7 +79,7 @@ export default function StickyHeadTable({ columns, body, loading }) {
                     >
                       <TableCell align="">
                         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-                          <Box>{item.position}</Box>
+                          <Box>{_startCase(item.position)}</Box>
                           <Tooltip title={`See ${item.position} details`}>
 
                             <IconButton aria-label="delete" onClick={() => navigate('/companyCareer', { state: { id: _get(item, '_id') } })}>
