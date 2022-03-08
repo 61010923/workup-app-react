@@ -36,7 +36,6 @@ function Company() {
   const { id } = useParams()
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
-  console.log(id)
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
   const fetchData = async () => {

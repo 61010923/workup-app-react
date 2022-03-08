@@ -65,7 +65,6 @@ function Home() {
   const [loading, setLoading] = useState(false)
   const [company, setCompany] = useState([])
   const [position, setPosition] = useState([])
-  console.log(company)
   const fetchData = async () => {
     setLoading(true)
     try {
