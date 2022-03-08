@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   },
   hexagon: {
     position: 'relative',
-    width: '350px',
+    maxWidth: '350px',
     height: '400px',
     margin: '50px 20px 70px',
     '&::before': {
@@ -51,7 +51,7 @@ const useStyles = makeStyles({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        // padding: '5px',
+        // padding: '20px',
         textAlign: 'center',
         background: 'linear-gradient(45deg,#30475E,rgba(3,169,244,0.5))',
         color: '#fff',
@@ -108,18 +108,20 @@ function Hexagon() {
             >
               หน้าที่
             </Typography>
-            <TouchAppOutlinedIcon sx={{
-              fontWeight: 'bold',
-              fontSize: '5rem',
-              textShadow: '0 0 20px #30475E',
+            <Box sx={{ textShadow: '0 0 20px #30475E' }}>
+              <TouchAppOutlinedIcon sx={{
+                fontWeight: 'bold',
+                fontSize: '5rem',
 
-            }}
-            />
+              }}
+              />
+            </Box>
+
           </Box>
         </Box>
         <Box className={classes.content}>
           <Box>
-            <Typography variant="body2">
+            <Typography variant="body2" sx={{ padding: '20px' }}>
               Born in the San Francisco Bay Area to a Samoan mother and a Black Nova Scotian father, Johnson played college football at the University of Miami, and won a national championship in 1991. He aspired to a professional career in football, but went undrafted in the 1995 NFL Draft. He signed with the Calgary Stampeders of the Canadian Football League (CFL), but was cut from the team in his first season.
             </Typography>
           </Box>

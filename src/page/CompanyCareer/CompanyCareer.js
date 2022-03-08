@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import axios from 'axios'
 import _get from 'lodash/get'
 import _map from 'lodash/map'
@@ -33,11 +33,10 @@ const useStyles = makeStyles({
 })
 function Company() {
   const classes = useStyles()
-  const { state } = useLocation()
-  const { id } = state
+  const { id } = useParams()
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
-  console.log(loading)
+  console.log(id)
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
   const fetchData = async () => {

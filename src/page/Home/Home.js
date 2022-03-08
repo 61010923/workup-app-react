@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import OwlCarousel from 'react-owl-carousel'
 import Typography from '@mui/material/Typography'
+import _get from 'lodash/get'
+import _map from 'lodash/map'
+import _toNumber from 'lodash/toNumber'
+import axios from 'axios'
 import Card from '../../component/Cart'
 import 'owl.carousel/dist/assets/owl.carousel.css'
 import 'owl.carousel/dist/assets/owl.theme.default.css'
@@ -58,6 +62,31 @@ const useStyles = makeStyles({
 })
 function Home() {
   const classes = useStyles()
+  const [loading, setLoading] = useState(false)
+  const [company, setCompany] = useState([])
+  const [position, setPosition] = useState([])
+  console.log(company)
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BASE_URL}/api/v1/company`,
+      )
+      if (response.status === 200) {
+        setCompany(_get(response, 'data.data'))
+        setPosition(_get(response, 'data.announce'))
+        setLoading(false)
+      }
+    } catch (error) {
+      setLoading(false)
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const itemsList = [
     {
       id: 1,
@@ -111,10 +140,10 @@ function Home() {
       </Typography>
 
       <OwlCarousel className="owl-theme" {...options}>
-        {itemsList.map(({
-          id, title, image, describe,
+        {company.map(({
+          announceText, companyId, companyName, imgCover, imgProfile,
         }) => (
-          <Card title={title} image={image} describe={describe} />
+          <Card title={companyName} image={imgProfile} describe={announceText} />
         ))}
       </OwlCarousel>
 

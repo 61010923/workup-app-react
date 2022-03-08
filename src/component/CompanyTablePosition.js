@@ -82,7 +82,7 @@ export default function StickyHeadTable({ columns, body, loading }) {
                           <Box>{_startCase(item.position)}</Box>
                           <Tooltip title={`See ${item.position} details`}>
 
-                            <IconButton aria-label="delete" onClick={() => navigate('/companyCareer', { state: { id: _get(item, '_id') } })}>
+                            <IconButton aria-label="delete" onClick={() => navigate(`/companyCareer/${_get(item, '_id')}`)}>
                               <InfoOutlinedIcon />
                             </IconButton>
                           </Tooltip>
