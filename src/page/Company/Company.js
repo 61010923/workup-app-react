@@ -7,9 +7,8 @@ import _toNumber from 'lodash/toNumber'
 import axios from 'axios'
 import { format } from 'date-fns'
 import { Skeleton } from '@mui/material'
-import { useParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import Typography from '../../component/Typography'
-import sony from '../../image/sony.png'
 import CareerTitle from '../../component/CareerTitle'
 import Profile from '../../component/CompanyProfile'
 import ImageListSkill from '../../component/ImageListSkill'
@@ -73,7 +72,6 @@ function Company() {
   const [tel, setTel] = useState('')
   const [travel, setTravel] = useState([])
   const [loading, setLoading] = useState(false)
-
   const setData = (data) => {
     setImgProfile(data.imgProfile)
     setImgCover(data.imgCover)

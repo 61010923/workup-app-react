@@ -2,7 +2,7 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
-import { Button } from '@mui/material'
+import { Button, Skeleton } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PaidIcon from '@mui/icons-material/Paid'
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic'
@@ -14,7 +14,7 @@ import PropTypes from 'prop-types'
 import { format, parseISO } from 'date-fns'
 import BusinessIcon from '@mui/icons-material/Business'
 import _get from 'lodash/get'
-import sony from '../image/sony.png'
+import TypographyLoading from './Typography'
 
 const useStyles = makeStyles({
   container: {
@@ -60,20 +60,29 @@ const useStyles = makeStyles({
     display: 'flex',
   },
 })
-function CareerAbout({ data }) {
+function CareerAbout({ data, loading }) {
   const classes = useStyles()
   const mediaQuery = useMediaQuery('(min-width:600px)')
   return (
     <Box className={classes.container}>
       <Box className={classes.dateBox}>
-        <Typography variant="body2">
-          {_get(data, 'createdAt')}
+        {loading ? (<Skeleton width={80} height={20} />
+        )
+          : (
+            <Typography variant="body2">
+              {_get(data, 'createdAt')}
 
-        </Typography>
+            </Typography>
+          )}
+
       </Box>
-      <Typography variant="h6">
-        {data?.position}
-      </Typography>
+      {loading ? (<Skeleton width={150} height={40} />
+      )
+        : (
+          <Typography variant="h6">
+            {data?.position}
+          </Typography>
+        )}
       <Box className={classes.locationWrapper}>
         <Box className={classes.careerItems}>
           <LocationOnIcon />
@@ -82,9 +91,9 @@ function CareerAbout({ data }) {
           </Typography>
         </Box>
         <Box className={classes.careerDes}>
-          <Typography variant="body2">
+          <TypographyLoading loading={loading} heightSkeleton="20" variant="body2">
             {data?.location}
-          </Typography>
+          </TypographyLoading>
         </Box>
       </Box>
       <Box className={classes.locationWrapper}>
@@ -95,9 +104,9 @@ function CareerAbout({ data }) {
           </Typography>
         </Box>
         <Box className={classes.careerDes}>
-          <Typography variant="body2">
+          <TypographyLoading loading={loading} heightSkeleton="20" variant="body2">
             {data?.salary}
-          </Typography>
+          </TypographyLoading>
         </Box>
       </Box>
       <Box className={classes.locationWrapper}>
@@ -108,26 +117,30 @@ function CareerAbout({ data }) {
           </Typography>
         </Box>
         <Box className={classes.careerDes}>
-          <Typography variant="body2">
+          <TypographyLoading loading={loading} heightSkeleton="20" variant="body2">
             {data?.positionTotal}
             {' '}
             positions
-          </Typography>
+          </TypographyLoading>
         </Box>
       </Box>
-      <Box className={classes.careerBox}>
-        {data?.interview === 'Online Interview'
-          ? (
-            <HeadsetMicIcon />
+      {loading ? (<Skeleton width={150} height={40} />
+      )
+        : (
+          <Box className={classes.careerBox}>
+            {data?.interview === 'Online Interview'
+              ? (
+                <HeadsetMicIcon />
 
-          ) : (
-            <BusinessIcon />
+              ) : (
+                <BusinessIcon />
 
-          )}
-        <Typography variant="body2">
-          {data?.interview}
-        </Typography>
-      </Box>
+              )}
+            <Typography variant="body2">
+              {data?.interview}
+            </Typography>
+          </Box>
+        )}
       <Box className={classes.dateBox}>
         <Button
           style={{
@@ -157,7 +170,9 @@ function CareerAbout({ data }) {
 export default CareerAbout
 CareerAbout.propTypes = {
   data: PropTypes.objectOf(PropTypes.any),
+  loading: PropTypes.bool,
 }
 CareerAbout.defaultProps = {
   data: [],
+  loading: false,
 }

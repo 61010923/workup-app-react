@@ -100,7 +100,7 @@ function App() {
       />
       <Route exact path="/companyPersonal" element={<AuthRoute loginRequired drawer page={CompanyProfile} footer />} />
       <Route exact path="/InfoUser" element={<AuthRoute loginRequired drawer page={InfoUser} footer />} />
-      <Route exact path="/companyCareer" element={<AuthRoute loginRequired drawer page={Career} footer />} />
+      <Route exact path="/companyCareer/:id" element={<AuthRoute loginRequired drawer page={Career} footer />} />
       <Route
         exact
         path="/CompanyManagement"

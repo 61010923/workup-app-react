@@ -17,10 +17,10 @@ import _every from 'lodash/every'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import AddOrRemoveInput from '../component/AddOrRemoveInput'
-import TextField from '../component/Textfield'
-import userDetail from '../redux/selector/user.selector'
-import { alertBar } from '../redux/action/alert.action'
+import AddOrRemoveInput from '../../component/AddOrRemoveInput'
+import TextField from '../../component/Textfield'
+import userDetail from '../../redux/selector/user.selector'
+import { alertBar } from '../../redux/action/alert.action'
 
 const useStyles = makeStyles({
 
@@ -265,7 +265,8 @@ function AddPosition({ id }) {
           dispatch(alertBar(true, 'success', 3000, 'Add Complete'))
           setLoading(false)
           setInterval(() => {
-            navigate('/announcement')
+            // navigate('/announcement')
+            window.location.href = '/announcement'
           }, 3000)
         }
       } catch (error) {

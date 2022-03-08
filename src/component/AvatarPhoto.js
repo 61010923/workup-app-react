@@ -128,6 +128,7 @@ function AvatarPhoto({
         </Box>
         <Box
           className={classes.avatarBgc}
+          sx={{ borderRadius: _isEmpty(variant) ? '50%' : '8px' }}
         />
       </>
       )}

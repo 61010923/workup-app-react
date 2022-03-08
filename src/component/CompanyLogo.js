@@ -4,6 +4,8 @@ import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import { Link } from '@mui/material'
 import PropTypes from 'prop-types'
+import TypographyLoading from './Typography'
+import AvatarLoading from './Avatar'
 
 const useStyles = makeStyles({
   container: {
@@ -20,19 +22,28 @@ const useStyles = makeStyles({
 
   },
 })
-function CompanyLogo({ data }) {
+function CompanyLogo({ data, loading }) {
   const classes = useStyles()
 
   return (
     <Box className={classes.container}>
-      <img src={data.imgProfile} alt="logo" className={classes.logo} />
+      <AvatarLoading
+        variantSkeleton="rectangular"
+        widthSkeleton="7rem"
+        heightSkeleton="7rem"
+        variant="rounded"
+        loading={loading}
+        src={data.imgProfile}
+        alt="logo"
+        sx={{ width: '7rem', height: '7rem' }}
+      />
       <Box sx={{
         display: 'flex', flexDirection: 'column', ml: 2,
       }}
       >
-        <Typography variant="h6">
+        <TypographyLoading loading={loading} variant="h6">
           {data.companyName}
-        </Typography>
+        </TypographyLoading>
         <Link
           href="/#"
           color="rgb(202 162 47)"
@@ -49,7 +60,9 @@ function CompanyLogo({ data }) {
 export default CompanyLogo
 CompanyLogo.propTypes = {
   data: PropTypes.objectOf(PropTypes.any),
+  loading: PropTypes.bool,
 }
 CompanyLogo.defaultProps = {
   data: [],
+  loading: false,
 }
