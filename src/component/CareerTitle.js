@@ -5,10 +5,11 @@ import Typography from '@mui/material/Typography'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PaidIcon from '@mui/icons-material/Paid'
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic'
+import Grid from '@mui/material/Grid'
+import PropTypes from 'prop-types'
 import sony from '../image/sony.png'
 
-const useStyles = makeStyles({
-
+const useStyles = makeStyles((theme) => ({
   positionItems: {
     position: 'relative',
     display: 'flex',
@@ -24,13 +25,20 @@ const useStyles = makeStyles({
       left: 0,
       width: '100%',
       height: '100%',
-      backgroundColor: 'orange',
+      backgroundColor: theme.palette.primary.main,
       transform: 'scaleX(0)',
       transformOrigin: 'left',
       transition: 'transform 0.5s',
-
+    },
+    borderRadius: '4px',
+    '&:hover::before': {
+      transform: 'scaleX(1)',
+      transformOrigin: 'left',
+      borderRadius: '4px',
+      transition: 'transform 0.5s',
     },
     '&:hover': {
+      borderRadius: '4px',
       color: '#fff',
       '& $changeColor': {
         color: '#fff',
@@ -42,68 +50,79 @@ const useStyles = makeStyles({
       },
     },
     '& $changeColor': {
-      color: 'orange',
+      color: theme.palette.primary.main,
     },
   },
   changeColor: {
-    fontSize: '1.2rem',
-    fontWeight: 'bold',
     transition: '0.5s',
     zIndex: '1',
+    textDecoration: 'underline',
   },
   numbers: {
     display: 'flex',
     justifyContent: 'space-between',
-
   },
   careerItems: {
     display: 'flex',
     alignItems: 'center',
-    width: '25%',
-    margin: '4px',
+    gap: '8px',
   },
-  locationWrapper: {
-    display: 'flex',
-  },
-})
-function CareerTitle() {
+}))
+function CareerTitle(props) {
   const classes = useStyles()
-
+  const {
+    date, location, salary, interview, position,
+  } = props
   return (
     <Box className={classes.positionItems}>
       <Box className={classes.numbers} sx={{ zIndex: 1 }}>
-        <Typography variant="body2">
-          1.
-        </Typography>
-        <Typography variant="body2">
-          Feb 3, 2022
-        </Typography>
+        <Typography variant="body2">{date}</Typography>
       </Box>
-      <Typography className={classes.changeColor}>
-        Software Engineer
-      </Typography>
-      <Box className={classes.locationWrapper} sx={{ zIndex: 1 }}>
-        <Box className={classes.careerItems}>
-          <LocationOnIcon />
-          <Typography variant="body2">
-            bangkok
-          </Typography>
-        </Box>
-        <Box className={classes.careerItems}>
-          <PaidIcon />
-          <Typography variant="body2">
-            company structure
-          </Typography>
-        </Box>
+      <Box mt={1} className={classes.changeColor}>
+        <Typography variant="h6">{position}</Typography>
       </Box>
-      <Box className={classes.careerItems} sx={{ zIndex: 1 }}>
-        <HeadsetMicIcon />
-        <Typography variant="body2">
-          Online interview
-        </Typography>
-      </Box>
+      <Grid
+        container
+        width="80%"
+        mt={1}
+        spacing={1}
+        className={classes.changeColor}
+        sx={{ textDecoration: 'none', color: 'black' }}
+      >
+        <Grid item md={6} xs={12}>
+          <Box className={classes.careerItems}>
+            <LocationOnIcon />
+            <Typography variant="body2">{location}</Typography>
+          </Box>
+
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <Box className={classes.careerItems}>
+            <PaidIcon />
+            <Typography variant="body2">{salary}</Typography>
+          </Box>
+
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <Box className={classes.careerItems} sx={{ zIndex: 1 }}>
+            <HeadsetMicIcon />
+            <Typography variant="body2">{interview}</Typography>
+          </Box>
+
+        </Grid>
+        {/* <Box className={classes.locationWrapper} sx={{ zIndex: 1 }} mt={1}> */}
+        {/* </Box> */}
+      </Grid>
     </Box>
   )
 }
 
 export default CareerTitle
+
+CareerTitle.propTypes = {
+  date: PropTypes.string.isRequired,
+  location: PropTypes.string.isRequired,
+  salary: PropTypes.string.isRequired,
+  interview: PropTypes.string.isRequired,
+  position: PropTypes.string.isRequired,
+}
