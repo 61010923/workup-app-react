@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import axios from 'axios'
 import _get from 'lodash/get'
 import _map from 'lodash/map'
 import _isEmpty from 'lodash/isEmpty'
-import { Box, Button } from '@mui/material'
+import { Box, Button, Skeleton } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,6 +15,8 @@ import CompanyLogo from '../../component/CompanyLogo'
 import CareerAbout from '../../component/CareerAbout'
 import CareerSuggest from '../../component/CareerSuggest'
 import userDetail from '../../redux/selector/user.selector'
+import TypographyLoading from '../../component/Typography'
+import Hexagon from '../../component/Hexagon'
 
 const useStyles = makeStyles({
   container: {
@@ -31,8 +33,7 @@ const useStyles = makeStyles({
 })
 function Company() {
   const classes = useStyles()
-  const { state } = useLocation()
-  const { id } = state
+  const { id } = useParams()
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const user = useSelector(userDetail)
@@ -65,45 +66,62 @@ function Company() {
       <Box className={classes.container}>
 
         <Box mb={3}>
-          <CompanyLogo data={{ companyName: data?.companyName, imgProfile: data?.imgProfile }} />
+          <CompanyLogo loading={loading} data={{ companyName: data?.companyName, imgProfile: data?.imgProfile }} />
         </Box>
         <Box mb={3}>
 
-          <CareerAbout data={{
-            createdAt: format(new Date(_get(data, 'announce.createdAt', new Date())), 'MMM dd, yyyy'),
-            position: data?.announce?.position,
-            location: data?.announce?.location,
-            salary: data?.announce?.salary,
-            positionTotal: data?.announce?.positionTotal,
-            interview: data?.announce?.interview,
-          }}
+          <CareerAbout
+            loading={loading}
+            data={{
+              createdAt: format(new Date(_get(data, 'announce.createdAt', new Date())), 'MMM dd, yyyy'),
+              position: data?.announce?.position,
+              location: data?.announce?.location,
+              salary: data?.announce?.salary,
+              positionTotal: data?.announce?.positionTotal,
+              interview: data?.announce?.interview,
+            }}
           />
         </Box>
         <Box mb={3}>
           <Typography variant="h6">
             หน้าที่และรายละเอียดของงาน
           </Typography>
-          {_map(data?.announce?.role, (item) => (
+          {loading ? (<Skeleton width={100} height={20} />
+          )
+            : (
+              <Box>
+                {_map(data?.announce?.role, (item) => (
 
-            <Typography variant="body2">
-              -
-              {' '}
-              {item}
-            </Typography>
-          ))}
+                  <Typography variant="body2">
+                    -
+                    {' '}
+                    {item}
+                  </Typography>
+                ))}
+              </Box>
+            )}
         </Box>
         <Box mb={3}>
           <Typography variant="h6">
             คุณสมบัติผู้สมัคร
           </Typography>
-          {_map(data?.announce?.property, (item) => (
+          {loading ? (<Skeleton width={100} height={20} />
+          )
+            : (
+              <Box>
+                {_map(data?.announce?.property, (item) => (
 
-            <Typography variant="body2">
-              -
-              {' '}
-              {item}
-            </Typography>
-          ))}
+                  <Typography variant="body2">
+                    -
+                    {' '}
+                    {item}
+                  </Typography>
+                ))}
+              </Box>
+            )}
+        </Box>
+        <Box>
+          <Hexagon />
         </Box>
         <Box>
           <Typography variant="h6">

@@ -198,14 +198,14 @@ export default function DrawerTab() {
       id: 3,
       menu: 'Annoucement',
       link: '/announcement',
-      icon: <ManageAccountsIcon />,
+      icon: <CampaignOutlinedIcon />,
       isLogin: !user.isLogin,
     },
     {
       id: 4,
       menu: 'Job Application',
       link: '/JobApplication',
-      icon: <CampaignOutlinedIcon />,
+      icon: <ManageAccountsIcon />,
       isLogin: !user.isLogin,
     },
     {

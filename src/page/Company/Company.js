@@ -7,6 +7,7 @@ import _toNumber from 'lodash/toNumber'
 import axios from 'axios'
 import { format } from 'date-fns'
 import { Skeleton } from '@mui/material'
+import { useLocation } from 'react-router-dom'
 import Typography from '../../component/Typography'
 import sony from '../../image/sony.png'
 import CareerTitle from '../../component/CareerTitle'
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Company() {
   const classes = useStyles()
+  const location = useLocation()
   const [companyName, setCompanyName] = useState('Kasuya Company')
   const [imgProfile, setImgProfile] = useState('')
   const [imgCover, setImgCover] = useState('')
@@ -72,7 +74,6 @@ function Company() {
   const [tel, setTel] = useState('')
   const [travel, setTravel] = useState([])
   const [loading, setLoading] = useState(false)
-
   const setData = (data) => {
     setImgProfile(data.imgProfile)
     setImgCover(data.imgCover)
