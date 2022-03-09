@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import {
-  BrowserRouter,
   Routes,
   Route,
+
 } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
@@ -43,7 +43,7 @@ function App() {
   }, [])
   return (
     <Routes>
-      <Route exact path="/" element={<AuthRoute loginRequired page={Home} drawer />} />
+      <Route exact path="/" element={<AuthRoute page={Home} drawer />} />
       <Route exact path="/login" element={<SignInUp />} />
       <Route exact path="/login/verify-account" element={<VerifyAccount />} />
 
