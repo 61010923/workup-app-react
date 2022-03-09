@@ -42,6 +42,7 @@ function CompanyProfile() {
   const [imgCover, setImgCover] = useState('')
   const [loading, setLoading] = useState(false)
   const [btLoading, setBtLoading] = useState(false)
+  const [announceText, setAnnounceText] = useState('')
 
   const handleChangeText = (e, setValue) => {
     const data = e.target.value
@@ -72,6 +73,7 @@ function CompanyProfile() {
       email,
       imgCover,
       imgProfile,
+      announceText,
       // imgAbout,
     }
     const arrErr = []
@@ -105,6 +107,7 @@ function CompanyProfile() {
     setCompanyName(data.companyName)
     setCompanyDetail(data.detail)
     setPhoneNumber(data.phoneNumber)
+    setAnnounceText(data.announceText)
     setImgProfile(data.imgProfile)
     setEmail(data.email)
     setAddress(data.address)
@@ -196,6 +199,25 @@ function CompanyProfile() {
               height={112}
             />
           </Box>
+          <Box mt={2}>
+            <Textfield
+              label="ข้อความสำหรับประกาศ"
+              fullWidth
+              value={announceText}
+              onChange={(e) => handleChangeText(e, setAnnounceText)}
+              error={
+                _includes(errorCheck, 'announceText')
+                && _isEmpty(announceText)
+              }
+              helperText={
+                _includes(errorCheck, 'announceText')
+                && _isEmpty(announceText)
+                && 'Please fill AnnounceText'
+              }
+              loading={loading}
+              height={112}
+            />
+          </Box>
           <Box mt={3}>
             <Typography variant="h6" color="primary">
               สวัสดิการ
@@ -245,7 +267,9 @@ function CompanyProfile() {
               className={classes.input}
               value={phoneNumber}
               onChange={(e) => handleChangeText(e, setPhoneNumber)}
-              error={_includes(errorCheck, 'phoneNumber') && _isEmpty(phoneNumber)}
+              error={
+                _includes(errorCheck, 'phoneNumber') && _isEmpty(phoneNumber)
+              }
               helperText={
                 _includes(errorCheck, 'phoneNumber')
                 && _isEmpty(phoneNumber)
@@ -266,9 +290,7 @@ function CompanyProfile() {
               label="อีเมลติดต่อ"
               autoComplete="off"
               fullWidth
-              error={
-                _includes(errorCheck, 'email') && _isEmpty(email)
-              }
+              error={_includes(errorCheck, 'email') && _isEmpty(email)}
               helperText={
                 _includes(errorCheck, 'email')
                 && _isEmpty(email)
@@ -313,10 +335,7 @@ function CompanyProfile() {
           </Button> */}
         </Box>
       </Box>
-      <Footer
-        submitFunc={handleCheck}
-        loading={btLoading}
-      />
+      <Footer submitFunc={handleCheck} loading={btLoading} />
     </>
   )
 }
