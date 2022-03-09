@@ -53,8 +53,10 @@ function Company() {
 
   useEffect(() => {
     fetchData()
+    window.scrollTo(0, 0)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   return (
     <>
       <Box sx={{ mb: 2 }}>
@@ -120,9 +122,9 @@ function Company() {
               </Box>
             )}
         </Box>
-        <Box>
+        {/* <Box>
           <Hexagon />
-        </Box>
+        </Box> */}
         <Box>
           <Typography variant="h6">
             Other positions at this company

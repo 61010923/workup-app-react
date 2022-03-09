@@ -46,13 +46,7 @@ function App() {
       <Route exact path="/" element={<AuthRoute loginRequired page={Home} drawer />} />
       <Route exact path="/login" element={<SignInUp />} />
       <Route exact path="/login/verify-account" element={<VerifyAccount />} />
-      <Route
-        exact
-        path="/company/:id"
-        element={(
-          <AuthRoute loginRequired page={Company} drawer />
-        )}
-      />
+
       <Route
         exact
         path="/candidatePersonal"
@@ -91,12 +85,18 @@ function App() {
 
       />
       <Route exact path="/companyPersonal" element={<AuthRoute loginRequired drawer page={CompanyProfile} />} />
-      <Route exact path="/company" element={<AuthRoute loginRequired drawer page={Company} />} />
       <Route
         exact
         path="/managePosition"
         element={<AuthRoute loginRequired drawer page={ManagePosition} />}
 
+      />
+      <Route
+        exact
+        path="/company/:id"
+        element={(
+          <AuthRoute loginRequired page={Company} drawer />
+        )}
       />
       <Route exact path="/companyPersonal" element={<AuthRoute loginRequired drawer page={CompanyProfile} footer />} />
       <Route exact path="/InfoUser" element={<AuthRoute loginRequired drawer page={InfoUser} footer />} />

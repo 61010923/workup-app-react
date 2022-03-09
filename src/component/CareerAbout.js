@@ -25,7 +25,13 @@ const useStyles = makeStyles({
     padding: '20px',
     borderRadius: '16px',
     boxShadow: '0 0 8px 2px #939393',
-
+    // boxShadow: '20px 20px 50px rgba(0, 0, 0, 0.5)',
+    // borderRadius: '15px',
+    // backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    // overflow: 'hidden',
+    // borderTop: '1px solid rgba(255, 255, 255, 0.5)',
+    // borderLeft: '1px solid rgba(255, 255, 255, 0.5)',
+    // backdropFilter: 'blur(5px)',
   },
   dateBox: {
     display: 'flex',

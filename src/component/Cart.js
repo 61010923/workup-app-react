@@ -7,15 +7,28 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import PropTypes from 'prop-types'
 import { margin } from '@mui/system'
+import { useNavigate } from 'react-router-dom'
 
 export default function MediaCard(props) {
-  const { title, image, describe } = props
+  const navigate = useNavigate()
+  const {
+    title, image, describe, cover, companyId,
+  } = props
   return (
-    <Card sx={{ maxWidth: 345, margin: 2, cursor: 'pointer' }}>
+    <Card
+      sx={{ maxWidth: 600, margin: 2, cursor: 'pointer' }}
+      onClick={() => navigate(`/company/${companyId}`)}
+    >
       <CardMedia
         component="img"
-        height="140"
+        height="60"
         image={image}
+        alt="praYut"
+      />
+      <CardMedia
+        component="img"
+        height="200"
+        image={cover}
         alt="praYut"
       />
       <CardContent>
@@ -27,14 +40,23 @@ export default function MediaCard(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
+        {/* <Button size="small">Share</Button> */}
+        <Button size="small">More Info</Button>
       </CardActions>
     </Card>
   )
 }
 MediaCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  describe: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  describe: PropTypes.string,
+  image: PropTypes.string,
+  cover: PropTypes.string,
+  companyId: PropTypes.string,
+}
+MediaCard.defaultProps = {
+  title: '',
+  describe: '',
+  image: '',
+  cover: '',
+  companyId: '',
 }

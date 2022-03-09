@@ -7,7 +7,7 @@ import _toNumber from 'lodash/toNumber'
 import axios from 'axios'
 import { format } from 'date-fns'
 import { Skeleton } from '@mui/material'
-import { useLocation } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import Typography from '../../component/Typography'
 import sony from '../../image/sony.png'
 import CareerTitle from '../../component/CareerTitle'
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Company() {
   const classes = useStyles()
-  const location = useLocation()
+  const { id } = useParams()
   const [companyName, setCompanyName] = useState('Kasuya Company')
   const [imgProfile, setImgProfile] = useState('')
   const [imgCover, setImgCover] = useState('')
@@ -91,7 +91,7 @@ function Company() {
     setLoading(true)
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/api/v1/company/621ef4684d7f2a6a3cf81b12`,
+        `${process.env.REACT_APP_BASE_URL}/api/v1/company/${id}`,
       )
       if (response.status === 200) {
         const data = _get(response, 'data.data')
@@ -106,6 +106,7 @@ function Company() {
 
   useEffect(() => {
     fetchData()
+    window.scrollTo(0, 0)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -169,15 +170,17 @@ function Company() {
         <Box className={classes.positionWrapper}>
           {!loading ? (
             <>
-              {_map(job, (data) => (
+              {_map(job, (data, i) => (
                 <CareerTitle
+                  positionId={_get(data, '_id')}
+                  key={data.position + i}
                   salary={data.salary}
                   location={data.location}
                   interview={data.interview}
                   position={data.position}
                   date={format(
                     new Date(`${_get(data, 'updatedAt')}`),
-                    'dd/MM/yyyy',
+                    'MMM dd, yyyy',
                   )}
                 />
               ))}

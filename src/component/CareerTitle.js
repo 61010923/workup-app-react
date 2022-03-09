@@ -7,7 +7,8 @@ import PaidIcon from '@mui/icons-material/Paid'
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic'
 import Grid from '@mui/material/Grid'
 import PropTypes from 'prop-types'
-import sony from '../image/sony.png'
+import { useNavigate } from 'react-router-dom'
+import BusinessIcon from '@mui/icons-material/Business'
 
 const useStyles = makeStyles((theme) => ({
   positionItems: {
@@ -29,16 +30,18 @@ const useStyles = makeStyles((theme) => ({
       transform: 'scaleX(0)',
       transformOrigin: 'left',
       transition: 'transform 0.5s',
+      borderRadius: '4px',
+
     },
-    borderRadius: '4px',
+    // borderRadius: '4px',
     '&:hover::before': {
       transform: 'scaleX(1)',
       transformOrigin: 'left',
-      borderRadius: '4px',
+      // borderRadius: '4px',
       transition: 'transform 0.5s',
     },
     '&:hover': {
-      borderRadius: '4px',
+      // borderRadius: '4px',
       color: '#fff',
       '& $changeColor': {
         color: '#fff',
@@ -70,11 +73,15 @@ const useStyles = makeStyles((theme) => ({
 }))
 function CareerTitle(props) {
   const classes = useStyles()
+  const navigate = useNavigate()
   const {
-    date, location, salary, interview, position,
+    date, location, salary, interview, position, positionId,
   } = props
   return (
-    <Box className={classes.positionItems}>
+    <Box
+      className={classes.positionItems}
+      onClick={() => navigate(`/companycareer/${positionId}`)}
+    >
       <Box className={classes.numbers} sx={{ zIndex: 1 }}>
         <Typography variant="body2">{date}</Typography>
       </Box>
@@ -105,7 +112,12 @@ function CareerTitle(props) {
         </Grid>
         <Grid item md={6} xs={12}>
           <Box className={classes.careerItems} sx={{ zIndex: 1 }}>
-            <HeadsetMicIcon />
+            {interview === 'Online Interview' ? (
+              <HeadsetMicIcon />
+
+            ) : (
+              <BusinessIcon />
+            )}
             <Typography variant="body2">{interview}</Typography>
           </Box>
 
@@ -125,4 +137,5 @@ CareerTitle.propTypes = {
   salary: PropTypes.string.isRequired,
   interview: PropTypes.string.isRequired,
   position: PropTypes.string.isRequired,
+  positionId: PropTypes.string.isRequired,
 }

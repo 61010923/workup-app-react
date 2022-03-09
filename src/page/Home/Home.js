@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Box from '@mui/material/Box'
+import { Box, Skeleton } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import OwlCarousel from 'react-owl-carousel'
 import Typography from '@mui/material/Typography'
@@ -62,7 +62,7 @@ const useStyles = makeStyles({
 })
 function Home() {
   const classes = useStyles()
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [company, setCompany] = useState([])
   const [position, setPosition] = useState([])
   const fetchData = async () => {
@@ -86,65 +86,28 @@ function Home() {
     fetchData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  const itemsList = [
-    {
-      id: 1,
-      title: 'sony',
-      image: sony,
-      describe: 'รับสมัคร Process engineer',
-    },
-    {
-      id: 2,
-      title: 'synnex',
-      image: sony,
-      describe: 'รับสมัคร Process engineer',
-    },
-    {
-      id: 3,
-      title: 'apple',
-      image: sony,
-      describe: 'รับสมัคร Process engineer',
-    },
-    {
-      id: 4,
-      title: 'kmitl',
-      image: sony,
-      describe: 'รับสมัคร Process engineer',
-    },
-    {
-      id: 4,
-      title: 'kmitl',
-      image: sony,
-      describe: 'รับสมัคร Process engineer',
-    },
-    {
-      id: 4,
-      title: 'kmitl',
-      image: sony,
-      describe: 'รับสมัคร Process engineer',
-    },
-    {
-      id: 4,
-      title: 'kmitl',
-      image: sony,
-      describe: 'รับสมัคร Process engineer',
-    },
-  ]
-
   return (
 
     <Box className={classes.container}>
       <Typography variant="h6" ml={2}>
         TOP COMPANIES
       </Typography>
-
-      <OwlCarousel className="owl-theme" {...options}>
-        {company.map(({
-          announceText, companyId, companyName, imgCover, imgProfile,
-        }) => (
-          <Card title={companyName} image={imgProfile} describe={announceText} />
-        ))}
-      </OwlCarousel>
+      {loading ? (
+        <Skeleton
+          variant="rectangular"
+          height={200}
+          width="100%"
+          sx={{ margin: '8px', borderRadius: '8px' }}
+        />
+      ) : (
+        <OwlCarousel className="owl-theme" {...options}>
+          {_map(company, ({
+            announceText, companyId, companyName, imgCover, imgProfile,
+          }, i) => (
+            <Card key={companyName + i} title={companyName} image={imgProfile} cover={imgCover} describe={announceText} companyId={companyId} />
+          ))}
+        </OwlCarousel>
+      )}
 
       <Typography variant="h6" ml={2}>
         URGENT JOBS
