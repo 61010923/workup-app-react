@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
@@ -8,30 +8,24 @@ import PaidIcon from '@mui/icons-material/Paid'
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic'
 import PersonIcon from '@mui/icons-material/Person'
 import SendIcon from '@mui/icons-material/Send'
-import EmailIcon from '@mui/icons-material/Email'
+import ContactPageIcon from '@mui/icons-material/ContactPage'
+import AssignmentIcon from '@mui/icons-material/Assignment'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import PropTypes from 'prop-types'
-import { format, parseISO } from 'date-fns'
 import BusinessIcon from '@mui/icons-material/Business'
 import _get from 'lodash/get'
+import Dialog from './Dialog'
 import TypographyLoading from './Typography'
 
 const useStyles = makeStyles({
   container: {
     display: 'flex',
-    // alignItems: 'center',
     flexDirection: 'column',
     backgroundColor: 'rgb(248 248 248)',
     padding: '20px',
     borderRadius: '16px',
     boxShadow: '0 0 8px 2px #939393',
-    // boxShadow: '20px 20px 50px rgba(0, 0, 0, 0.5)',
-    // borderRadius: '15px',
-    // backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    // overflow: 'hidden',
-    // borderTop: '1px solid rgba(255, 255, 255, 0.5)',
-    // borderLeft: '1px solid rgba(255, 255, 255, 0.5)',
-    // backdropFilter: 'blur(5px)',
+
   },
   dateBox: {
     display: 'flex',
@@ -68,36 +62,44 @@ const useStyles = makeStyles({
 })
 function CareerAbout({ data, loading }) {
   const classes = useStyles()
+  const [applyType, setApplyType] = useState('')
+  const [open, setOpen] = useState(false)
   const mediaQuery = useMediaQuery('(min-width:600px)')
+
+  const handleClose = () => {
+    setOpen(false)
+    setApplyType('')
+  }
   return (
     <Box className={classes.container}>
       <Box className={classes.dateBox}>
-        {loading ? (<Skeleton width={80} height={20} />
-        )
-          : (
-            <Typography variant="body2">
-              {_get(data, 'createdAt')}
-
-            </Typography>
-          )}
-
-      </Box>
-      {loading ? (<Skeleton width={150} height={40} />
-      )
-        : (
-          <Typography variant="h6">
-            {data?.position}
-          </Typography>
+        {loading ? (
+          <Skeleton width={80} height={20} />
+        ) : (
+          <Typography variant="body2">{_get(data, 'createdAt')}</Typography>
         )}
+      </Box>
+      {loading ? (
+        <Skeleton width={150} height={40} />
+      ) : (
+        <Typography variant="h6">{data?.position}</Typography>
+      )}
       <Box className={classes.locationWrapper}>
         <Box className={classes.careerItems}>
           <LocationOnIcon />
-          <Typography variant="body2" style={{ display: mediaQuery ? 'inline-block' : 'none' }}>
+          <Typography
+            variant="body2"
+            style={{ display: mediaQuery ? 'inline-block' : 'none' }}
+          >
             Location
           </Typography>
         </Box>
         <Box className={classes.careerDes}>
-          <TypographyLoading loading={loading} heightSkeleton="20" variant="body2">
+          <TypographyLoading
+            loading={loading}
+            heightSkeleton="20"
+            variant="body2"
+          >
             {data?.location}
           </TypographyLoading>
         </Box>
@@ -105,12 +107,14 @@ function CareerAbout({ data, loading }) {
       <Box className={classes.locationWrapper}>
         <Box className={classes.careerItems}>
           <PaidIcon />
-          <Typography variant="body2">
-            Salary
-          </Typography>
+          <Typography variant="body2">Salary</Typography>
         </Box>
         <Box className={classes.careerDes}>
-          <TypographyLoading loading={loading} heightSkeleton="20" variant="body2">
+          <TypographyLoading
+            loading={loading}
+            heightSkeleton="20"
+            variant="body2"
+          >
             {data?.salary}
           </TypographyLoading>
         </Box>
@@ -118,58 +122,118 @@ function CareerAbout({ data, loading }) {
       <Box className={classes.locationWrapper}>
         <Box className={classes.careerItems}>
           <PersonIcon />
-          <Typography variant="body2">
-            Vacancies
-          </Typography>
+          <Typography variant="body2">Vacancies</Typography>
         </Box>
         <Box className={classes.careerDes}>
-          <TypographyLoading loading={loading} heightSkeleton="20" variant="body2">
+          <TypographyLoading
+            loading={loading}
+            heightSkeleton="20"
+            variant="body2"
+          >
             {data?.positionTotal}
             {' '}
             positions
           </TypographyLoading>
         </Box>
       </Box>
-      {loading ? (<Skeleton width={150} height={40} />
-      )
-        : (
-          <Box className={classes.careerBox}>
-            {data?.interview === 'Online Interview'
-              ? (
-                <HeadsetMicIcon />
-
-              ) : (
-                <BusinessIcon />
-
-              )}
-            <Typography variant="body2">
-              {data?.interview}
-            </Typography>
-          </Box>
-        )}
+      {loading ? (
+        <Skeleton width={150} height={40} />
+      ) : (
+        <Box className={classes.careerBox}>
+          {data?.interview === 'Online Interview' ? (
+            <HeadsetMicIcon />
+          ) : (
+            <BusinessIcon />
+          )}
+          <Typography variant="body2">{data?.interview}</Typography>
+        </Box>
+      )}
       <Box className={classes.dateBox}>
-        <Button
+        {/* <Button
           style={{
-            maxWidth: '300px', minWidth: '100px',
+            maxWidth: '300px',
+            minWidth: '100px',
           }}
           variant="contained"
           endIcon={<EmailIcon />}
         >
           Sent Email
-        </Button>
+        </Button> */}
         <Button
           style={{
-            maxWidth: '300px', minWidth: '100px', marginLeft: '13px',
+            maxWidth: '300px',
+            minWidth: '100px',
+            marginLeft: '13px',
           }}
           variant="contained"
           endIcon={<SendIcon />}
+          onClick={() => setOpen(true)}
         >
           Apply Now
         </Button>
-
       </Box>
-    </Box>
+      <Dialog open={open} title="Apply" onClose={handleClose}>
+        <Box
+          width="100%"
+          height="100%"
+          display="flex"
+          alignItems="center"
+          flexDirection="column"
+          gap="16px"
+          justifyContent="center"
+        >
+          <Box>
+            <Typography variant="h6">เลือกวิธีสมัครงาน</Typography>
+          </Box>
+          <Box alignItems="flex-start" width="100%" mb={2}>
+            <Box
+              mt={2}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Box width="50%">
+                <Button
+                  variant={applyType === 'profile' ? 'contained' : 'outlined'}
+                  color="primary"
+                  fullWidth
+                  startIcon={<ContactPageIcon />}
+                  sx={{ borderRadius: '6px' }}
+                  onClick={() => setApplyType('profile')}
+                >
+                  สมัครด่วน
+                </Button>
+              </Box>
+              <Box>
+                <Typography variant="body1">สมัครโดยใช้ประวัติที่มี</Typography>
+              </Box>
+            </Box>
 
+            <Box
+              mt={2}
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Box width="50%">
+                <Button
+                  fullWidth
+                  variant={applyType === 'manual' ? 'contained' : 'outlined'}
+                  sx={{ borderRadius: '6px' }}
+                  onClick={() => setApplyType('manual')}
+                  startIcon={<AssignmentIcon />}
+                >
+                  กรอกประวัติแบบย่อ
+                </Button>
+              </Box>
+              <Box>
+                <Typography variant="body1">กรอกประวัติด้วยตัวเอง</Typography>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Dialog>
+    </Box>
   )
 }
 
