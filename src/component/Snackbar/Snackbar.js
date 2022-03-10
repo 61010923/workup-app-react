@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import SnackBar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import Proptypes from 'prop-types'
-import { clearMessage } from '../redux/action/alert.action'
+import { clearMessage } from '../../redux/action/alert.action'
 
 function Snackbar(props) {
   const {

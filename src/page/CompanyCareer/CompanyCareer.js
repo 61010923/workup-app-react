@@ -62,13 +62,15 @@ function Company() {
       <Box sx={{ mb: 2 }}>
         <Button startIcon={<ArrowBackIcon />} onClick={() => window.history.back()}>
           back
-
         </Button>
       </Box>
       <Box className={classes.container}>
 
         <Box mb={3}>
-          <CompanyLogo loading={loading} data={{ companyName: data?.companyName, imgProfile: data?.imgProfile }} />
+          <CompanyLogo
+            loading={loading}
+            data={{ companyName: data?.companyName, imgProfile: data?.imgProfile }}
+          />
         </Box>
         <Box mb={3}>
 
