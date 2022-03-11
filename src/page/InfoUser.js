@@ -275,7 +275,7 @@ function InfoUser() {
                 ช่วยแม่ถูบ้าน
               </Typography>
             </Box>
-            <ImageListSkill />
+            {/* <ImageListSkill /> */}
 
           </Box>
         </Box>

@@ -80,7 +80,7 @@ function CareerTitle(props) {
   return (
     <Box
       className={classes.positionItems}
-      onClick={() => navigate(`/companycareer/${positionId}`)}
+      onClick={() => navigate(`/companyCareer/${positionId}`)}
     >
       <Box className={classes.numbers} sx={{ zIndex: 1 }}>
         <Typography variant="body2">{date}</Typography>

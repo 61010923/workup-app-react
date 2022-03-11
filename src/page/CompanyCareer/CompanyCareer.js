@@ -38,7 +38,9 @@ function Company() {
   const [loading, setLoading] = useState(true)
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
+  console.log(data)
   const fetchData = async () => {
+    setLoading(true)
     try {
       const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/announcement/${id}`)
       if (response.status === 200) {
@@ -50,17 +52,21 @@ function Company() {
       setLoading(false)
     }
   }
-
   useEffect(() => {
     fetchData()
     window.scrollTo(0, 0)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [id])
 
   return (
     <>
       <Box sx={{ mb: 2 }}>
-        <Button startIcon={<ArrowBackIcon />} onClick={() => window.history.back()}>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={() => {
+            window.history.back()
+          }}
+        >
           back
 
         </Button>
@@ -68,7 +74,14 @@ function Company() {
       <Box className={classes.container}>
 
         <Box mb={3}>
-          <CompanyLogo loading={loading} data={{ companyName: data?.companyName, imgProfile: data?.imgProfile }} />
+          <CompanyLogo
+            loading={loading}
+            data={{
+              companyName: data?.companyName,
+              imgProfile: data?.imgProfile,
+              companyId: data.announce?.companyId,
+            }}
+          />
         </Box>
         <Box mb={3}>
 
@@ -88,17 +101,39 @@ function Company() {
           <Typography variant="h6">
             หน้าที่และรายละเอียดของงาน
           </Typography>
-          {loading ? (<Skeleton width={100} height={20} />
+          {loading ? (<Skeleton width="50%" height={40} />
           )
             : (
-              <Box>
-                {_map(data?.announce?.role, (item) => (
+              <Box sx={{ marginLeft: 2 }}>
+                {_map(data?.announce?.role, (item, i) => (
 
-                  <Typography variant="body2">
-                    -
-                    {' '}
-                    {item}
-                  </Typography>
+                  <Box
+                    sx={{
+                      backgroundColor: 'primary.mediumFade',
+                      m: 0.5,
+                      p: 1,
+                      width: '50%',
+                      display: 'block',
+                      borderRadius: '8px',
+                      transition: '0.5s',
+                      color: 'primary.main',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                        color: '#fff',
+                        backgroundColor: 'primary.medium',
+
+                      },
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      // sx={{ color: '#fff' }}
+                    >
+                      {i + 1}
+                      {'. '}
+                      {item}
+                    </Typography>
+                  </Box>
                 ))}
               </Box>
             )}
@@ -107,17 +142,38 @@ function Company() {
           <Typography variant="h6">
             คุณสมบัติผู้สมัคร
           </Typography>
-          {loading ? (<Skeleton width={100} height={20} />
+          {loading ? (<Skeleton width="50%" height={40} />
           )
             : (
-              <Box>
-                {_map(data?.announce?.property, (item) => (
+              <Box sx={{ marginLeft: 2 }}>
+                {_map(data?.announce?.property, (item, i) => (
 
-                  <Typography variant="body2">
-                    -
-                    {' '}
-                    {item}
-                  </Typography>
+                  <Box
+                    sx={{
+                      backgroundColor: 'primary.mediumFade',
+                      m: 0.5,
+                      p: 1,
+                      width: '50%',
+                      display: 'block',
+                      borderRadius: '8px',
+                      transition: '0.5s',
+                      color: 'primary.main',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                        color: '#fff',
+                        backgroundColor: 'primary.medium',
+
+                      },
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                    >
+                      {i + 1}
+                      {'. '}
+                      {item}
+                    </Typography>
+                  </Box>
                 ))}
               </Box>
             )}
@@ -126,17 +182,60 @@ function Company() {
           <Hexagon />
         </Box> */}
         <Box>
+          {!_isEmpty(data.otherAnnounce)
+          && (
           <Typography variant="h6">
             Other positions at this company
-
           </Typography>
-          <Box className={classes.PositionWrapper}>
-            <CareerSuggest />
-            <CareerSuggest />
-            <CareerSuggest />
-            <CareerSuggest />
-            <CareerSuggest />
-          </Box>
+          )}
+
+          {loading ? (
+            <Box sx={{
+              display: 'flex', height: 216, overflow: 'hidden', flexWrap: 'wrap',
+            }}
+            >
+              <Skeleton
+                variant="rectangular"
+                height={200}
+                width="23%"
+                sx={{ margin: '8px', borderRadius: '8px' }}
+              />
+              <Skeleton
+                variant="rectangular"
+                height={200}
+                width="23%"
+                sx={{ margin: '8px', borderRadius: '8px' }}
+              />
+              <Skeleton
+                variant="rectangular"
+                height={200}
+                width="23%"
+                sx={{ margin: '8px', borderRadius: '8px' }}
+              />
+              <Skeleton
+                variant="rectangular"
+                height={200}
+                width="23%"
+                sx={{ margin: '8px', borderRadius: '8px' }}
+              />
+            </Box>
+          ) : (
+            <Box className={classes.PositionWrapper}>
+              {_map(data.otherAnnounce, ({
+                _id, position, location, salary,
+              }, i) => (
+                <CareerSuggest data={{
+                  id: _id,
+                  position,
+                  location,
+                  salary,
+                }}
+                />
+
+              ))}
+            </Box>
+          )}
+          {/* <Hexagon /> */}
         </Box>
       </Box>
 

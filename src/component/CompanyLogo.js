@@ -2,8 +2,9 @@ import React from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
-import { Link } from '@mui/material'
+import { Button, Link } from '@mui/material'
 import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
 import TypographyLoading from './Typography'
 import AvatarLoading from './Avatar'
 
@@ -13,30 +14,27 @@ const useStyles = makeStyles({
     // justifyContent: 'center',
     alignItems: 'center',
   },
-  logo: {
-    width: '7rem',
-    height: '7rem',
-    // objectFit: 'cover',
-    borderRadius: '20px',
-    boxShadow: '0 0 4px 2px #939393',
-
-  },
 })
 function CompanyLogo({ data, loading }) {
   const classes = useStyles()
-
+  const navigate = useNavigate()
   return (
     <Box className={classes.container}>
-      <AvatarLoading
-        variantSkeleton="rectangular"
-        widthSkeleton="7rem"
-        heightSkeleton="7rem"
-        variant="rounded"
-        loading={loading}
-        src={data.imgProfile}
-        alt="logo"
-        sx={{ width: '7rem', height: '7rem' }}
-      />
+      <Box
+        sx={{ minWidth: '7rem', height: '7rem' }}
+      >
+        <AvatarLoading
+          variantSkeleton="rectangular"
+          widthSkeleton="7rem"
+          heightSkeleton="7rem"
+          variant="rounded"
+          loading={loading}
+          src={data.imgProfile}
+          alt="logo"
+          sx={{ width: '100%', height: '100%' }}
+        />
+      </Box>
+
       <Box sx={{
         display: 'flex', flexDirection: 'column', ml: 2,
       }}
@@ -44,13 +42,17 @@ function CompanyLogo({ data, loading }) {
         <TypographyLoading loading={loading} variant="h6">
           {data.companyName}
         </TypographyLoading>
-        <Link
-          href="/#"
-          color="rgb(202 162 47)"
-          sx={{ textDecoration: 'none' }}
+        <Button
+          variant="text"
+          size="small"
+          sx={{
+            textTransform: 'capitalize',
+            mt: 0.5,
+          }}
+          onClick={() => navigate(`/company/${data.companyId}`)}
         >
           See more company details.
-        </Link>
+        </Button>
       </Box>
 
     </Box>

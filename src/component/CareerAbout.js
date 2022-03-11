@@ -16,7 +16,7 @@ import BusinessIcon from '@mui/icons-material/Business'
 import _get from 'lodash/get'
 import TypographyLoading from './Typography'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     // alignItems: 'center',
@@ -52,7 +52,7 @@ const useStyles = makeStyles({
     // backgroundColor: 'red',
     margin: '5px',
     padding: '5px',
-    backgroundColor: 'orange',
+    backgroundColor: theme.palette.primary.medium,
     boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)',
     color: '#fff',
     borderRadius: '8px',
@@ -65,7 +65,7 @@ const useStyles = makeStyles({
   locationWrapper: {
     display: 'flex',
   },
-})
+}))
 function CareerAbout({ data, loading }) {
   const classes = useStyles()
   const mediaQuery = useMediaQuery('(min-width:600px)')
