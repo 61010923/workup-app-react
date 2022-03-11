@@ -17,7 +17,7 @@ import _get from 'lodash/get'
 import Dialog from './Dialog'
 import TypographyLoading from './Typography'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -46,7 +46,7 @@ const useStyles = makeStyles({
     // backgroundColor: 'red',
     margin: '5px',
     padding: '5px',
-    backgroundColor: 'orange',
+    backgroundColor: theme.palette.primary.medium,
     boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)',
     color: '#fff',
     borderRadius: '8px',
@@ -59,7 +59,7 @@ const useStyles = makeStyles({
   locationWrapper: {
     display: 'flex',
   },
-})
+}))
 function CareerAbout({ data, loading }) {
   const classes = useStyles()
   const [applyType, setApplyType] = useState('')

@@ -5,9 +5,10 @@ import Typography from '@mui/material/Typography'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PaidIcon from '@mui/icons-material/Paid'
 import { collapseClasses } from '@mui/material'
-import sony from '../image/sony.png'
+import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
 
   CompaniesItem: {
     width: '19rem',
@@ -23,7 +24,7 @@ const useStyles = makeStyles({
       position: 'absolute',
       height: '100%',
       width: '0.5rem',
-      backgroundColor: 'orange',
+      backgroundColor: theme.palette.primary.medium,
       transition: '0.5s',
     },
     '&:hover::before': {
@@ -35,13 +36,9 @@ const useStyles = makeStyles({
         color: '#fff',
       },
     },
-    '& $changeColor': {
-      color: 'orange',
-    },
   },
   changeColor: {
-    fontSize: '1.3rem',
-    fontWeight: 'bold',
+    color: theme.palette.primary.medium,
     transition: '0.5s',
 
   },
@@ -50,33 +47,44 @@ const useStyles = makeStyles({
     alignItems: 'center',
     // margin: '4px',
   },
-})
-function CareerSuggest() {
+}))
+function CareerSuggest({ data }) {
   const classes = useStyles()
-
+  const navigate = useNavigate()
   return (
-    <Box className={classes.CompaniesItem}>
+    <Box
+      className={classes.CompaniesItem}
+      onClick={() => navigate(`/companyCareer/${data.id}`)}
+    >
       <Box
         sx={{
           padding: 1,
-          ml: 1,
+          ml: 2,
           zIndex: '1',
           transition: '0.5s',
         }}
       >
-        <changeColor className={classes.changeColor}>
-          Product Design Engineer
-        </changeColor>
+        <Typography
+          className={classes.changeColor}
+          sx={{
+            fontSize: '1.3rem',
+            fontWeight: 'bold',
+            transition: '0.5s',
+            textTransform: 'capitalize',
+          }}
+        >
+          {data.position}
+        </Typography>
         <Box className={classes.careerItems}>
           <LocationOnIcon />
           <Typography variant="body2">
-            Amata City Chonburi Industrial Estate Chon Buri
+            {data.location}
           </Typography>
         </Box>
         <Box className={classes.careerItems}>
           <PaidIcon />
           <Typography variant="body2">
-            Company structure
+            {data.salary}
           </Typography>
         </Box>
       </Box>
@@ -85,3 +93,9 @@ function CareerSuggest() {
 }
 
 export default CareerSuggest
+CareerSuggest.propTypes = {
+  data: PropTypes.objectOf(PropTypes.any),
+}
+CareerSuggest.defaultProps = {
+  data: [],
+}

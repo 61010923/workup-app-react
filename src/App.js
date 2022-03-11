@@ -24,6 +24,7 @@ import UserAccount from './page/UserAccount'
 import UserTable from './page/UserTable'
 import CompanyTablePosition from './page/CompanyTablePosition'
 import CompanyTableJobApp from './page/CompanyTableJobApp'
+import DragAndDrop from './component/DragAndDrop'
 
 function App() {
   const dispatch = useDispatch()
@@ -97,6 +98,7 @@ function App() {
       />
       <Route exact path="/companyPersonal" element={<AuthRoute loginRequired drawer page={CompanyProfile} footer />} />
       <Route exact path="/InfoUser" element={<AuthRoute loginRequired drawer page={InfoUser} footer />} />
+      <Route exact path="/DragAndDrop" element={<AuthRoute loginRequired drawer page={DragAndDrop} footer />} />
       <Route exact path="/companyCareer/:id" element={<AuthRoute loginRequired drawer page={Career} footer />} />
       <Route
         exact
@@ -105,7 +107,6 @@ function App() {
           <AuthRoute page={CompanyManagement} loginRequired drawer={false} />
 )}
       />
-
       <Route path="*" element={<NotFound />} />
     </Routes>
   )

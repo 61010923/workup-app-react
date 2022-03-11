@@ -1,6 +1,9 @@
 const palette = {
   primary: {
     main: '#30475E',
+    light: '#00ecd5',
+    medium: '#4e95ed',
+    mediumFade: '#4e95ed94',
     contrastText: '#FFF',
   },
   secondary: {
