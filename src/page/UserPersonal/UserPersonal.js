@@ -292,6 +292,7 @@ function PersonalTab() {
               }}
               state={profile}
               setState={setProfile}
+              actionType="edit"
             />
             <Box margin={2} mx={3}>
               <Box>

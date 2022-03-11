@@ -21,6 +21,7 @@ import NotFound from './component/NotFound'
 import InfoUser from './page/InfoUser'
 import UserPersonal from './page/UserPersonal'
 import UserAccount from './page/UserAccount'
+import UserApplication from './page/UserApplication'
 import UserTable from './page/UserTable'
 import CompanyTablePosition from './page/CompanyTablePosition'
 import CompanyTableJobApp from './page/CompanyTableJobApp'
@@ -59,6 +60,11 @@ function App() {
         exact
         path="/candidateTable"
         element={<AuthRoute loginRequired drawer page={UserTable} />}
+      />
+      <Route
+        exact
+        path="/candidate/:id"
+        element={<AuthRoute loginRequired drawer page={UserApplication} />}
       />
       <Route
         exact
