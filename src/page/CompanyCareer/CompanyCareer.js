@@ -68,7 +68,6 @@ function Company() {
           }}
         >
           back
-
         </Button>
       </Box>
       <Box className={classes.container}>

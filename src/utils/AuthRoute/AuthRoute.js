@@ -25,9 +25,8 @@ function AuthRoute(props) {
     output = <Navigate to="/login" />
   // eslint-disable-next-line brace-style
   }
-  else if (user.isLogin && !isLoginRequired) {
-    output = <Navigate to="/" />
-  } else if ((user.isLogin && isLoginRequired) || (!user.isLogin && !isLoginRequired)) {
+  else if ((user.isLogin && isLoginRequired)
+  || (!user.isLogin && !isLoginRequired) || (user.isLogin && !isLoginRequired)) {
     output = (
       <>
         <Snackbar
@@ -64,7 +63,12 @@ export default AuthRoute
 
 AuthRoute.propTypes = {
   page: PropTypes.elementType.isRequired,
-  loginRequired: PropTypes.bool.isRequired,
+  loginRequired: PropTypes.bool,
   drawer: PropTypes.bool.isRequired,
-  footer: PropTypes.bool.isReuireed,
+  footer: PropTypes.bool,
+}
+
+AuthRoute.defautProps = {
+  footer: false,
+  loginRequired: false,
 }
