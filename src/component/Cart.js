@@ -6,7 +6,6 @@ import CardMedia from '@mui/material/CardMedia'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import PropTypes from 'prop-types'
-import { margin } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
 
 export default function MediaCard(props) {
@@ -16,7 +15,7 @@ export default function MediaCard(props) {
   } = props
   return (
     <Card
-      sx={{ maxWidth: 600, margin: 2, cursor: 'pointer' }}
+      sx={{ maxWidth: 400, margin: 2, cursor: 'pointer' }}
       onClick={() => navigate(`/company/${companyId}`)}
     >
       <CardMedia
@@ -32,14 +31,16 @@ export default function MediaCard(props) {
         alt="praYut"
       />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h6" component="div">
           {title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {describe}
         </Typography>
       </CardContent>
-      <CardActions>
+      <CardActions
+        sx={{ float: 'right' }}
+      >
         {/* <Button size="small">Share</Button> */}
         <Button size="small">More Info</Button>
       </CardActions>

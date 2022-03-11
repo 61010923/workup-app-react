@@ -78,7 +78,7 @@ export default function QuiltedImageList(props) {
               <>
                 {i < 5 && (
                 <ImageListItem
-                  key={item.img}
+                  key={item.img + i}
                   component="image"
                   onMouseEnter={() => {
                     if (i === 4) {
