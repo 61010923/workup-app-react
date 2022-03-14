@@ -8,6 +8,7 @@ const palette = {
   },
   secondary: {
     main: '#F5F5F5',
+    hard: '#a7a7a7',
     contrastText: '#FFF',
   },
   common: {

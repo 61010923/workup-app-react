@@ -24,7 +24,7 @@ const useStyles = makeStyles({
   },
 })
 function UserProfile({
-  loading, data, state, setState,
+  loading, data, state, setState, actionType,
 }) {
   const classes = useStyles()
   const navigate = useNavigate()
@@ -44,7 +44,7 @@ function UserProfile({
           firstName={data.firstName}
           state={state}
           setState={setState}
-          actionType="edit"
+          actionType={actionType}
         />
       )}
       <Box
@@ -60,7 +60,7 @@ function UserProfile({
               heightSkeleton={20}
               loading={loading}
               variant="h5"
-              color="primary"
+              color="secondary"
               sx={{ fontWeight: 'bold' }}
             >
               {_startCase(data.firstName)}
@@ -71,7 +71,7 @@ function UserProfile({
               heightSkeleton={20}
               loading={loading}
               variant="h5"
-              color="primary"
+              color="secondary"
               sx={{ fontWeight: 'bold' }}
             >
               {_startCase(data.lastName)}
@@ -82,7 +82,7 @@ function UserProfile({
               heightSkeleton={20}
               loading={loading}
               variant="body1"
-              color="primary"
+              color="secondary"
             >
               {data.responsible}
             </TypographyLoading>
@@ -100,6 +100,7 @@ function UserProfile({
             {user.userDetail.userType}
           </TypographyLoading>
         </Box> */}
+        {actionType === 'edit' && (
         <Box mt={2}>
           <Button
             onClick={() => navigate(`/${user.userDetail.userType}Account`)}
@@ -112,6 +113,7 @@ function UserProfile({
             Change password
           </Button>
         </Box>
+        )}
       </Box>
     </Box>
   )
@@ -123,4 +125,8 @@ UserProfile.propTypes = {
   state: PropTypes.string.isRequired,
   setState: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
+  actionType: PropTypes.string,
+}
+UserProfile.defaultProps = {
+  actionType: 'view',
 }
