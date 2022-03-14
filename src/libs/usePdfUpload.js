@@ -3,10 +3,7 @@ import _get from 'lodash/get'
 
 const usePdfUpload = () => async (e) => {
   let data = ''
-  // const myArr = e.map((x) => x)
-  // console.log(myArr)
   const test = e[0]
-  console.log(test)
   try {
     const formData = new FormData()
     formData.append('file', test)

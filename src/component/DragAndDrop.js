@@ -209,7 +209,9 @@ function App({ myFiles, setMyFiles }) {
                 </IconButton>
               </Box>
             </Box>
+            <Box className={classes.progressBar} />
           </Box>
+
         ))}
       </Box>
 

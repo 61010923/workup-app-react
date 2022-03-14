@@ -5,10 +5,8 @@ const useImageUpload = () => async (e) => {
   let data = ''
   try {
     const { files } = e.target
-    console.log(files[0])
     const formData = new FormData()
     formData.append('image', files[0])
-    console.log(formData)
     const response = await axios.post(
       `${process.env.REACT_APP_BASE_URL}/api/v1/uploads`,
       formData,
