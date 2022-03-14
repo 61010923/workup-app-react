@@ -44,7 +44,7 @@ function UserProfile({
           firstName={data.firstName}
           state={state}
           setState={setState}
-          actionType="view"
+          actionType={actionType}
         />
       )}
       <Box
@@ -60,7 +60,7 @@ function UserProfile({
               heightSkeleton={20}
               loading={loading}
               variant="h5"
-              color="primary"
+              color="secondary"
               sx={{ fontWeight: 'bold' }}
             >
               {_startCase(data.firstName)}
@@ -71,7 +71,7 @@ function UserProfile({
               heightSkeleton={20}
               loading={loading}
               variant="h5"
-              color="primary"
+              color="secondary"
               sx={{ fontWeight: 'bold' }}
             >
               {_startCase(data.lastName)}
@@ -82,7 +82,7 @@ function UserProfile({
               heightSkeleton={20}
               loading={loading}
               variant="body1"
-              color="primary"
+              color="secondary"
             >
               {data.responsible}
             </TypographyLoading>

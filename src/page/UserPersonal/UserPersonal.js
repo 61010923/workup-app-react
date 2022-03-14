@@ -30,12 +30,11 @@ import { alertBar } from '../../redux/action/alert.action'
 import TextField from '../../component/Textfield'
 import TagField from '../../component/TagField'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   formContainer: {
     width: '90%',
     margin: '0 auto',
     padding: '2rem 0',
-
   },
   container: {
     display: 'flex',
@@ -43,7 +42,10 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     // flexDirection: 'column',
   },
-})
+  multilineColor: {
+    color: 'theme.palette.secondary.main',
+  },
+}))
 const Maritals = [
   {
     id: 'single',
@@ -274,7 +276,7 @@ function PersonalTab() {
           <Box
             color="primary"
             sx={{
-              backgroundColor: 'rgb(248 248 248)',
+              backgroundColor: 'primary.main',
               borderRadius: '2px 0 0 0',
               // border: 'solid 2px',
               // boxShadow: '5px 10px 15px rgba(0,0,0,0.5)',
@@ -299,6 +301,8 @@ function PersonalTab() {
                 <TextField
                   loading={openSkeleton}
                   required
+                  color="secondary"
+                  sx={{ input: { color: 'secondary.main' } }}
                   variant="standard"
                   id="demo-helper-text-aligned"
                   label="Email"
@@ -306,7 +310,7 @@ function PersonalTab() {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <EmailIcon />
+                        <EmailIcon color="secondary" />
                       </InputAdornment>
                     ),
                   }}
@@ -326,6 +330,7 @@ function PersonalTab() {
                 <TextField
                   loading={openSkeleton}
                   required
+                  color="secondary"
                   variant="standard"
                   id="demo-helper-text-aligned"
                   label="โทรศัพท์"
@@ -334,10 +339,11 @@ function PersonalTab() {
                   helperText={
                     openError && _isEmpty(phone) && 'please fill phone'
                   }
+                  sx={{ input: { color: 'secondary.main' } }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <PhoneIcon />
+                        <PhoneIcon color="secondary" />
                       </InputAdornment>
                     ),
                   }}
@@ -352,6 +358,8 @@ function PersonalTab() {
                 <TextField
                   loading={openSkeleton}
                   required
+                  color="secondary"
+                  sx={{ input: { color: 'secondary.main' } }}
                   variant="standard"
                   id="demo-helper-text-aligned"
                   label="จังหวัด / เมือง"
@@ -361,7 +369,7 @@ function PersonalTab() {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <LocationOnIcon />
+                        <LocationOnIcon color="secondary" />
                       </InputAdornment>
                     ),
                   }}

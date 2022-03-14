@@ -100,7 +100,6 @@ function App() {
   //   const uploadImage = useImageUpload([])
   const [imageFile, setImageFile] = useState('')
 
-  console.log(myFiles)
   const removeFile = (file) => {
     setMyFiles((oldStateVal) => reject(oldStateVal, { id: file }))
   }

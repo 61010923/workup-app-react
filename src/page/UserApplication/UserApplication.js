@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Button, MenuItem } from '@mui/material'
+import {
+  Box, Button, Chip, MenuItem,
+} from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { makeStyles } from '@mui/styles'
-import DatePicker from '@mui/lab/DatePicker'
-import AdapterDateFns from '@mui/lab/AdapterDateFns'
-import LocalizationProvider from '@mui/lab/LocalizationProvider'
 import EmailIcon from '@mui/icons-material/Email'
 import _isEmpty from 'lodash/isEmpty'
 import _isDate from 'lodash/isDate'
@@ -17,11 +16,12 @@ import _every from 'lodash/every'
 import InputAdornment from '@mui/material/InputAdornment'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PhoneIcon from '@mui/icons-material/Phone'
+import SchoolIcon from '@mui/icons-material/School'
 import Typography from '../../component/Typography'
 import Footer from '../../component/Footer'
 import ImageUploader from '../../component/ImageUploader'
 import AddOrRemoveEducation from '../../component/AddOrRemoveEducation'
-import AddOrRemoveInput from '../../component/AddOrRemoveInput'
+import ImgListSkill from '../../component/ImageListSkill'
 import UserProfile from '../../component/UserProfile'
 import userDetail from '../../redux/selector/user.selector'
 import { alertBar } from '../../redux/action/alert.action'
@@ -279,12 +279,11 @@ function UserApplication() {
   }, [])
   return (
     <Box className={classes.container}>
-      <Grid container width="100%" height="100%">
+      <Grid container width="100%">
         <Grid item md={3} xs={12}>
           <Box
-            color="primary"
             sx={{
-              backgroundColor: 'rgb(248 248 248)',
+              backgroundColor: '#30475E',
               borderRadius: '2px 0 0 0',
               // border: 'solid 2px',
               // boxShadow: '5px 10px 15px rgba(0,0,0,0.5)',
@@ -309,9 +308,9 @@ function UserApplication() {
                 alignItems="center"
                 className={classes.borderBox}
               >
-                <EmailIcon color="primary" />
+                <EmailIcon color="secondary" />
                 <Box ml={2}>
-                  <Typography variant="body1" color="primary">
+                  <Typography variant="body1" color="secondary">
                     mock@gmail.com
                   </Typography>
                 </Box>
@@ -322,9 +321,11 @@ function UserApplication() {
                 alignItems="center"
                 className={classes.borderBox}
               >
-                <PhoneIcon fontSize="small" color="primary" />
+                <PhoneIcon fontSize="small" color="secondary" />
                 <Box ml={2}>
-                  <Typography variant="body1">08569879875</Typography>
+                  <Typography variant="body1" color="secondary">
+                    08569879875
+                  </Typography>
                 </Box>
               </Box>
               <Box
@@ -333,9 +334,11 @@ function UserApplication() {
                 alignItems="center"
                 className={classes.borderBox}
               >
-                <LocationOnIcon fontSize="small" color="primary" />
+                <LocationOnIcon fontSize="small" color="secondary" />
                 <Box ml={2}>
-                  <Typography variant="body1">BKK</Typography>
+                  <Typography variant="body1" color="secondary">
+                    BKK
+                  </Typography>
                 </Box>
               </Box>
               {/* <TextField
@@ -424,6 +427,8 @@ function UserApplication() {
               borderRadius: '0 2px 2px 2px',
               // boxShadow: '5px 10px 15px rgba(0,0,0,0.5)',
               width: '100%',
+              maxHeight: '600px',
+              overflowY: 'scroll',
             }}
           >
             <Box className={classes.formContainer}>
@@ -610,12 +615,75 @@ function UserApplication() {
                 <Typography
                   variant="h5"
                   color="primary"
-                  sx={{ fontWeight: 'bold', mb: 2 }}
+                  sx={{ fontWeight: 'bold' }}
                 >
                   การศึกษา
-
                 </Typography>
               </Box>
+              {_map(
+                [
+                  {
+                    education: 'Bachelor Degree',
+                    major: 'it',
+                    university: 'KMITL',
+                    start: 2017,
+                    complete: 2018,
+                  },
+                  {
+                    education: 'Bachelor Degree',
+                    major: 'it',
+                    university: 'KMITL',
+                    start: 2017,
+                    complete: 2018,
+                  },
+                ],
+                (data) => (
+                  <Box
+                    // mt={2}
+                    width="100%"
+                    paddingY={2}
+                    sx={{
+                      borderBottom: '2px solid',
+                      borderColor: 'primary.main',
+                    }}
+                  >
+                    <Typography variant="h6" color="primary">
+                      {`${data.major} (${data.education})`}
+                    </Typography>
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      mt={1}
+                    >
+                      <Box display="flex" alignItems="center">
+                        <Box>
+                          <SchoolIcon
+                            sx={{ color: 'secondary.hard' }}
+                            fontSize="small"
+                          />
+                        </Box>
+                        <Box ml={1}>
+                          <Typography
+                            variant="body2"
+                            sx={{ color: 'secondary.hard' }}
+                          >
+                            {data.university}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: 'secondary.hard' }}
+                        >
+                          {`${data.start} - ${data.complete}`}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                ),
+              )}
               {/* <AddOrRemoveInput
                 loading={openSkeleton}
                 error={openError}
@@ -633,45 +701,38 @@ function UserApplication() {
                 state={education}
                 setState={setEducation}
               /> */}
-              <Typography sx={{ fontWeight: 'bold', mt: 2 }}>
-                ความสามารถ/ผลงาน
-              </Typography>
-              {/* <AddOrRemoveInput
-            loading={openSkeleton}
-            error={openError}
-            keyText='skill'
-            label='Skill/Past work'
-            state={skill}
-            setState={setSkill}
-          /> */}
-              <Box mt={2}>
-                <TagField
-                  label="Skill"
-                  state={skill}
-                  setState={setSkill}
-                  error={openError && _isEmpty(skill)}
-                  loading={openSkeleton}
-                />
+              <Box mt={8}>
+                <Typography
+                  variant="h5"
+                  color="primary"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  ทักษะความสามารถ
+                </Typography>
+              </Box>
+              <Box mt={2} display="flex" gap={1}>
+                {_map(['php', 'css', 'javascript'], (data) => (
+                  <Chip label={data} color="primary" />
+                ))}
               </Box>
 
-              <Box sx={{ mt: 2 }}>
-                <ImageUploader
-                  loading={openSkeleton}
-                  error={openError}
-                  state={image}
-                  setState={setImage}
+              <Box mt={8}>
+                <Typography
+                  variant="h5"
+                  color="primary"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  ผลงาน
+                </Typography>
+              </Box>
+              <Box mt={2}>
+                <ImgListSkill
+                  imgList={[
+                    'https://res.cloudinary.com/myprojectbyatipat/image/upload/v1646128173/workup-upload/tmp-13-1646128172296_wk9gsk.jpg',
+                    'https://res.cloudinary.com/myprojectbyatipat/image/upload/v1646278893/workup-upload/tmp-1-1646278893017_w4cu2x.png',
+                  ]}
                 />
               </Box>
-              <input type="file" onChange={handleFileChange} />
-              {/* <Button
-            sx={{ mt: 2 }}
-            onClick={(e) => handleSubmit()}
-            disabled={loading}
-            fullWidth
-            variant="contained"
-          >
-            save
-          </Button> */}
             </Box>
           </Box>
         </Grid>

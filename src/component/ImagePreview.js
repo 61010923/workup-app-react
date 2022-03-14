@@ -80,8 +80,6 @@ function ImagePreview({
   setIsOpen,
   haveKeepData,
   keepDataLength,
-  isCs,
-  csIndex,
 }) {
   const classes = useStyles()
   const [sequence, setSequence] = useState()
@@ -95,14 +93,7 @@ function ImagePreview({
   }
   useEffect(() => {
     if (_isEmpty(images)) {
-      if (isCs) {
-        setIsOpen((prev) => ({
-          ...prev,
-          [csIndex]: false,
-        }))
-      } else {
-        setIsOpen(false)
-      }
+      setIsOpen(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images])
@@ -205,14 +196,7 @@ function ImagePreview({
           size="small"
           style={{ backgroundColor: 'black', color: 'white' }}
           onClick={() => {
-            if (isCs) {
-              setIsOpen((prev) => ({
-                ...prev,
-                [csIndex]: false,
-              }))
-            } else {
-              setIsOpen(false)
-            }
+            setIsOpen(false)
           }}
         >
           <CloseIcon fontSize="small" />
@@ -226,14 +210,12 @@ ImagePreview.propTypes = {
   images: PropTypes.arrayOf(PropTypes.string).isRequired,
   initialSlide: PropTypes.number.isRequired,
   isOpen: PropTypes.bool.isRequired,
-  isCs: PropTypes.bool.isRequired,
   actionType: PropTypes.string.isRequired,
   setImages: PropTypes.func,
   titleImg: PropTypes.string,
   setIsOpen: PropTypes.func.isRequired,
   haveKeepData: PropTypes.bool,
   keepDataLength: PropTypes.number,
-  csIndex: PropTypes.number,
 }
 
 ImagePreview.defaultProps = {
@@ -241,5 +223,4 @@ ImagePreview.defaultProps = {
   titleImg: 'image',
   haveKeepData: false,
   keepDataLength: 0,
-  csIndex: 0,
 }
