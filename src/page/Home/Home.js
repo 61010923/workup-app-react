@@ -230,7 +230,6 @@ function Home() {
   const [loading, setLoading] = useState(true)
   const [company, setCompany] = useState([])
   const [positions, setPositions] = useState([])
-  console.log(positions)
   const fetchData = async () => {
     setLoading(true)
     try {

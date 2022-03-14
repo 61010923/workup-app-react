@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import Typography from '@mui/material/Typography'
-import { Button, Skeleton } from '@mui/material'
+import {
+  Button, Skeleton, FormGroup, FormControlLabel, Checkbox,
+} from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PaidIcon from '@mui/icons-material/Paid'
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic'
@@ -16,6 +18,8 @@ import BusinessIcon from '@mui/icons-material/Business'
 import _get from 'lodash/get'
 import Dialog from './Dialog'
 import TypographyLoading from './Typography'
+import DragAndDrop from './DragAndDrop'
+import usePdfUpload from '../libs/usePdfUpload'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -61,14 +65,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 function CareerAbout({ data, loading }) {
+  const pdfUpload = usePdfUpload()
   const classes = useStyles()
   const [applyType, setApplyType] = useState('')
+  const [myFiles, setMyFiles] = useState([])
   const [open, setOpen] = useState(false)
   const mediaQuery = useMediaQuery('(min-width:600px)')
 
   const handleClose = () => {
     setOpen(false)
     setApplyType('')
+  }
+  const handleSubmit = () => {
+    const pdfLink = pdfUpload(myFiles)
   }
   return (
     <Box className={classes.container}>
@@ -149,16 +158,6 @@ function CareerAbout({ data, loading }) {
         </Box>
       )}
       <Box className={classes.dateBox}>
-        {/* <Button
-          style={{
-            maxWidth: '300px',
-            minWidth: '100px',
-          }}
-          variant="contained"
-          endIcon={<EmailIcon />}
-        >
-          Sent Email
-        </Button> */}
         <Button
           style={{
             maxWidth: '300px',
@@ -172,65 +171,16 @@ function CareerAbout({ data, loading }) {
           Apply Now
         </Button>
       </Box>
-      <Dialog open={open} title="Apply" onClose={handleClose}>
-        <Box
-          width="100%"
-          height="100%"
-          display="flex"
-          alignItems="center"
-          flexDirection="column"
-          gap="16px"
-          justifyContent="center"
-        >
-          <Box>
-            <Typography variant="h6">เลือกวิธีสมัครงาน</Typography>
-          </Box>
-          <Box alignItems="flex-start" width="100%" mb={2}>
-            <Box
-              mt={2}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Box width="50%">
-                <Button
-                  variant={applyType === 'profile' ? 'contained' : 'outlined'}
-                  color="primary"
-                  fullWidth
-                  startIcon={<ContactPageIcon />}
-                  sx={{ borderRadius: '6px' }}
-                  onClick={() => setApplyType('profile')}
-                >
-                  สมัครด่วน
-                </Button>
-              </Box>
-              <Box>
-                <Typography variant="body1">สมัครโดยใช้ประวัติที่มี</Typography>
-              </Box>
-            </Box>
-
-            <Box
-              mt={2}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Box width="50%">
-                <Button
-                  fullWidth
-                  variant={applyType === 'manual' ? 'contained' : 'outlined'}
-                  sx={{ borderRadius: '6px' }}
-                  onClick={() => setApplyType('manual')}
-                  startIcon={<AssignmentIcon />}
-                >
-                  กรอกประวัติแบบย่อ
-                </Button>
-              </Box>
-              <Box>
-                <Typography variant="body1">กรอกประวัติด้วยตัวเอง</Typography>
-              </Box>
-            </Box>
-          </Box>
+      <Dialog
+        open={open}
+        title="Apply"
+        onClose={handleClose}
+        btLabel="Send"
+        submitFunc={handleSubmit}
+      >
+        <Box>
+          <DragAndDrop myFiles={myFiles} setMyFiles={setMyFiles} />
+          <FormControlLabel control={<Checkbox />} label="ยืนยันการส่งข้อมูลประวัติส่วนตัว" />
         </Box>
       </Dialog>
     </Box>
