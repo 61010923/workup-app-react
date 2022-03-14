@@ -38,7 +38,6 @@ function Company() {
   const [loading, setLoading] = useState(true)
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
-  console.log(data)
   const fetchData = async () => {
     setLoading(true)
     try {

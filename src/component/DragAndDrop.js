@@ -1,47 +1,71 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { useDropzone } from 'react-dropzone'
 import {
   Box, Button, Typography, IconButton, Tooltip,
 } from '@mui/material'
 import _map from 'lodash/map'
-import { isEmpty, reject } from 'lodash'
 import { makeStyles } from '@mui/styles'
+import _isEmpty from 'lodash/isEmpty'
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined'
 import CloseIcon from '@mui/icons-material/Close'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import useImageUpload from '../libs/useImageUpload'
+import { useDispatch } from 'react-redux'
+import PropTypes from 'prop-types'
 import pdfImage from '../image/pdf.png'
+import { alertBar } from '../redux/action/alert.action'
 
 const useStyles = makeStyles((theme) => (
   {
     container: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
       gap: '10px',
     // height: '15rem',
     },
     dragBx: {
       height: '15rem',
       // backgroundColor: '#333',
-      border: '1px solid #333',
+      border: `3px dashed ${theme.palette.primary.main}`,
+      borderRadius: '8px',
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'column',
       gap: 10,
+      '&:hover': {
+        backgroundColor: '#f5f5f56b',
+      },
     },
     fileBx: {
       backgroundColor: '#f5f5f56b',
-      height: '15rem',
-      // overflowY: 'scroll',
+      maxHeight: '15rem',
+      overflowY: 'scroll',
+      '&::-webkit-scrollbar': {
+        width: '0.4em',
+      },
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: '#E6E6E6',
+        borderRadius: '8px',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: '#9C9C9C',
+        borderRadius: '8px',
+
+      },
     },
     fileList: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      border: '1px solid black',
+      border: '1px solid #93939336',
+      borderRadius: '8px',
       marginBottom: '8px',
+      marginRight: '6px',
+      marginLeft: '1px',
       padding: '8px',
+      // transition: 'box-shadow 0.2s',
+      '&:hover': {
+        boxShadow: '3px 3px 3px rgba(0,0,0,0.2),-1px -1px 1px rgba(0,0,0,0.05)',
+      },
     },
     pdfImage: {
       minWidth: '2.5rem',
@@ -66,11 +90,11 @@ const useStyles = makeStyles((theme) => (
         maxWidth: '20em',
 
       },
-      [theme.breakpoints.up(800)]: {
+      [theme.breakpoints.up(760)]: {
         maxWidth: '25em',
 
       },
-      [theme.breakpoints.up(815)]: {
+      [theme.breakpoints.up(795)]: {
         maxWidth: '10em',
 
       },
@@ -78,7 +102,7 @@ const useStyles = makeStyles((theme) => (
         maxWidth: '15em',
 
       },
-      [theme.breakpoints.up(1015)]: {
+      [theme.breakpoints.up(1100)]: {
         maxWidth: '20em',
 
       },
@@ -93,22 +117,26 @@ const useStyles = makeStyles((theme) => (
     },
   }
 ))
-function App() {
+function App({ myFiles, setMyFiles }) {
+  const dispatch = useDispatch()
   const classes = useStyles()
-
-  const [myFiles, setMyFiles] = useState([])
-  //   const uploadImage = useImageUpload([])
-  const [imageFile, setImageFile] = useState('')
-
-  const removeFile = (file) => {
-    setMyFiles((oldStateVal) => reject(oldStateVal, { id: file }))
+  const fileSize = useMemo(() => myFiles.reduce((a, b) => +a + +b.size, 0), [myFiles])
+  const removeFile = (index) => {
+    const data = [...myFiles]
+    data.splice(index, 1)
+    setMyFiles(data)
   }
-  const handleFileInputChange = (file) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onloadend = () => {
-      setImageFile(reader.result)
+  const alertFileSize = () => {
+    if (fileSize >= 5000000) {
+      dispatch(alertBar(true, 'error', 3000, 'Maximum upload file size: 5 MB'))
     }
+  }
+  function bytesToSize(bytes) {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+    if (bytes === 0) return '0 Byte'
+    // eslint-disable-next-line radix
+    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+    return `${Math.round(bytes / 1024 ** i, 2)} ${sizes[i]}`
   }
   const onDrop = useCallback(
     (acceptedFiles) => {
@@ -122,9 +150,10 @@ function App() {
         type: item.type,
         webkitRelativePath: item.webkitRelativePath,
       }))
-      // handleFileInputChange(acceptedFiles[0])
       setMyFiles(files)
+      alertFileSize()
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [myFiles],
   )
 
@@ -135,21 +164,26 @@ function App() {
   return (
     <Box className={classes.container}>
 
-      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <Box {...getRootProps()} className={classes.dragBx}>
+      <Box>
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-        <input {...getInputProps()} />
-        <CloudUploadOutlinedIcon sx={{ fontSize: '6rem', color: 'primary.main' }} />
-        <Box sx={{ textAlign: 'center' }}>
-          <Typography>Drop files here</Typography>
-          <Typography>or</Typography>
+        <Box {...getRootProps()} className={classes.dragBx}>
+          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+          <input {...getInputProps()} />
+          <CloudUploadOutlinedIcon sx={{ fontSize: '6rem', color: 'primary.main' }} />
+          <Box sx={{ textAlign: 'center' }}>
+            <Typography>Drop files here</Typography>
+            <Typography>or</Typography>
+          </Box>
+          <Button variant="contained" size="small" sx={{ textTransform: 'capitalize' }}>
+            Browse
+          </Button>
         </Box>
-        <Button variant="contained" size="small" sx={{ textTransform: 'capitalize' }}>
-          Browse
-        </Button>
+        <Box>
+          <Typography variant="caption">Accepted file type: .pdf only (Maximum upload file size: 5 MB)</Typography>
+        </Box>
       </Box>
       <Box className={classes.fileBx}>
-        {_map(myFiles, (file) => (
+        {_map(myFiles, (file, i) => (
           <Box key={file.id}>
             <Box className={classes.fileList}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -163,16 +197,14 @@ function App() {
                       {file.name}
                     </Typography>
                   </Tooltip>
-                  <Typography variant="caption" sx={{ color: '#b1b1b1' }}>
-                    {file.size}
-                    {' '}
-                    bytes
+                  <Typography variant="caption" sx={{ color: '#939393' }}>
+                    {bytesToSize(file.size)}
                   </Typography>
                 </Box>
               </Box>
 
               <Box>
-                <IconButton onClick={() => removeFile(file.id)}>
+                <IconButton onClick={() => removeFile(i)}>
                   <CloseIcon />
                 </IconButton>
               </Box>
@@ -180,8 +212,13 @@ function App() {
           </Box>
         ))}
       </Box>
+
     </Box>
   )
 }
 
 export default App
+App.propTypes = {
+  myFiles: PropTypes.arrayOf(PropTypes.any).isRequired,
+  setMyFiles: PropTypes.func.isRequired,
+}

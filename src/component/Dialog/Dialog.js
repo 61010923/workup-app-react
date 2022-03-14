@@ -14,9 +14,13 @@ function CustomDialog(props) {
     children, onClose, title, open, btLabel, submitFunc, ...other
   } = props
   return (
-    <Dialog open={open}>
+    <Dialog
+      open={open}
+      fullWidth
+      maxWidth="lg"
+    >
       <DialogTitle
-        sx={{ m: 0, p: 2, minWidth: '400px' }}
+        sx={{ m: 0, p: 2 }}
         {...other}
       >
         {title}
