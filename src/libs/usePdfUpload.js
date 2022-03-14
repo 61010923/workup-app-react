@@ -17,7 +17,7 @@ const usePdfUpload = () => async (e) => {
       },
     )
     if (response.status === 200) {
-      data = _get(response, 'data.image.src')
+      data = _get(response, 'data.file.src')
     }
   } catch (error) {
     console.log(error)
