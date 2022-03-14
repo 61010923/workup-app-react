@@ -6,7 +6,6 @@ const usePdfUpload = () => async (e) => {
   // const myArr = e.map((x) => x)
   // console.log(myArr)
   const test = e[0]
-  console.log(test)
   try {
     const formData = new FormData()
     formData.append('file', test)
@@ -20,7 +19,7 @@ const usePdfUpload = () => async (e) => {
       },
     )
     if (response.status === 200) {
-      data = _get(response, 'data.image.src')
+      data = _get(response, 'data.file.src')
     }
   } catch (error) {
     console.log(error)

@@ -10,16 +10,15 @@ import PaidIcon from '@mui/icons-material/Paid'
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic'
 import PersonIcon from '@mui/icons-material/Person'
 import SendIcon from '@mui/icons-material/Send'
-import ContactPageIcon from '@mui/icons-material/ContactPage'
-import AssignmentIcon from '@mui/icons-material/Assignment'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import PropTypes from 'prop-types'
 import BusinessIcon from '@mui/icons-material/Business'
 import _get from 'lodash/get'
+import { useDispatch } from 'react-redux'
 import Dialog from './Dialog'
 import TypographyLoading from './Typography'
 import DragAndDrop from './DragAndDrop'
-import usePdfUpload from '../libs/usePdfUpload'
+import { alertBar } from '../redux/action/alert.action'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -65,19 +64,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 function CareerAbout({ data, loading }) {
-  const pdfUpload = usePdfUpload()
   const classes = useStyles()
-  const [applyType, setApplyType] = useState('')
+  const dispatch = useDispatch()
+  const [confirm, setConfirm] = useState(false)
   const [myFiles, setMyFiles] = useState([])
   const [open, setOpen] = useState(false)
   const mediaQuery = useMediaQuery('(min-width:600px)')
 
   const handleClose = () => {
     setOpen(false)
-    setApplyType('')
   }
   const handleSubmit = () => {
-    const pdfLink = pdfUpload(myFiles)
+    if (confirm) {
+      dispatch(alertBar(true, 'success', 3000, 'ส่งใบสมัครสำเร็จ'))
+    } else {
+      dispatch(alertBar(true, 'error', 3000, 'โปรดกดยืนยัน'))
+    }
   }
   return (
     <Box className={classes.container}>
@@ -180,7 +182,7 @@ function CareerAbout({ data, loading }) {
       >
         <Box>
           <DragAndDrop myFiles={myFiles} setMyFiles={setMyFiles} />
-          <FormControlLabel control={<Checkbox />} label="ยืนยันการส่งข้อมูลประวัติส่วนตัว" />
+          <FormControlLabel value={confirm} checked={confirm} onChange={() => setConfirm(!confirm)} control={<Checkbox />} label="ยืนยันการส่งข้อมูลประวัติส่วนตัว" />
         </Box>
       </Dialog>
     </Box>
