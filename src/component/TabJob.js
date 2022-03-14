@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     top: 0,
     left: 0,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: 'rgba(0,0,0,0.05)',
     clipPath: 'circle(25px at 0 0)',
     transition: '1s ease-out',
   },
