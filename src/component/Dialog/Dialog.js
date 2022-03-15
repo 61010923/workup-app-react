@@ -11,7 +11,7 @@ import CloseIcon from '@mui/icons-material/Close'
 
 function CustomDialog(props) {
   const {
-    children, onClose, title, open, btLabel, submitFunc, ...other
+    children, onClose, title, open, btLabel, submitFunc, disable, ...other
   } = props
   return (
     <Dialog
@@ -41,7 +41,7 @@ function CustomDialog(props) {
       </DialogTitle>
       <DialogContent dividers>{children}</DialogContent>
       <DialogActions>
-        <Button onClick={submitFunc}>{btLabel}</Button>
+        <Button onClick={submitFunc} disabled={disable}>{btLabel}</Button>
       </DialogActions>
     </Dialog>
   )
@@ -54,6 +54,7 @@ CustomDialog.propTypes = {
   title: PropTypes.string.isRequired,
   btLabel: PropTypes.string,
   open: PropTypes.bool.isRequired,
+  disable: PropTypes.bool.isRequired,
   submitFunc: PropTypes.func,
 }
 

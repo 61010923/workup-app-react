@@ -339,6 +339,7 @@ export default function DrawerTab() {
           <ListItem
             button
             key="user"
+            onClick={() => handleClick(`/${userType}Personal`)}
           >
             <ListItemIcon>
               <AvatarLoading
@@ -360,7 +361,6 @@ export default function DrawerTab() {
                   ? allData?.companyName : `${`${allData?.firstName} ${allData.lastName}`}`}
               </TypographyLoading>
               <Button
-                onClick={() => handleClick(`/${userType}Personal`)}
                 startIcon={<SettingsOutlinedIcon />}
                 variant="outlined"
                 color="info"
