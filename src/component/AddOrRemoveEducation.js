@@ -51,7 +51,7 @@ function App({
 }) {
   // handle input change
   const handleInputChange = (e, index, type) => {
-    if (type !== '') {
+    if (type === 'start' || type === 'end') {
       const list = [...state]
       list[index][type] = e
       setState(list)
@@ -75,7 +75,6 @@ function App({
       education: '', major: '', university: '', start: null, end: null,
     }])
   }
-
   return (
     <>
       {_map(state, (object, i) => (
@@ -111,7 +110,7 @@ function App({
                     && _isEmpty(object.education)
                     && 'please select education'
                   }
-                  onChange={(e) => handleInputChange(e, i)}
+                  onChange={(e) => handleInputChange(e, i, 'education')}
                   fullWidth
                 >
                   {_map(educationSelect, (option) => (
@@ -135,7 +134,7 @@ function App({
                       && _isEmpty(object.major)
                       && 'please fill major/program'
                     }
-                    onChange={(e) => handleInputChange(e, i)}
+                    onChange={(e) => handleInputChange(e, i, 'major')}
                     fullWidth
                   />
                 </Box>
@@ -156,7 +155,7 @@ function App({
                       && _isEmpty(object.university)
                       && 'please fill University/School'
                     }
-                    onChange={(e) => handleInputChange(e, i)}
+                    onChange={(e) => handleInputChange(e, i, 'university')}
                     fullWidth
                   />
 

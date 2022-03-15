@@ -14,11 +14,13 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import PropTypes from 'prop-types'
 import BusinessIcon from '@mui/icons-material/Business'
 import _get from 'lodash/get'
-import { useDispatch } from 'react-redux'
+import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
 import Dialog from './Dialog'
 import TypographyLoading from './Typography'
 import DragAndDrop from './DragAndDrop'
 import { alertBar } from '../redux/action/alert.action'
+import userDetail from '../redux/selector/user.selector'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -69,14 +71,34 @@ function CareerAbout({ data, loading }) {
   const [confirm, setConfirm] = useState(false)
   const [myFiles, setMyFiles] = useState([])
   const [open, setOpen] = useState(false)
-  const mediaQuery = useMediaQuery('(min-width:600px)')
-
+  const user = useSelector(userDetail)
+  const [sendLoading, setSendLoading] = useState(false)
+  const userToken = _get(user, 'userDetail.userToken')
   const handleClose = () => {
     setOpen(false)
   }
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (confirm) {
-      dispatch(alertBar(true, 'success', 3000, 'ส่งใบสมัครสำเร็จ'))
+      setSendLoading(true)
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/application/candidate/${data.id}`, myFiles, {
+          headers: {
+            authorization: userToken,
+            'Content-type': 'application/json',
+          },
+        })
+        if (response.status === 201 || response.status === 200) {
+          dispatch(alertBar(true, 'success', 3000, 'ส่งใบสมัครสำเร็จ'))
+          setSendLoading(false)
+          setInterval(() => {
+            window.location.reload()
+          }, 3000)
+        }
+      } catch (error) {
+        dispatch(alertBar(true, 'warning', 3000, 'Already created job with this account'))
+        setSendLoading(false)
+        console.log(error)
+      }
     } else {
       dispatch(alertBar(true, 'error', 3000, 'โปรดกดยืนยัน'))
     }
@@ -100,7 +122,7 @@ function CareerAbout({ data, loading }) {
           <LocationOnIcon />
           <Typography
             variant="body2"
-            style={{ display: mediaQuery ? 'inline-block' : 'none' }}
+            // style={{ display: mediaQuery ? 'inline-block' : 'none' }}
           >
             Location
           </Typography>
@@ -179,6 +201,7 @@ function CareerAbout({ data, loading }) {
         onClose={handleClose}
         btLabel="Send"
         submitFunc={handleSubmit}
+        disable={sendLoading}
       >
         <Box>
           <DragAndDrop myFiles={myFiles} setMyFiles={setMyFiles} />

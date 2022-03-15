@@ -15,6 +15,7 @@ import TabJob from '../../component/TabJob'
 import CompaniesItem from '../../component/CompaniesItem'
 import CardGlass from '../../component/CardGlass'
 import CardCareer from '../../component/CardCareer'
+import StackedCard from '../../component/Stacked-card'
 
 const jobTypeArray = [
   {
@@ -421,6 +422,9 @@ function Home() {
           ))}
         </Box>
       )}
+      <Box>
+        <StackedCard />
+      </Box>
     </Box>
 
   )

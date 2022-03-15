@@ -10,6 +10,7 @@ import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined'
 import CloseIcon from '@mui/icons-material/Close'
 import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
+import LinearProgress from '@mui/material/LinearProgress'
 import pdfImage from '../image/pdf.png'
 import { alertBar } from '../redux/action/alert.action'
 import usePdfUpload from '../libs/usePdfUpload'
@@ -122,16 +123,12 @@ function App({ myFiles, setMyFiles }) {
   const dispatch = useDispatch()
   const classes = useStyles()
   const pdfUpload = usePdfUpload()
-  const fileSize = useMemo(() => myFiles.reduce((a, b) => +a + +b.size, 0), [myFiles])
+  const fileSize = useMemo(() => myFiles.reduce((a, b) => a + b.size, 0), [myFiles])
+  const [progress, setProgress] = React.useState([0])
   const removeFile = (index) => {
     const data = [...myFiles]
     data.splice(index, 1)
     setMyFiles(data)
-  }
-  const alertFileSize = () => {
-    if (fileSize >= 5000000) {
-      dispatch(alertBar(true, 'error', 3000, 'Maximum upload file size: 5 MB'))
-    }
   }
   function bytesToSize(bytes) {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
@@ -142,26 +139,27 @@ function App({ myFiles, setMyFiles }) {
   }
   const onDrop = useCallback(
     async (acceptedFiles) => {
-      alertFileSize()
-      const upload = await pdfUpload(acceptedFiles)
-      const newFile = { fileUrl: upload, name: acceptedFiles[0].name, size: acceptedFiles[0].size }
-      const files = [...myFiles, newFile]
-      // console.log(acceptedFiles)
-      // const filesWithId = files.map((item, index) => ({
-      //   id: index + 1,
-      //   lastModified: item.lastModified,
-      //   lastModifiedDate: item.lastModifiedDate,
-      //   name: item.name,
-      //   size: item.size,
-      //   type: item.type,
-      //   webkitRelativePath: item.webkitRelativePath,
-      // }))
-      setMyFiles(files)
+      if (fileSize <= 5000000) {
+        const upload = await pdfUpload(acceptedFiles)
+        const newFile = { fileUrl: upload, name: acceptedFiles[0].name, size: acceptedFiles[0].size }
+        const files = [...myFiles, newFile]
+        // const filesWithId = files.map((item, index) => ({
+        //   id: index + 1,
+        //   lastModified: item.lastModified,
+        //   lastModifiedDate: item.lastModifiedDate,
+        //   name: item.name,
+        //   size: item.size,
+        //   type: item.type,
+        //   webkitRelativePath: item.webkitRelativePath,
+        // }))
+        setMyFiles(files)
+      } else {
+        dispatch(alertBar(true, 'error', 3000, 'Maximum upload file size: 5 MB'))
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [myFiles],
   )
-
   const { getRootProps, getInputProps } = useDropzone({
     accept: '.pdf',
     onDrop,
@@ -190,7 +188,7 @@ function App({ myFiles, setMyFiles }) {
       <Box className={classes.fileBx}>
         {_map(myFiles, (file, i) => (
           <Box key={file.id}>
-            <Box className={classes.fileList} sx={{ cursor: 'pointer' }} onClick={() => window.open(file.fileUrl)}>
+            <Box className={classes.fileList}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Box className={classes.pdfImage}>
                   <img src={pdfImage} alt="pdf" />
@@ -198,7 +196,7 @@ function App({ myFiles, setMyFiles }) {
                 <Box>
 
                   <Tooltip title={file.name}>
-                    <Typography className={classes.cropText}>
+                    <Typography className={classes.cropText} sx={{ cursor: 'pointer' }} onClick={() => window.open(file.fileUrl)}>
                       {file.name}
                     </Typography>
                   </Tooltip>
@@ -214,7 +212,9 @@ function App({ myFiles, setMyFiles }) {
                 </IconButton>
               </Box>
             </Box>
-            <Box className={classes.progressBar} />
+            {/* <Box sx={{ width: '100%' }}>
+              <LinearProgress variant="determinate" value={progress[i]} />
+            </Box> */}
           </Box>
 
         ))}

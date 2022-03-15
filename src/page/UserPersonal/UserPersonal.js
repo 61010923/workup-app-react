@@ -177,9 +177,16 @@ function PersonalTab() {
         education,
         (item) => item.education.length > 0
           && item.major.length > 0
-          && item.university.length > 0
-          && item.start.length > 0
-          && item.end.length > 0,
+          && item.university.length > 0,
+        // && !_isEmpty(item.start)
+        // && !_isEmpty(item.end),
+      )
+      && _every(
+        experience,
+        (item) => item.position.length > 0
+          && item.company.length > 0,
+        // && _isDate(item.start)
+        // && _isDate(item.end),
       )
       && !_isEmpty(skill)
       && _every(image, (item) => item.length > 0)
@@ -194,6 +201,7 @@ function PersonalTab() {
         address,
         interestedJob,
         education,
+        experience,
         pastWork: skill,
         pastWorkImg: image,
         imgProfile: profile,
@@ -254,6 +262,9 @@ function PersonalTab() {
     }
     if (!_isEmpty(data.education)) {
       setEducation(data.education)
+    }
+    if (!_isEmpty(data.experience)) {
+      setExperience(data.experience)
     }
     if (!_isEmpty(data.pastWork)) {
       setSkill(data.pastWork)

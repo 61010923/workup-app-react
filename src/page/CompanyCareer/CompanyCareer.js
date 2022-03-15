@@ -92,6 +92,7 @@ function Company() {
               salary: data?.announce?.salary,
               positionTotal: data?.announce?.positionTotal,
               interview: data?.announce?.interview,
+              id,
             }}
           />
         </Box>

@@ -21,7 +21,7 @@ function ButtonAddPosition() {
       >
         จัดการตำแหน่งงาน
       </Typography>
-      <Button onClick={() => { history('/managePosition') }} variant="contained" color="success" startIcon={<AddIcon sx={{ fontSize: 40 }} />}>
+      <Button onClick={() => { history('/managePosition') }} variant="text" color="success" size="large" startIcon={<AddIcon sx={{ fontSize: 40 }} />}>
         เพิ่มตำแหน่งงาน
       </Button>
     </Box>

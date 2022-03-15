@@ -51,7 +51,7 @@ function App({
 }) {
   // handle input change
   const handleInputChange = (e, index, type) => {
-    if (type !== '') {
+    if (type === 'start' || type === 'end') {
       const list = [...state]
       list[index][type] = e
       setState(list)
@@ -109,7 +109,7 @@ function App({
                       && _isEmpty(object.position)
                       && 'please fill position'
                     }
-                  onChange={(e) => handleInputChange(e, i)}
+                  onChange={(e) => handleInputChange(e, i, 'position')}
                   fullWidth
                 />
                 <Box sx={{ ml: 2, width: '100%' }}>
@@ -127,7 +127,7 @@ function App({
                       && _isEmpty(object.company)
                       && 'please fill company'
                     }
-                    onChange={(e) => handleInputChange(e, i)}
+                    onChange={(e) => handleInputChange(e, i, 'company')}
                     fullWidth
                   />
                 </Box>
@@ -139,7 +139,7 @@ function App({
                       <>
                         <Box sx={{ width: '100%' }}>
                           <DatePicker
-                            views={['year']}
+                            views={['year', 'month']}
                             label="Start"
                             name="start"
                             value={object.start}
@@ -160,7 +160,7 @@ function App({
                         </Box>
                         <Box sx={{ width: '100%' }}>
                           <DatePicker
-                            views={['year']}
+                            views={['year', 'month']}
                             label="End"
                             name="end"
                             value={object.end}

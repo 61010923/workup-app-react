@@ -33,6 +33,7 @@ export default function StickyHeadTable() {
       setLoading(false)
     }
   }
+  console.log(body)
   async function fetchData() {
     try {
       const response = await axios.get(

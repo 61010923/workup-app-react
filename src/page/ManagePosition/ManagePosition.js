@@ -15,12 +15,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import _get from 'lodash/get'
 import _every from 'lodash/every'
 import PropTypes from 'prop-types'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import _isNumber from 'lodash/isNumber'
 import AddOrRemoveInput from '../../component/AddOrRemoveInput'
 import TextField from '../../component/Textfield'
 import userDetail from '../../redux/selector/user.selector'
 import { alertBar } from '../../redux/action/alert.action'
+import Switch from '../../component/Switch'
 
 const useStyles = makeStyles({
 
@@ -195,6 +197,7 @@ const jobTypeArray = [
 
 ]
 function AddPosition({ id }) {
+  const { state } = useLocation()
   const classes = useStyles()
   const navigate = useNavigate()
   const [jobType, setJobType] = useState('')
@@ -205,14 +208,14 @@ function AddPosition({ id }) {
   const [location, setLocation] = useState('')
   const [property, setProperty] = useState([''])
   const [interview, setInterview] = useState('')
-
+  const [announce, setAnnounce] = useState(false)
   const [loading, setLoading] = useState(false)
   const [openError, setOpenError] = useState(false)
   const [openSkeleton, setOpenSkeleton] = useState(true)
-
   const dispatch = useDispatch()
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
+  console.log(state)
   const handleChange = (e, setValue) => {
     const { value } = e.target
     if (setValue === setPositionTotal) {
@@ -226,8 +229,19 @@ function AddPosition({ id }) {
       setValue(value)
     }
   }
-  const checkId = () => {
-    if (_isEmpty(id)) {
+  const handleCheckData = () => {
+    if (_isEmpty(state)) {
+      setOpenSkeleton(false)
+    } else if (!_isEmpty(state)) {
+      setJobType(state.jobType)
+      setPosition(state.position)
+      setPositionTotal(state.positionTotal)
+      setSalary(state.salary)
+      setRole(state.role)
+      setLocation(state.location)
+      setProperty(state.property)
+      setInterview(state.interview)
+      setAnnounce(state.isActive)
       setOpenSkeleton(false)
     }
   }
@@ -236,7 +250,7 @@ function AddPosition({ id }) {
     setOpenError(true)
     if (!_isEmpty(jobType)
       && !_isEmpty(position)
-      && !_isEmpty(positionTotal)
+      && !_isEmpty(positionTotal.toString())
       && !_isEmpty(salary)
       && _every(role, (item) => item.length > 0)
       && !_isEmpty(location)
@@ -253,26 +267,46 @@ function AddPosition({ id }) {
         location,
         property,
         interview,
+        isActive: announce,
       }
-      try {
-        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/announcement`, body, {
-          headers: {
-            authorization: userToken,
-            'Content-type': 'application/json',
-          },
-        })
-        if (response.status === 201 || response.status === 200) {
-          dispatch(alertBar(true, 'success', 3000, 'Add Complete'))
+      if (_isEmpty(state)) {
+        try {
+          const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/announcement`, body, {
+            headers: {
+              authorization: userToken,
+              'Content-type': 'application/json',
+            },
+          })
+          if (response.status === 201 || response.status === 200) {
+            dispatch(alertBar(true, 'success', 3000, 'Add Complete'))
+            setLoading(false)
+            setInterval(() => {
+              // navigate('/announcement')
+              window.location.href = '/announcement'
+            }, 3000)
+          }
+        } catch (error) {
+          dispatch(alertBar(true, 'warning', 3000, 'Something went wrong'))
           setLoading(false)
-          setInterval(() => {
-            // navigate('/announcement')
-            window.location.href = '/announcement'
-          }, 3000)
+          console.log(error)
         }
-      } catch (error) {
-        dispatch(alertBar(true, 'warning', 3000, 'Something went wrong'))
-        setLoading(false)
-        console.log(error)
+      } else {
+        try {
+          const response = await axios.patch(`${process.env.REACT_APP_BASE_URL}/api/v1/announcement/company/${_get(state, '_id')}`, body, {
+            headers: {
+              authorization: userToken,
+              'Content-type': 'application/json',
+            },
+          })
+          if (response.status === 201 || response.status === 200) {
+            dispatch(alertBar(true, 'success', 3000, 'Updated Complete'))
+            setLoading(false)
+          }
+        } catch (error) {
+          dispatch(alertBar(true, 'warning', 3000, 'Something went wrong'))
+          setLoading(false)
+          console.log(error)
+        }
       }
     } else {
       dispatch(alertBar(true, 'warning', 3000, 'Please fill all the fields'))
@@ -280,7 +314,7 @@ function AddPosition({ id }) {
     }
   }
   useEffect(() => {
-    checkId()
+    handleCheckData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
@@ -353,9 +387,9 @@ function AddPosition({ id }) {
             id="demo-helper-text-aligned"
             label="อัตราที่รับ"
             value={positionTotal}
-            error={openError && _isEmpty(positionTotal)}
+            error={openError && _isEmpty(positionTotal.toString())}
             helperText={
-                  openError && _isEmpty(positionTotal) && 'please fill positionTotal'
+                  openError && _isEmpty(positionTotal.toString()) && 'please fill positionTotal'
                 }
             onChange={(e) => {
               handleChange(e, setPositionTotal)
@@ -380,22 +414,6 @@ function AddPosition({ id }) {
             autoComplete="off"
             fullWidth
           />
-
-          <Typography
-            variant="h6"
-            color="primary"
-            sx={{ mt: 2 }}
-          >
-            หน้าที่และรายละเอียดของงาน
-          </Typography>
-          <AddOrRemoveInput
-            loading={openSkeleton}
-            error={openError}
-            keyText="role"
-            label="หน้าที่และรายละเอียดของงาน"
-            state={role}
-            setState={setRole}
-          />
           <TextField
             loading={openSkeleton}
             sx={{ mt: 2 }}
@@ -413,6 +431,22 @@ function AddPosition({ id }) {
             autoComplete="off"
             fullWidth
           />
+          <Typography
+            variant="h6"
+            color="primary"
+            sx={{ mt: 2 }}
+          >
+            หน้าที่และรายละเอียดของงาน
+          </Typography>
+          <AddOrRemoveInput
+            loading={openSkeleton}
+            error={openError}
+            keyText="role"
+            label="หน้าที่และรายละเอียดของงาน"
+            state={role}
+            setState={setRole}
+          />
+
           <Typography
             variant="h6"
             color="primary"
@@ -454,7 +488,22 @@ function AddPosition({ id }) {
               please select รูปแบบการสัมภาษณ์งาน
             </Typography>
           )}
+          {!_isEmpty(state)
+          && (
+          <>
+            <Typography
+              variant="h6"
+              color="primary"
+              sx={{ mt: 2 }}
+            >
+              การประกาศงาน
+            </Typography>
+            <Box sx={{ paddingLeft: 0.5 }}>
+              <Switch announce={announce} setAnnounce={setAnnounce} />
+            </Box>
 
+          </>
+          )}
           <Button
             sx={{ mt: 2 }}
             onClick={(e) => handleSubmit()}
@@ -462,8 +511,7 @@ function AddPosition({ id }) {
             fullWidth
             variant="contained"
           >
-            เพิ่มตำแหน่งงาน
-
+            {_isEmpty(state) ? 'เพิ่มตำแหน่งงาน' : 'แก้ไขตำแหน่งงาน'}
           </Button>
         </Box>
       </Box>
