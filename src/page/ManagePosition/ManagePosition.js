@@ -215,7 +215,6 @@ function AddPosition({ id }) {
   const dispatch = useDispatch()
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
-  console.log(state)
   const handleChange = (e, setValue) => {
     const { value } = e.target
     if (setValue === setPositionTotal) {
