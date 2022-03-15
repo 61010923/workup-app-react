@@ -61,15 +61,17 @@ function App({
             key={keyText + i}
             sx={{
               display: 'flex',
+              alignItems: 'center',
               mt: 2,
             }}
           >
-
             {/* {state.length !== i + 1 && ( */}
             {state.length !== 1 && (
-            <IconButton aria-label="delete" size="small" onClick={() => handleRemoveClick(i)} color="error">
-              <RemoveCircleOutlineOutlinedIcon sx={{ fontSize: '20px' }} />
-            </IconButton>
+            <Box>
+              <IconButton aria-label="delete" size="small" onClick={() => handleRemoveClick(i)} color="error">
+                <RemoveCircleOutlineOutlinedIcon sx={{ fontSize: '20px' }} />
+              </IconButton>
+            </Box>
             )}
             <TextField
               loading={loading}

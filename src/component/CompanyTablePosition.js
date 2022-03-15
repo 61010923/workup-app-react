@@ -100,8 +100,8 @@ export default function StickyHeadTable({ columns, body, loading }) {
                       <TableCell align="">
                         <Box sx={{
                           backgroundColor:
-                  ((item.status === 'ประกาศ' && 'green')
-                  || (item.status === 'ไม่ประกาศ' && 'orange')
+                  ((item.isActive === 'ประกาศ' && 'green')
+                  || (item.isActive === 'ไม่ประกาศ' && 'orange')
                   ),
                           padding: '0.5rem',
                           borderRadius: '0.5rem',
@@ -111,11 +111,11 @@ export default function StickyHeadTable({ columns, body, loading }) {
                           boxShadow: '0 0 5px 2px #c8c7c6',
                         }}
                         >
-                          {item.status}
+                          {item.isActive}
                         </Box>
                       </TableCell>
                       <TableCell align="">
-                        <ButtonActionManage buttonText="Edit" icon={<EditIcon />} path="/ManagePosition" />
+                        <ButtonActionManage buttonText="Edit" icon={<EditIcon />} path="/ManagePosition" data={item} />
                       </TableCell>
                     </TableRow>
                   ))}

@@ -72,19 +72,18 @@ function App({
   // handle click event of the Add Button
   const handleAddClick = () => {
     setState([...state, {
-      education: '', major: '', university: '', start: null, end: null,
+      position: '', company: '', start: null, end: null,
     }])
   }
+
   return (
     <>
       {_map(state, (object, i) => (
         <>
-          <Box display="flex" alignItems="center" width="100%">
+          <Box key={`state${i}`} display="flex" alignItems="center" width="100%">
 
             {state.length !== 1 && (
-              <Box
-                sx={{ mt: 2 }}
-              >
+              <Box sx={{ mt: 2 }}>
                 <IconButton
                   aria-label="delete"
                   onClick={() => handleRemoveClick(i)}
@@ -95,79 +94,52 @@ function App({
               </Box>
             )}
             <Box width="100%">
-              <Box key={`state${i}`} sx={{ display: 'flex', mt: 2 }}>
+              <Box sx={{ display: 'flex', mt: 2 }}>
                 <TextField
                   loading={loading}
-                  sx={{ ml: 0.2 }}
-                  name="education"
-                  id="outlined-select-currency"
-                  select
-                  label="Education"
-                  value={object.education}
-                  error={error && _isEmpty(object.education)}
+                  name="position"
+                  required
+                  id="demo-helper-text-aligned"
+                  label="Position"
+                  autoComplete="off"
+                  value={object.position}
+                  error={error && _isEmpty(object.position)}
                   helperText={
-                    error
-                    && _isEmpty(object.education)
-                    && 'please select education'
-                  }
-                  onChange={(e) => handleInputChange(e, i, 'education')}
+                      error
+                      && _isEmpty(object.position)
+                      && 'please fill position'
+                    }
+                  onChange={(e) => handleInputChange(e, i, 'position')}
                   fullWidth
-                >
-                  {_map(educationSelect, (option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                />
                 <Box sx={{ ml: 2, width: '100%' }}>
                   <TextField
                     loading={loading}
-                    name="major"
+                    name="company"
                     required
                     id="demo-helper-text-aligned"
-                    label="Major/Program"
+                    label="Company"
                     autoComplete="off"
-                    value={object.major}
-                    error={error && _isEmpty(object.major)}
+                    value={object.company}
+                    error={error && _isEmpty(object.company)}
                     helperText={
                       error
-                      && _isEmpty(object.major)
-                      && 'please fill major/program'
+                      && _isEmpty(object.company)
+                      && 'please fill company'
                     }
-                    onChange={(e) => handleInputChange(e, i, 'major')}
+                    onChange={(e) => handleInputChange(e, i, 'company')}
                     fullWidth
                   />
                 </Box>
               </Box>
               <Box mt={2} display="flex" gap={2}>
-                <Box sx={{ width: '100%' }}>
-                  <TextField
-                    loading={loading}
-                    name="university"
-                    required
-                    id="demo-helper-text-aligned"
-                    label="University/School"
-                    autoComplete="off"
-                    value={object.university}
-                    error={error && _isEmpty(object.university)}
-                    helperText={
-                      error
-                      && _isEmpty(object.university)
-                      && 'please fill University/School'
-                    }
-                    onChange={(e) => handleInputChange(e, i, 'university')}
-                    fullWidth
-                  />
-
-                </Box>
-
-                <Box sx={{ width: '100%' }}>
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    {loading ? (<Skeleton variant="text" width={150} />)
-                      : (
-                        <Box sx={{ display: 'flex', gap: 2 }}>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  {loading ? (<Skeleton variant="text" width="100%" height={56} />)
+                    : (
+                      <>
+                        <Box sx={{ width: '100%' }}>
                           <DatePicker
-                            views={['year']}
+                            views={['year', 'month']}
                             label="Start"
                             name="start"
                             value={object.start}
@@ -175,6 +147,7 @@ function App({
                             renderInput={(params) => (
                               <TextField
                                 {...params}
+                                fullWidth
                                 error={error && _isEmpty(object.start)}
                                 helperText={
                       error
@@ -184,8 +157,10 @@ function App({
                               />
                             )}
                           />
+                        </Box>
+                        <Box sx={{ width: '100%' }}>
                           <DatePicker
-                            views={['year']}
+                            views={['year', 'month']}
                             label="End"
                             name="end"
                             value={object.end}
@@ -193,6 +168,7 @@ function App({
                             renderInput={(params) => (
                               <TextField
                                 {...params}
+                                fullWidth
                                 helperText={
                       error
                       && _isEmpty(object.end)
@@ -202,12 +178,11 @@ function App({
                               />
                             )}
                           />
-
                         </Box>
-                      )}
+                      </>
+                    )}
 
-                  </LocalizationProvider>
-                </Box>
+                </LocalizationProvider>
               </Box>
             </Box>
           </Box>
@@ -220,7 +195,7 @@ function App({
               variant="text"
               color="success"
             >
-              เพิ่ม University/School
+              เพิ่ม ประสบการณ์ทำงาน
             </Button>
           )}
         </>

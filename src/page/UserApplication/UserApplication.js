@@ -270,9 +270,6 @@ function UserApplication() {
     }
   }
 
-  const handleFileChange = (e) => {
-    console.log(e.target.file)
-  }
   useEffect(() => {
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
