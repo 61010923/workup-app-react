@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import format from 'date-fns/format'
 import {
   Box, Button, Chip, MenuItem,
 } from '@mui/material'
@@ -6,26 +7,25 @@ import Grid from '@mui/material/Grid'
 import { makeStyles } from '@mui/styles'
 import EmailIcon from '@mui/icons-material/Email'
 import _isEmpty from 'lodash/isEmpty'
-import _isDate from 'lodash/isDate'
+import BusinessIcon from '@mui/icons-material/Business'
+import _startCase from 'lodash/startCase'
 import _map from 'lodash/map'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import _get from 'lodash/get'
-import _every from 'lodash/every'
-import InputAdornment from '@mui/material/InputAdornment'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
 import PhoneIcon from '@mui/icons-material/Phone'
+import Skeleton from '@mui/material/Skeleton'
 import SchoolIcon from '@mui/icons-material/School'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import pdfImage from '../../image/pdf.png'
 import Typography from '../../component/Typography'
 import Footer from '../../component/Footer'
-import ImageUploader from '../../component/ImageUploader'
-import AddOrRemoveEducation from '../../component/AddOrRemoveEducation'
 import ImgListSkill from '../../component/ImageListSkill'
 import UserProfile from '../../component/UserProfile'
 import userDetail from '../../redux/selector/user.selector'
 import { alertBar } from '../../redux/action/alert.action'
-import TagField from '../../component/TagField'
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -43,6 +43,47 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: '2px solid ',
     borderColor: theme.palette.primary.main,
     padding: '16px 0',
+  },
+  fileList: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    border: '1px solid #93939336',
+    borderRadius: '8px',
+    marginBottom: '8px',
+    marginRight: '6px',
+    marginLeft: '1px',
+    padding: '8px',
+    // transition: 'box-shadow 0.2s',
+    '&:hover': {
+      boxShadow: '3px 3px 3px rgba(0,0,0,0.2),-1px -1px 1px rgba(0,0,0,0.05)',
+    },
+  },
+  pdfImage: {
+    minWidth: '2.5rem',
+    height: '2.5rem',
+    marginRight: '0.5rem',
+    '& img': {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+    },
+  },
+  fileBx: {
+    backgroundColor: '#f5f5f56b',
+    maxHeight: '15rem',
+    overflowY: 'scroll',
+    '&::-webkit-scrollbar': {
+      width: '0.4em',
+    },
+    '&::-webkit-scrollbar-track': {
+      backgroundColor: '#E6E6E6',
+      borderRadius: '8px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#9C9C9C',
+      borderRadius: '8px',
+    },
   },
 }))
 const Maritals = [
@@ -90,6 +131,7 @@ function CalculateAge(birthday) {
 function UserApplication() {
   const classes = useStyles()
   const history = useNavigate()
+  const { id } = useParams()
   const [email, setEmail] = useState('')
   const [emailAuth, setEmailAuth] = useState('')
   const [firstName, setFirstName] = useState('')
@@ -106,7 +148,9 @@ function UserApplication() {
   const [skill, setSkill] = useState([])
   const [image, setImage] = useState([])
   const [profile, setProfile] = useState(null)
+  const [experience, setExperience] = useState([])
   const [loading, setLoading] = useState(false)
+  const [otherFile, setOtherFile] = useState([])
   const [openError, setOpenError] = useState(false)
   const [openSkeleton, setOpenSkeleton] = useState(true)
   const [responsible, setResponsible] = useState('')
@@ -115,114 +159,114 @@ function UserApplication() {
   const [phone, setPhone] = useState('')
   const newDate = new Date()
   const newDateMax = new Date()
-  const decreaseDateMin = new Date(
-    newDate.setFullYear(newDate.getFullYear() - 60),
-  )
-  const decreaseDateMax = new Date(
-    newDateMax.setFullYear(newDateMax.getFullYear() - 15),
-  )
   const dispatch = useDispatch()
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
-  const emailValidate = (e) => {
-    const re = /\S+@\S+\.\S+/
-    return re.test(e)
-  }
-  const checkEmail = (e) => {
-    let errorMessage = ''
-    if (openError && !emailValidate(email)) {
-      errorMessage = 'please check email'
-    }
-    if (openError && _isEmpty(email)) {
-      errorMessage = 'please fill email'
-    }
-    return errorMessage
-  }
-  const handleChange = (e, setValue) => {
-    const { value } = e.target
-    setValue(value)
-  }
-  const handleChangeGender = (event) => {
-    setGender(event.target.value)
-  }
-  const handleChangeMarital = (event) => {
-    setMarital(event.target.value)
-  }
-  const handleSubmit = async () => {
-    setLoading(true)
-    setOpenError(true)
-    if (
-      !_isEmpty(email)
-      && emailValidate(email)
-      && !_isEmpty(firstName)
-      && !_isEmpty(lastName)
-      && !_isEmpty(birthday)
-      && !_isEmpty(gender)
-      && !_isEmpty(marital)
-      && !_isEmpty(address)
-      && !_isEmpty(aboutMe)
-      && !_isEmpty(responsible)
-      && !_isEmpty(city)
-      && !_isEmpty(phone)
-      && _every(interestedJob, (item) => item.length > 0)
-      && _every(
-        education,
-        (item) => item.education.length > 0
-          && item.major.length > 0
-          && item.university.length > 0,
-      )
-      && !_isEmpty(skill)
-      && _every(image, (item) => item.length > 0)
-    ) {
-      const body = {
-        email,
-        firstName,
-        lastName,
-        birthDate: new Date(birthday).toISOString(),
-        gender,
-        marital,
-        address,
-        interestedJob,
-        education,
-        pastWork: skill,
-        pastWorkImg: image,
-        imgProfile: profile,
-        aboutMe,
-        city,
-        responsible,
-        phone,
-      }
-      try {
-        const response = await axios.patch(
-          `${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/profile`,
-          body,
-          {
-            headers: {
-              authorization: userToken,
-              'Content-type': 'application/json',
-            },
-          },
-        )
-        if (response.status === 201 || response.status === 200) {
-          // history('/login/verify-account')
+  // const emailValidate = (e) => {
+  // const decreaseDateMin = new Date(
+  //   newDate.setFullYear(newDate.getFullYear() - 60),
+  // )
+  // const decreaseDateMax = new Date(
+  //   newDateMax.setFullYear(newDateMax.getFullYear() - 15),
+  // )
+  //   const re = /\S+@\S+\.\S+/
+  //   return re.test(e)
+  // }
+  // const checkEmail = (e) => {
+  //   let errorMessage = ''
+  //   if (openError && !emailValidate(email)) {
+  //     errorMessage = 'please check email'
+  //   }
+  //   if (openError && _isEmpty(email)) {
+  //     errorMessage = 'please fill email'
+  //   }
+  //   return errorMessage
+  // }
+  // const handleChange = (e, setValue) => {
+  //   const { value } = e.target
+  //   setValue(value)
+  // }
+  // const handleChangeGender = (event) => {
+  //   setGender(event.target.value)
+  // }
+  // const handleChangeMarital = (event) => {
+  //   setMarital(event.target.value)
+  // }
+  // const handleSubmit = async () => {
+  //   setLoading(true)
+  //   setOpenError(true)
+  //   if (
+  //     !_isEmpty(email)
+  //     && emailValidate(email)
+  //     && !_isEmpty(firstName)
+  //     && !_isEmpty(lastName)
+  //     && !_isEmpty(birthday)
+  //     && !_isEmpty(gender)
+  //     && !_isEmpty(marital)
+  //     && !_isEmpty(address)
+  //     && !_isEmpty(aboutMe)
+  //     && !_isEmpty(responsible)
+  //     && !_isEmpty(city)
+  //     && !_isEmpty(phone)
+  //     && _every(interestedJob, (item) => item.length > 0)
+  //     && _every(
+  //       education,
+  //       (item) => item.education.length > 0
+  //         && item.major.length > 0
+  //         && item.university.length > 0,
+  //     )
+  //     && !_isEmpty(skill)
+  //     && _every(image, (item) => item.length > 0)
+  //   ) {
+  //     const body = {
+  //       email,
+  //       firstName,
+  //       lastName,
+  //       birthDate: new Date(birthday).toISOString(),
+  //       gender,
+  //       marital,
+  //       address,
+  //       interestedJob,
+  //       education,
+  //       pastWork: skill,
+  //       pastWorkImg: image,
+  //       imgProfile: profile,
+  //       aboutMe,
+  //       city,
+  //       responsible,
+  //       phone,
+  //     }
+  //     try {
+  //       const response = await axios.patch(
+  //         `${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/profile`,
+  //         body,
+  //         {
+  //           headers: {
+  //             authorization: userToken,
+  //             'Content-type': 'application/json',
+  //           },
+  //         },
+  //       )
+  //       if (response.status === 201 || response.status === 200) {
+  //         // history('/login/verify-account')
 
-          dispatch(alertBar(true, 'success', 3000, 'Update Complete'))
-          setLoading(false)
-          setOpenError(false)
-          // setInterval(() => {
-          //   window.location.reload()
-          // }, 3000)
-        }
-      } catch (error) {
-        dispatch(alertBar(true, 'warning', 3000, 'Something went wrong'))
-        setLoading(false)
-        console.log(error)
-      }
-    } else {
-      dispatch(alertBar(true, 'warning', 3000, 'Please fill all the fields'))
-      setLoading(false)
-    }
-  }
+  //         dispatch(alertBar(true, 'success', 3000, 'Update Complete'))
+  //         setLoading(false)
+  //         setOpenError(false)
+  //         // setInterval(() => {
+  //         //   window.location.reload()
+  //         // }, 3000)
+  //       }
+  //     } catch (error) {
+  //       dispatch(alertBar(true, 'warning', 3000, 'Something went wrong'))
+  //       setLoading(false)
+  //       console.log(error)
+  //     }
+  //   } else {
+  //     dispatch(alertBar(true, 'warning', 3000, 'Please fill all the fields'))
+  //     setLoading(false)
+  //   }
+  // }
   const setBody = (data) => {
     setEmail(data.email)
     setEmailAuth(data.emailAuth)
@@ -236,8 +280,9 @@ function UserApplication() {
     if (!_isEmpty(data.birthDate)) {
       setAge(CalculateAge(new Date(data.birthDate)))
     }
-    setGender(data.gender)
-    setMarital(data.marital)
+    genders.forEach((x) => x.id === data.gender && setGender(x.value))
+    Maritals.forEach((x) => x.id === data.marital && setMarital(x.value))
+
     setAddress(data.address)
     if (!_isEmpty(data.interestedJob)) {
       setInterestedJob(data.interestedJob)
@@ -248,13 +293,15 @@ function UserApplication() {
     if (!_isEmpty(data.pastWork)) {
       setSkill(data.pastWork)
     }
+    setExperience(data.experience)
     setImage(data.pastWorkImg)
     setProfile(data.imgProfile)
   }
   async function fetchData() {
+    setLoading(true)
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/getUserProfile`,
+        `${process.env.REACT_APP_BASE_URL}/api/v1/application/company/${id}`,
         {
           headers: {
             authorization: userToken,
@@ -262,21 +309,31 @@ function UserApplication() {
         },
       )
       if (response.status === 200 || response.status === 201) {
-        setBody(_get(response, 'data.data'))
+        setBody(_get(response, 'data.data.userProfile'))
+        setOtherFile(_get(response, 'data.data.other'))
         setOpenSkeleton(false)
+        setLoading(false)
       }
     } catch (error) {
       console.log(error)
+      setLoading(false)
     }
   }
 
-  const handleFileChange = (e) => {
-    console.log(e.target.file)
+  // const handleFileChange = (e) => {
+  //   console.log(e.target.file)
+  // }
+  function bytesToSize(bytes) {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+    if (bytes === 0) return '0 Byte'
+    // eslint-disable-next-line radix
+    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+    return `${Math.round(bytes / 1024 ** i, 2)} ${sizes[i]}`
   }
   useEffect(() => {
     fetchData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [userToken, id])
   return (
     <Box className={classes.container}>
       <Grid container width="100%">
@@ -292,7 +349,7 @@ function UserApplication() {
             }}
           >
             <UserProfile
-              loading={openSkeleton}
+              loading={loading}
               data={{
                 firstName,
                 lastName,
@@ -308,10 +365,14 @@ function UserApplication() {
                 alignItems="center"
                 className={classes.borderBox}
               >
-                <EmailIcon color="secondary" />
-                <Box ml={2}>
-                  <Typography variant="body1" color="secondary">
-                    mock@gmail.com
+                {!loading && <EmailIcon color="secondary" />}
+                <Box ml={2} minWidth={60}>
+                  <Typography
+                    variant="body1"
+                    color="secondary"
+                    loading={loading}
+                  >
+                    {email}
                   </Typography>
                 </Box>
               </Box>
@@ -321,10 +382,14 @@ function UserApplication() {
                 alignItems="center"
                 className={classes.borderBox}
               >
-                <PhoneIcon fontSize="small" color="secondary" />
-                <Box ml={2}>
-                  <Typography variant="body1" color="secondary">
-                    08569879875
+                {!loading && <PhoneIcon fontSize="small" color="secondary" />}
+                <Box ml={2} minWidth={60}>
+                  <Typography
+                    variant="body1"
+                    color="secondary"
+                    loading={loading}
+                  >
+                    {phone}
                   </Typography>
                 </Box>
               </Box>
@@ -334,89 +399,19 @@ function UserApplication() {
                 alignItems="center"
                 className={classes.borderBox}
               >
-                <LocationOnIcon fontSize="small" color="secondary" />
-                <Box ml={2}>
-                  <Typography variant="body1" color="secondary">
-                    BKK
+                {!loading && (
+                  <LocationOnIcon fontSize="small" color="secondary" />
+                )}
+                <Box ml={2} minWidth={60}>
+                  <Typography
+                    variant="body1"
+                    color="secondary"
+                    loading={loading}
+                  >
+                    {city}
                   </Typography>
                 </Box>
               </Box>
-              {/* <TextField
-                  loading={openSkeleton}
-                  required
-                  variant="standard"
-                  id="demo-helper-text-aligned"
-                  label="Email"
-                  value={email}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <EmailIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  error={
-                    (openError && !emailValidate(email))
-                    || (openError && _isEmpty(email))
-                  }
-                  helperText={checkEmail(email)}
-                  onChange={(e) => {
-                    handleChange(e, setEmail)
-                  }}
-                  autoComplete="off"
-                  fullWidth
-                /> */}
-              {/* </Box> */}
-              {/* <Box mt={2}>
-                <TextField
-                  loading={openSkeleton}
-                  required
-                  variant="standard"
-                  id="demo-helper-text-aligned"
-                  label="โทรศัพท์"
-                  value={phone}
-                  error={openError && _isEmpty(phone)}
-                  helperText={
-                    openError && _isEmpty(phone) && 'please fill phone'
-                  }
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PhoneIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  onChange={(e) => {
-                    handleChange(e, setPhone)
-                  }}
-                  autoComplete="off"
-                  fullWidth
-                />
-              </Box>
-              <Box mt={2}>
-                <TextField
-                  loading={openSkeleton}
-                  required
-                  variant="standard"
-                  id="demo-helper-text-aligned"
-                  label="จังหวัด / เมือง"
-                  value={city}
-                  error={openError && _isEmpty(city)}
-                  helperText={openError && _isEmpty(city) && 'please fill city'}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <LocationOnIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                  onChange={(e) => {
-                    handleChange(e, setCity)
-                  }}
-                  autoComplete="off"
-                  fullWidth
-                />
-              </Box> */}
             </Box>
           </Box>
         </Grid>
@@ -442,31 +437,10 @@ function UserApplication() {
                 </Typography>
               </Box>
               <Box mt={2} width="100%">
-                <Typography variant="body1" color="primary">
-                  Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                  Repellendus, exercitationem similique? Ipsum minus ab aut.
-                  Nulla expedita ratione aperiam, repellat dolorem saepe ipsa.
+                <Typography variant="body1" color="primary" loading={loading}>
+                  {aboutMe}
                 </Typography>
               </Box>
-              {/* <Box mt={2} width="100%">
-                <TextField
-                  multiline
-                  rows={4}
-                  fullWidth
-                  loading={openSkeleton}
-                  label="About me"
-                  value={aboutMe}
-                  error={openError && _isEmpty(aboutMe)}
-                  helperText={
-                    openError && _isEmpty(aboutMe)
-                      ? 'Please fill About me'
-                      : 'Explain Yourself'
-                  }
-                  onChange={(e) => {
-                    handleChange(e, setAboutMe)
-                  }}
-                />
-              </Box> */}
               <Box mt={8}>
                 <Typography
                   variant="h5"
@@ -476,118 +450,130 @@ function UserApplication() {
                   PERSONAL INFORMATION
                 </Typography>
               </Box>
-              {/* <TextField
-            loading={openSkeleton}
-            required
-            variant="standard"
-            id="demo-helper-text-aligned"
-            label="Email"
-            value={email}
-            error={
-              (openError && !emailValidate(email))
-              || (openError && _isEmpty(email))
-            }
-            helperText={checkEmail(email)}
-            onChange={(e) => {
-              handleChange(e, setEmail)
-            }}
-            autoComplete="off"
-            fullWidth
-          /> */}
               <Box
                 sx={{ mt: 2, display: 'flex' }}
                 width="100%" // justifyContent="space-between"
               >
-                <Box display="flex" width="100%">
+                <Box display="flex" width="100%" alignItems="center">
                   <Box>
                     <Typography variant="body1" color="primary">
                       First name :
                     </Typography>
                   </Box>
-                  <Box ml={1}>
-                    <Typography variant="body1" color="primary">
-                      Vanakorn
+                  <Box ml={1} minWidth={60}>
+                    <Typography
+                      variant="body1"
+                      color="primary"
+                      loading={loading}
+                    >
+                      {_startCase(firstName)}
                     </Typography>
                   </Box>
                 </Box>
-                <Box display="flex" width="100%">
+                <Box display="flex" width="100%" alignItems="center">
                   <Box>
                     <Typography variant="body1" color="primary">
                       Last name :
                     </Typography>
                   </Box>
-                  <Box ml={1}>
-                    <Typography variant="body1" color="primary">
-                      Inyai
+                  <Box ml={1} minWidth={60}>
+                    <Typography
+                      variant="body1"
+                      color="primary"
+                      loading={loading}
+                    >
+                      {_startCase(lastName)}
                     </Typography>
                   </Box>
                 </Box>
               </Box>
               <Box sx={{ mt: 2, display: 'flex' }}>
-                <Box display="flex" width="100%">
+                <Box display="flex" width="100%" alignItems="center">
                   <Box>
                     <Typography variant="body1" color="primary">
                       Date of Birth :
                     </Typography>
                   </Box>
-                  <Box ml={1}>
-                    <Typography variant="body1" color="primary">
-                      3/10/2022
+                  <Box ml={1} minWidth={60}>
+                    <Typography
+                      variant="body1"
+                      color="primary"
+                      loading={loading}
+                    >
+                      {format(
+                        new Date(_get(birthday, '', new Date())),
+                        'dd/MM/yyyy',
+                      )}
                     </Typography>
                   </Box>
                 </Box>
-                <Box display="flex" width="100%">
+                <Box display="flex" width="100%" alignItems="center">
                   <Box>
                     <Typography variant="body1" color="primary">
                       Age :
                     </Typography>
                   </Box>
-                  <Box ml={1}>
-                    <Typography variant="body1" color="primary">
-                      22 years old
+                  <Box ml={1} minWidth={60}>
+                    {' '}
+                    <Typography
+                      variant="body1"
+                      color="primary"
+                      loading={loading}
+                    >
+                      {`${age} years old`}
                     </Typography>
                   </Box>
                 </Box>
               </Box>
 
               <Box sx={{ mt: 2, display: 'flex' }}>
-                <Box display="flex" width="100%">
+                <Box display="flex" width="100%" alignItems="center">
                   <Box>
                     <Typography variant="body1" color="primary">
                       Gender :
                     </Typography>
                   </Box>
-                  <Box ml={1}>
-                    <Typography variant="body1" color="primary">
-                      Male
+                  <Box ml={1} minWidth={60}>
+                    <Typography
+                      variant="body1"
+                      color="primary"
+                      loading={loading}
+                    >
+                      {gender}
                     </Typography>
                   </Box>
                 </Box>
-                <Box display="flex" width="100%">
+                <Box display="flex" width="100%" alignItems="center">
                   <Box>
                     <Typography variant="body1" color="primary">
                       Mariital :
                     </Typography>
                   </Box>
-                  <Box ml={1}>
-                    <Typography variant="body1" color="primary">
-                      Single
+                  <Box ml={1} minWidth={60}>
+                    <Typography
+                      variant="body1"
+                      color="primary"
+                      loading={loading}
+                    >
+                      {marital}
                     </Typography>
                   </Box>
                 </Box>
               </Box>
               <Box sx={{ mt: 2 }}>
-                <Box display="flex" width="100%">
+                <Box display="flex" width="100%" alignItems="center">
                   <Box minWidth="70px">
                     <Typography variant="body1" color="primary">
                       Address :
                     </Typography>
                   </Box>
-                  <Box ml={1}>
-                    <Typography variant="body1" color="primary">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Facere tempore rerum sunt quis voluptates fugiat facilis
-                      dolor! Sit quas rerum nihil quod provident?
+                  <Box ml={1} minWidth={60}>
+                    <Typography
+                      variant="body1"
+                      color="primary"
+                      loading={loading}
+                    >
+                      {address}
                     </Typography>
                   </Box>
                 </Box>
@@ -601,13 +587,20 @@ function UserApplication() {
                   ลักษณะงานที่สนใจ
                 </Typography>
               </Box>
-              {_map(['Hi', 'YO'], (data, i) => (
-                <Box key={`interest_${i}`} display="flex" mt={2}>
+              {_map(interestedJob, (data, i) => (
+                <Box
+                  key={`interest_${i}`}
+                  display="flex"
+                  alignItems="center"
+                  mt={2}
+                >
                   <Box>
-                    <Typography variant="body1">-</Typography>
+                    {!loading && <Typography variant="body1">-</Typography>}
                   </Box>
-                  <Box ml={1}>
-                    <Typography variant="body1">{data}</Typography>
+                  <Box ml={1} minWidth={60}>
+                    <Typography variant="body1" loading={loading}>
+                      {data}
+                    </Typography>
                   </Box>
                 </Box>
               ))}
@@ -620,87 +613,153 @@ function UserApplication() {
                   การศึกษา
                 </Typography>
               </Box>
-              {_map(
-                [
-                  {
-                    education: 'Bachelor Degree',
-                    major: 'it',
-                    university: 'KMITL',
-                    start: 2017,
-                    complete: 2018,
-                  },
-                  {
-                    education: 'Bachelor Degree',
-                    major: 'it',
-                    university: 'KMITL',
-                    start: 2017,
-                    complete: 2018,
-                  },
-                ],
-                (data) => (
+              {_map(education, (data, i) => (
+                <Box
+                  // mt={2}
+                  key={`education_${i}`}
+                  width="100%"
+                  paddingY={2}
+                  sx={{
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.main',
+                  }}
+                >
+                  <Typography variant="h6" color="primary" loading={loading}>
+                    {`${data.major} (${data.education})`}
+                  </Typography>
                   <Box
-                    // mt={2}
-                    width="100%"
-                    paddingY={2}
-                    sx={{
-                      borderBottom: '2px solid',
-                      borderColor: 'primary.main',
-                    }}
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mt={1}
                   >
-                    <Typography variant="h6" color="primary">
-                      {`${data.major} (${data.education})`}
-                    </Typography>
-                    <Box
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      mt={1}
-                    >
-                      <Box display="flex" alignItems="center">
-                        <Box>
+                    <Box display="flex" alignItems="center">
+                      <Box>
+                        {!loading && (
                           <SchoolIcon
                             sx={{ color: 'secondary.hard' }}
                             fontSize="small"
                           />
-                        </Box>
-                        <Box ml={1}>
-                          <Typography
-                            variant="body2"
-                            sx={{ color: 'secondary.hard' }}
-                          >
-                            {data.university}
-                          </Typography>
-                        </Box>
+                        )}
                       </Box>
-                      <Box>
+                      <Box ml={1} minWidth={60}>
                         <Typography
                           variant="body2"
                           sx={{ color: 'secondary.hard' }}
+                          loading={loading}
                         >
-                          {`${data.start} - ${data.complete}`}
+                          {data.university}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Box display="flex" gap={1} alignItems="center">
+                      <Box>
+                        {!loading && (
+                          <CalendarTodayIcon
+                            fontSize="small"
+                            sx={{ color: 'secondary.hard' }}
+                          />
+                        )}
+                      </Box>
+                      <Box minWidth={60}>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: 'secondary.hard' }}
+                          loading={loading}
+                        >
+                          {`${format(
+                            new Date(_get(data, 'start', new Date())),
+                            'yyyy',
+                          )} - ${format(
+                            new Date(_get(data, 'end', new Date())),
+                            'yyyy',
+                          )}
+                        `}
                         </Typography>
                       </Box>
                     </Box>
                   </Box>
-                ),
-              )}
-              {/* <AddOrRemoveInput
-                loading={openSkeleton}
-                error={openError}
-                keyText="interestedJob"
-                label="Interested Job"
-                state={interestedJob}
-                setState={setInterestedJob}
-              /> */}
-              {/* <Typography sx={{ fontWeight: 'bold', mt: 2 }}>
-                การศึกษา
-              </Typography>
-              <AddOrRemoveEducation
-                loading={openSkeleton}
-                error={openError}
-                state={education}
-                setState={setEducation}
-              /> */}
+                </Box>
+              ))}
+              <Box mt={8}>
+                <Typography
+                  variant="h5"
+                  color="primary"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  ประสบการณ์การทำงาน
+                </Typography>
+              </Box>
+              {_map(experience, (data, i) => (
+                <Box
+                  key={`experience_${i}`}
+                  // mt={2}
+                  width="100%"
+                  paddingY={2}
+                  sx={{
+                    borderBottom: '2px solid',
+                    borderColor: 'primary.main',
+                  }}
+                >
+                  <Box minWidth={60}>
+                    <Typography variant="h6" color="primary" loading={loading}>
+                      {data.position}
+                    </Typography>
+                  </Box>
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mt={1}
+                  >
+                    <Box display="flex" alignItems="center">
+                      <Box>
+                        {!loading && (
+                          <BusinessIcon
+                            sx={{ color: 'secondary.hard' }}
+                            fontSize="sm
+                          all"
+                          />
+                        )}
+                      </Box>
+                      <Box ml={1} minWidth={60}>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: 'secondary.hard' }}
+                          loading={loading}
+                        >
+                          {_startCase(data.company)}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Box display="flex" gap={1} alignItems="center">
+                      <Box>
+                        {!loading && (
+                          <CalendarTodayIcon
+                            fontSize="small"
+                            sx={{ color: 'secondary.hard' }}
+                          />
+                        )}
+                      </Box>
+                      <Box minWidth={60}>
+                        <Typography
+                          variant="body2"
+                          sx={{ color: 'secondary.hard' }}
+                          loading={loading}
+                        >
+                          {`${format(
+                            new Date(_get(data, 'start', new Date())),
+                            'MMM, yyyy',
+                          )} - ${format(
+                            new Date(_get(data, 'end', new Date())),
+                            'MMM, yyyy',
+                          )}`}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              ))}
               <Box mt={8}>
                 <Typography
                   variant="h5"
@@ -711,9 +770,13 @@ function UserApplication() {
                 </Typography>
               </Box>
               <Box mt={2} display="flex" gap={1}>
-                {_map(['php', 'css', 'javascript'], (data) => (
-                  <Chip label={data} color="primary" />
-                ))}
+                {loading ? (
+                  <Box width="100%">
+                    <Skeleton variant="text" size={40} />
+                  </Box>
+                ) : (
+                  _map(skill, (data) => <Chip label={data} color="primary" />)
+                )}
               </Box>
 
               <Box mt={8}>
@@ -726,13 +789,52 @@ function UserApplication() {
                 </Typography>
               </Box>
               <Box mt={2}>
-                <ImgListSkill
-                  imgList={[
-                    'https://res.cloudinary.com/myprojectbyatipat/image/upload/v1646128173/workup-upload/tmp-13-1646128172296_wk9gsk.jpg',
-                    'https://res.cloudinary.com/myprojectbyatipat/image/upload/v1646278893/workup-upload/tmp-1-1646278893017_w4cu2x.png',
-                  ]}
-                />
+                <ImgListSkill imgList={image} loading={loading} />
               </Box>
+              <Box mt={8}>
+                <Typography
+                  variant="h5"
+                  color="primary"
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  เอกสารเพิ่มเติม
+                </Typography>
+              </Box>
+
+              <Box mt={2} className={classes.fileBx}>
+                {loading ? (
+                  <Box width="100%" minWidth={100}>
+                    <Skeleton variant="rectangle" />
+                  </Box>
+                ) : _map(otherFile, (file, i) => (
+                  <Box key={file.id}>
+                    <Box
+                      className={classes.fileList}
+                      sx={{ cursor: 'pointer' }}
+                      onClick={() => window.open(file.fileUrl)}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Box className={classes.pdfImage}>
+                          <img src={pdfImage} alt="pdf" />
+                        </Box>
+                        <Box>
+                          <Typography className={classes.cropText}>
+                            {file.name}
+                          </Typography>
+                          <Typography
+                            variant="caption"
+                            sx={{ color: '#939393' }}
+                          >
+                            {bytesToSize(file.size)}
+                          </Typography>
+                        </Box>
+                      </Box>
+
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+
             </Box>
           </Box>
         </Grid>

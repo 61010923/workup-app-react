@@ -64,7 +64,7 @@ function App() {
       />
       <Route
         exact
-        path="/candidate/:id"
+        path="/application/:id"
         element={<AuthRoute loginRequired drawer page={UserApplication} />}
       />
       <Route
