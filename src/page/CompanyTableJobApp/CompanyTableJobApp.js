@@ -55,7 +55,7 @@ export default function StickyHeadTable() {
     snapshot.forEach((data, i) => {
       const newData = data
       newData.applicationId = data.applicationId
-      newData.name = data.name
+      newData.name = `${data.firstName} ${data.lastName}`
       newData.email = data.email
       newData.position = data.position
       newData.phone = data.phone
