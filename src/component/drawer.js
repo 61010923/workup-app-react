@@ -349,14 +349,14 @@ export default function DrawerTab() {
                 alt="avatar"
                 src={allData.imgProfile}
                 sx={{
-                  width: 40, height: 40, mt: '7px', backgroundColor: 'primary.main',
+                  backgroundColor: 'primary.main', objectFit: 'cover', border: 0,
                 }}
               >
                 {allData?.firstName?.charAt(0).toUpperCase()}
               </AvatarLoading>
             </ListItemIcon>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <TypographyLoading heightSkeleton={20} loading={loading} sx={{ fontWeight: 'bold' }}>
+              <TypographyLoading heightSkeleton={20} loading={loading} sx={{ fontWeight: '600' }}>
                 {userType === 'company'
                   ? allData?.companyName : `${`${allData?.firstName} ${allData.lastName}`}`}
               </TypographyLoading>

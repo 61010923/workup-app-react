@@ -3,6 +3,8 @@ import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import PropTypes from 'prop-types'
 import { Typography } from '@mui/material'
+import _map from 'lodash/map'
+import ButtonGradient from './ButtonGradient'
 
 const useStyles = makeStyles((theme) => ({
   cardList: {
@@ -25,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   card: {
-    height: '350px',
+    height: '400px',
     width: '400px',
     minWidth: '250px',
     // padding: '1.5rem',
@@ -52,52 +54,82 @@ const useStyles = makeStyles((theme) => ({
   },
   imgBx: {
     height: '200px',
-    display: 'absolute',
-    top: 0,
-    left: 0,
+
     '& img': {
+      display: 'absolute',
+      top: 0,
+      left: 0,
       width: '100%',
       height: '100%',
       objectFit: 'cover',
     },
   },
   contentBx: {
-    padding: '1rem',
-    overflowWrap: 'break-word',
+    padding: '16px',
+    display: 'flex',
+    flexDirection: 'column',
   },
 }))
-function StackedCard() {
+function StackedCard({ data }) {
   const classes = useStyles()
+
   return (
     <Box className={classes.cardList}>
-      <Box className={classes.card}>
-        <Box className={classes.imgBx}>
-          <img src="https://www.forbes.com/advisor/wp-content/uploads/2021/03/ethereum-1-900x510.jpeg" alt="img" />
-        </Box>
-        <Box className={classes.contentBx}>
-          <Typography
-            variant="h6"
-            sx={{
-              color: '#fff',
-              fontWeight: 'bold',
-              textTransform: 'uppercase',
-              letterSpacing: '4px',
+      {_map(data, (item, i) => (
+        <Box className={classes.card} key={item.id}>
+          <Box className={classes.imgBx}>
+            <img src={item.imgProfile} alt="img" />
+          </Box>
+          <Box className={classes.contentBx}>
+
+            <Box sx={{
+              overflowWrap: 'break-word',
+              height: '120px',
+              overflow: 'hidden',
             }}
-          >
-            content
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: '#fff',
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase',
+                  letterSpacing: '2px',
+                }}
+              >
+                {item.companyName}
+              </Typography>
+              <Typography
+                variant="body1"
+                sx={{
+                  color: '#cbcbcb',
+
+                }}
+              >
+                {item.position}
+              </Typography>
+            </Box>
+            <Box sx={{
+              alignSelf: 'flex-end',
+              position: 'absolute',
+              bottom: '16px',
             }}
-          >
-            contentcontentcontentcontentcontentcontentcontentcontentcontentcontentcontent
-          </Typography>
+            >
+              <ButtonGradient />
+            </Box>
+          </Box>
         </Box>
-      </Box>
+      ))}
+
     </Box>
   )
 }
 
 export default StackedCard
+StackedCard.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.any),
+}
+StackedCard.defaultProps = {
+  data: [],
+
+}
