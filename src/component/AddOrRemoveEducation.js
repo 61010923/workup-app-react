@@ -80,11 +80,8 @@ function App({
       {_map(state, (object, i) => (
         <>
           <Box display="flex" alignItems="center" width="100%">
-
             {state.length !== 1 && (
-              <Box
-                sx={{ mt: 2 }}
-              >
+              <Box sx={{ mt: 2 }}>
                 <IconButton
                   aria-label="delete"
                   onClick={() => handleRemoveClick(i)}
@@ -158,54 +155,60 @@ function App({
                     onChange={(e) => handleInputChange(e, i, 'university')}
                     fullWidth
                   />
-
                 </Box>
 
                 <Box sx={{ width: '100%' }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    {loading ? (<Skeleton variant="text" width={150} />)
-                      : (
-                        <Box sx={{ display: 'flex', gap: 2 }}>
-                          <DatePicker
-                            views={['year']}
-                            label="Start"
-                            name="start"
-                            value={object.start}
-                            onChange={(e) => handleInputChange(e, i, 'start')}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                error={error && _isEmpty(object.start)}
-                                helperText={
-                      error
-                      && _isEmpty(object.start)
-                      && 'please fill start'
-                    }
-                              />
-                            )}
-                          />
-                          <DatePicker
-                            views={['year']}
-                            label="End"
-                            name="end"
-                            value={object.end}
-                            onChange={(e) => handleInputChange(e, i, 'end')}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                helperText={
-                      error
-                      && _isEmpty(object.end)
-                      && 'please fill end'
-                    }
-                                error={error && _isEmpty(object.end)}
-                              />
-                            )}
-                          />
-
-                        </Box>
-                      )}
-
+                    {loading ? (
+                      <Skeleton variant="text" width={150} />
+                    ) : (
+                      <Box sx={{ display: 'flex', gap: 2 }}>
+                        <DatePicker
+                          views={['year']}
+                          label="Start"
+                          name="start"
+                          value={object.start}
+                          onChange={(e) => handleInputChange(e, i, 'start')}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              error={
+                                error
+                                && _isEmpty(new Date(object.start).toISOString())
+                              }
+                              helperText={
+                                error
+                                && _isEmpty(
+                                  new Date(object.start).toISOString(),
+                                )
+                                && 'please fill start'
+                              }
+                            />
+                          )}
+                        />
+                        <DatePicker
+                          views={['year']}
+                          label="End"
+                          name="end"
+                          value={object.end}
+                          onChange={(e) => handleInputChange(e, i, 'end')}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              helperText={
+                                error
+                                && _isEmpty(new Date(object.end).toISOString())
+                                && 'please fill end'
+                              }
+                              error={
+                                error
+                                && _isEmpty(new Date(object.end).toISOString())
+                              }
+                            />
+                          )}
+                        />
+                      </Box>
+                    )}
                   </LocalizationProvider>
                 </Box>
               </Box>
