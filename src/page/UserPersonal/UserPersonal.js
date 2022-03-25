@@ -23,7 +23,6 @@ import PhoneIcon from '@mui/icons-material/Phone'
 import Footer from '../../component/Footer'
 import ImageUploader from '../../component/ImageUploader'
 import AddOrRemoveEducation from '../../component/AddOrRemoveEducation'
-import AddOrRemoveExperience from '../../component/AddOrRemoveExperience'
 import AddOrRemoveInput from '../../component/AddOrRemoveInput'
 import UserProfile from '../../component/UserProfile'
 import userDetail from '../../redux/selector/user.selector'
@@ -102,19 +101,7 @@ function PersonalTab() {
   const [marital, setMarital] = useState('')
   const [address, setAddress] = useState('')
   const [interestedJob, setInterestedJob] = useState([''])
-  const [education, setEducation] = useState([{
-    education: '',
-    major: '',
-    university: '',
-    start: null,
-    end: null,
-  }])
-  const [experience, setExperience] = useState([{
-    position: '',
-    company: '',
-    start: null,
-    end: null,
-  }])
+  const [education, setEducation] = useState([{ education: '', major: '', university: '' }])
   const [skill, setSkill] = useState([])
   const [image, setImage] = useState([])
   const [profile, setProfile] = useState(null)
@@ -132,6 +119,7 @@ function PersonalTab() {
   const dispatch = useDispatch()
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
+  console.log(birthday)
   const emailValidate = (e) => {
     const re = /\S+@\S+\.\S+/
     return re.test(e)
@@ -164,7 +152,7 @@ function PersonalTab() {
       && emailValidate(email)
       && !_isEmpty(firstName)
       && !_isEmpty(lastName)
-      && !_isEmpty(birthday)
+      && !_isEmpty(new Date(birthday).toISOString())
       && !_isEmpty(gender)
       && !_isEmpty(marital)
       && !_isEmpty(address)
@@ -178,15 +166,6 @@ function PersonalTab() {
         (item) => item.education.length > 0
           && item.major.length > 0
           && item.university.length > 0,
-        // && !_isEmpty(item.start)
-        // && !_isEmpty(item.end),
-      )
-      && _every(
-        experience,
-        (item) => item.position.length > 0
-          && item.company.length > 0,
-        // && _isDate(item.start)
-        // && _isDate(item.end),
       )
       && !_isEmpty(skill)
       && _every(image, (item) => item.length > 0)
@@ -201,7 +180,6 @@ function PersonalTab() {
         address,
         interestedJob,
         education,
-        experience,
         pastWork: skill,
         pastWorkImg: image,
         imgProfile: profile,
@@ -262,9 +240,6 @@ function PersonalTab() {
     }
     if (!_isEmpty(data.education)) {
       setEducation(data.education)
-    }
-    if (!_isEmpty(data.experience)) {
-      setExperience(data.experience)
     }
     if (!_isEmpty(data.pastWork)) {
       setSkill(data.pastWork)
@@ -537,10 +512,13 @@ function PersonalTab() {
                       <TextField
                         loading={openSkeleton}
                         {...params}
-                        error={openError && _isEmpty(birthday)}
+                        error={
+                          openError
+                          && _isEmpty(new Date(birthday).toISOString())
+                        }
                         helperText={
                           openError
-                          && _isEmpty(birthday)
+                          && _isEmpty(new Date(birthday).toISOString())
                           && 'please select birthday'
                         }
                         fullWidth
@@ -651,16 +629,6 @@ function PersonalTab() {
                 state={education}
                 setState={setEducation}
               />
-              <Typography sx={{ fontWeight: 'bold', mt: 2 }}>
-                ประสบการณ์ทำงาน
-              </Typography>
-              <AddOrRemoveExperience
-                loading={openSkeleton}
-                error={openError}
-                state={experience}
-                setState={setExperience}
-              />
-
               <Typography sx={{ fontWeight: 'bold', mt: 2 }}>
                 ความสามารถ/ผลงาน
               </Typography>
