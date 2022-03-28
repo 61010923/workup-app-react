@@ -50,7 +50,7 @@ export default function StickyHeadTable({ columns, body, loading }) {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, cancel it!',
+      confirmButtonText: 'Yes, delete it!',
     })
     if (swalRes.isConfirmed) {
       setDisableButton(true)
@@ -67,8 +67,8 @@ export default function StickyHeadTable({ columns, body, loading }) {
           // setBody(_get(response, 'data.data'))
           setDisableButton(false)
           Swal.fire(
-            'cancelled!',
-            'Your job application has been cancelled.',
+            'Deleted!',
+            'Your position has been Deleted.',
             'success',
           )
         }
@@ -139,7 +139,7 @@ export default function StickyHeadTable({ columns, body, loading }) {
                         {item.positionTotal}
                       </TableCell>
                       <TableCell align="">
-                        {format(new Date(item.createdAt), 'dd/MM/yyyy')}
+                        {format(new Date(item.createdAt), 'dd/MM/yyyy HH:mm')}
                       </TableCell>
                       <TableCell align="right">
                         {item.salary}

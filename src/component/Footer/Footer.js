@@ -23,6 +23,7 @@ function Footer(props) {
               variant="outlined"
               size="small"
               fullWidth
+              disabled={loading}
               onClick={cancelFunc}
             >
               {cancelLabel}
