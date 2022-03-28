@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import queryString from 'query-string'
 import { makeStyles } from '@mui/styles'
-import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
+
 import CircularProgress from '@mui/material/CircularProgress'
 import Lottie from 'lottie-react-web'
 import { Typography } from '@mui/material'
@@ -32,7 +31,6 @@ function VerifyAccount(props) {
   const classes = useStyles()
   const [showVerification, setShowVerification] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { computedMatch } = props
   const history = useNavigate()
   const queryParams = queryString.parse(window.location.search)
   const location = useLocation()

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 import { Box } from '@mui/material'
+import _toNumber from 'lodash/toNumber'
 import Paper from '@mui/material/Paper'
 import DrawerTab from '../../component/drawer'
 import userDetail from '../../redux/selector/user.selector'
@@ -30,10 +31,10 @@ function AuthRoute(props) {
     output = (
       <>
         <Snackbar
-          open={snackbar.open}
-          timeduration={snackbar.time}
+          open={snackbar.open || false}
+          timeduration={_toNumber(snackbar.time)}
           message={snackbar.message}
-          type={snackbar.type}
+          type={snackbar.type || 'info'}
         />
 
         {drawer ? (

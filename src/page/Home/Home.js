@@ -312,7 +312,7 @@ function Home() {
         Types of Careers
       </Typography>
       <OwlCarousel className="owl-theme" {...options}>
-        {_map(jobTypeArray, ({ id, value }) => <CardCareer title={value} />)}
+        {_map(jobTypeArray, ({ id, value }, i) => <CardCareer key={`jobtype_${i}`} title={value} />)}
       </OwlCarousel>
       <Typography
         variant="h6"
