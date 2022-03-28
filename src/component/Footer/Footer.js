@@ -15,7 +15,7 @@ function Footer(props) {
       sx={{ top: 'auto', bottom: 0, height: '50px' }}
     >
       <Box height="100%" width="100%" display="flex" justifyContent="flex-end" alignItems="center">
-        <Box display="flex" justifyContent="space-evenly" gap="8px" mr={2}>
+        <Box display="flex" justifyContent="space-evenly" alignItems="center" gap="8px" mr={2}>
           { haveCancel && (
           <Box>
             <Button

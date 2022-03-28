@@ -56,9 +56,8 @@ export default function StickyHeadTable() {
 
   useEffect(() => {
     fetchData()
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [body])
   return (
     <Box sx={{
       minHeight: '76.5vh',

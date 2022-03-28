@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import Box from '@mui/material/Box'
+import {
+  Box, Button, Avatar, Typography,
+} from '@mui/material'
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
@@ -9,7 +11,6 @@ import axios from 'axios'
 import TabPanel from '@mui/lab/TabPanel'
 import CircularProgress from '@mui/material/CircularProgress'
 import { makeStyles } from '@mui/styles'
-import { Avatar } from '@mui/material'
 import userDetail from '../../redux/selector/user.selector'
 import SignUp from '../../component/signUp'
 
@@ -69,15 +70,11 @@ function SignInUp() {
   const classes = useStyles()
   return (
     <Box className={classes.container}>
-      <Box
-        sx={{
-          width: '400px',
-          typography: 'body1',
-          // margin: '0 auto',
-          bgcolor: '#5a619929',
-          boxShadow: 5,
-          borderRadius: 4,
-        }}
+      <Box sx={{
+        width: '400px',
+        bgcolor: '#5a619929',
+        borderRadius: 4,
+      }}
       >
         <TabContext value={value}>
           <Box

@@ -423,7 +423,7 @@ function Home() {
         </Box>
       )}
       <Box>
-        <StackedCard />
+        <StackedCard data={positions} />
       </Box>
     </Box>
 
