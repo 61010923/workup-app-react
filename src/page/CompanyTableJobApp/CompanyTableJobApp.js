@@ -7,12 +7,15 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
-import { Typography, Box, Avatar } from '@mui/material'
+import {
+  Typography, Box, Avatar, Button,
+} from '@mui/material'
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 import _get from 'lodash/get'
 import { useNavigate } from 'react-router-dom'
+import DeleteIcon from '@mui/icons-material/Delete'
 import ButtonActionManage from '../../component/ButtonActionManage'
 import userDetail from '../../redux/selector/user.selector'
 
@@ -24,7 +27,7 @@ const columns = [
     minWidth: 110,
   },
   { id: 'skill', label: 'Skill', minWidth: 110 },
-  { id: 'status', label: 'Status', minWidth: 90 },
+  { id: 'status', label: 'Status', minWidth: 100 },
   { id: 'action', label: 'Action' },
 ]
 
@@ -44,7 +47,6 @@ export default function StickyHeadTable() {
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
-
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value)
     setPage(0)
@@ -66,7 +68,7 @@ export default function StickyHeadTable() {
           sx={{ width: 50, height: 50, margin: 'auto 0' }}
         />
       )
-      newData.status = 'อ่านแล้ว'
+      newData.status = 'รอดำเนินการ'
       newData.url = `/application/${data.applicationId}`
       newArr.push(newData)
     })
@@ -121,7 +123,8 @@ export default function StickyHeadTable() {
                     <TableCell
                       align=""
                       sx={{ cursor: 'pointer' }}
-                      onClick={() => navigate(row.url)}
+                      onClick={() => navigate(row.url, { state: { id: row.applicationId, position: row.position } })}
+
                     >
                       <Box
                         sx={{
@@ -150,28 +153,30 @@ export default function StickyHeadTable() {
                     <TableCell
                       align=""
                       sx={{ cursor: 'pointer' }}
-                      onClick={() => navigate(row.url)}
+                      onClick={() => navigate(row.url, { state: { id: row.applicationId, position: row.position } })}
                     >
                       {row.position}
                     </TableCell>
                     <TableCell
                       align=""
                       sx={{ cursor: 'pointer' }}
-                      onClick={() => navigate(row.url)}
+                      onClick={() => navigate(row.url, { state: { id: row.applicationId, position: row.position } })}
+
                     >
                       {row.skill}
                     </TableCell>
                     <TableCell
                       align=""
                       sx={{ cursor: 'pointer' }}
-                      onClick={() => navigate(row.url)}
+                      onClick={() => navigate(row.url, { state: { id: row.applicationId, position: row.position } })}
+
                     >
                       <Box
                         sx={{
                           backgroundColor:
                             (row.status === 'อ่านแล้ว' && 'green')
-                            || (row.status === 'ยังไม่ได้อ่าน' && 'gray'),
-                          padding: '0.3rem',
+                            || (row.status === 'รอดำเนินการ' && 'gray'),
+                          padding: '0.5rem',
                           borderRadius: '0.5rem',
                           display: 'inline-block',
                           color: '#fff',
@@ -183,11 +188,9 @@ export default function StickyHeadTable() {
                       </Box>
                     </TableCell>
                     <TableCell align="">
-                      <ButtonActionManage
-                        buttonText="info"
-                        icon={<HelpOutlineOutlinedIcon />}
-                        path="/InfoUser"
-                      />
+                      <Button variant="contained" color="error" startIcon={<DeleteIcon />}>
+                        Delete
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}

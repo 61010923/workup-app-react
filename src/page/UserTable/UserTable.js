@@ -22,7 +22,9 @@ import {
 } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
+import Swal from 'sweetalert2'
 import userDetail from '../../redux/selector/user.selector'
+import 'sweetalert2/dist/sweetalert2.css'
 
 const columns = [
   { id: 'company', label: 'Company', minWidth: 120 },
@@ -36,6 +38,7 @@ export default function StickyHeadTable() {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [loading, setLoading] = useState(true)
+  const [disableButton, setDisableButton] = useState(false)
   const [body, setBody] = useState([])
   const user = useSelector(userDetail)
   const navigate = useNavigate()
@@ -72,12 +75,51 @@ export default function StickyHeadTable() {
     }
     checkData()
   }
-
+  const handleDelete = async (id) => {
+    const swalRes = await Swal.fire({
+      title: 'Are you sure kkk?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, cancel it!',
+    })
+    if (swalRes.isConfirmed) {
+      setDisableButton(true)
+      try {
+        const response = await axios.delete(
+          `${process.env.REACT_APP_BASE_URL}/api/v1/application/candidate/${id}`,
+          {
+            headers: {
+              authorization: userToken,
+            },
+          },
+        )
+        if (response.status === 200 || response.status === 201) {
+          // setBody(_get(response, 'data.data'))
+          setDisableButton(false)
+          Swal.fire(
+            'cancelled!',
+            'Your job application has been cancelled.',
+            'success',
+          )
+        }
+      } catch (error) {
+        console.log(error)
+        Swal.fire(
+          'Something went wrong!',
+          'Please try again.',
+          'error',
+        )
+        setDisableButton(false)
+      }
+    }
+  }
   useEffect(() => {
     fetchData()
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [body])
   return (
     <Box sx={{
       display: 'flex',
@@ -176,7 +218,7 @@ export default function StickyHeadTable() {
                       </Box> */}
                       </TableCell>
                       <TableCell align="">
-                        <Button color="error" variant="contained" startIcon={<CancelOutlinedIcon />}>
+                        <Button color="error" variant="contained" disabled={disableButton} startIcon={<CancelOutlinedIcon />} onClick={() => handleDelete(row.applicationId)}>
                           cancel
                         </Button>
                       </TableCell>
