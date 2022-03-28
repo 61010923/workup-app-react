@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { styled, useTheme } from '@mui/material/styles'
 import {
-  Box, Avatar, Button, ListItemButton, Skeleton,
+  Box, Button, ListItemButton,
 } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import MuiDrawer from '@mui/material/Drawer'
 import MuiAppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import List from '@mui/material/List'
-import CssBaseline from '@mui/material/CssBaseline'
 import Typography from '@mui/material/Typography'
-import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
@@ -18,12 +16,10 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
-import MailIcon from '@mui/icons-material/Mail'
 import HomeIcon from '@mui/icons-material/Home'
 import LoginIcon from '@mui/icons-material/Login'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import _get from 'lodash/get'
 import LogoutIcon from '@mui/icons-material/Logout'
 import axios from 'axios'
@@ -125,14 +121,16 @@ const useStyles = makeStyles({
 export default function DrawerTab() {
   const theme = useTheme()
   const classes = useStyles()
+  const navigate = useNavigate()
+  const location = useLocation()
   const [btValue, setBtValue] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
+  const pathName = _get(location, 'pathname', '/')
   const userType = _get(user, 'userDetail.userType')
   const [allData, setAllData] = useState({})
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -160,7 +158,7 @@ export default function DrawerTab() {
 
     {
       id: 2,
-      menu: 'Jop applying',
+      menu: 'Job applying',
       link: '/candidateTable',
       icon: <ManageAccountsIcon />,
       isLogin: !user.isLogin,
@@ -263,9 +261,20 @@ export default function DrawerTab() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userToken])
+
+  useEffect(() => {
+    if (pathName === '/') {
+      setBtValue(0)
+    }
+    if (pathName === '/candidateTable' || pathName === '/announcement') {
+      setBtValue(1)
+    }
+    if (pathName === '/JobApplication') {
+      setBtValue(2)
+    }
+  }, [pathName])
   return (
     <Box>
-      {/* <CssBaseline /> */}
       <AppBar position="fixed" open={open} color="common">
         <Toolbar>
           <IconButton
@@ -312,66 +321,80 @@ export default function DrawerTab() {
           </IconButton>
         </DrawerHeader>
         <List>
-          {itemsList.filter((obj) => !obj.isLogin).map(({
-            id, menu, link, icon,
-          }, i) => (
-            <ListItemButton
-              button
-              key={id}
-              onClick={() => handleClick(link, i)}
-              className={classes.selected}
-              selected={btValue === i}
-            >
-              {icon && (
-              <ListItemIcon
+          {itemsList
+            .filter((obj) => !obj.isLogin)
+            .map(({
+              id, menu, link, icon,
+            }, i) => (
+              <ListItemButton
+                button="true"
+                key={id}
+                onClick={() => handleClick(link, i)}
                 className={classes.selected}
-                sx={{ color: btValue === i ? 'white' : '#30475E' }}
+                selected={btValue === i}
               >
-                {icon}
-              </ListItemIcon>
-              )}
-              <ListItemText primary={menu} className={classes.selected} />
-            </ListItemButton>
-          ))}
+                {icon && (
+                <ListItemIcon
+                  className={classes.selected}
+                  sx={{ color: btValue === i ? 'white' : '#30475E' }}
+                >
+                  {icon}
+                </ListItemIcon>
+                )}
+                <ListItemText primary={menu} className={classes.selected} />
+              </ListItemButton>
+            ))}
         </List>
         {user.isLogin && (
-        <List style={{ marginTop: 'auto' }}>
-          <ListItem
-            button
-            key="user"
-            onClick={() => handleClick(`/${userType}Personal`)}
-          >
-            <ListItemIcon>
-              <AvatarLoading
-                loading={loading}
-                heightSkeleton={40}
-                widthSkeleton={40}
-                alt="avatar"
-                src={allData.imgProfile}
-                sx={{
-                  backgroundColor: 'primary.main', objectFit: 'cover', border: 0,
-                }}
-              >
-                {allData?.firstName?.charAt(0).toUpperCase()}
-              </AvatarLoading>
-            </ListItemIcon>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-              <TypographyLoading heightSkeleton={20} loading={loading} sx={{ fontWeight: '600' }}>
-                {userType === 'company'
-                  ? allData?.companyName : `${`${allData?.firstName} ${allData.lastName}`}`}
-              </TypographyLoading>
-              <Button
-                startIcon={<SettingsOutlinedIcon />}
-                variant="outlined"
-                color="info"
-                size="small"
-                sx={{ borderRadius: '1rem', fontSize: '8px', fontWeight: 'bold' }}
-              >
-                Profile Settings
-              </Button>
-            </Box>
-          </ListItem>
-        </List>
+          <List style={{ marginTop: 'auto' }}>
+            <ListItem
+              button="true"
+              key="user"
+              onClick={() => handleClick(`/${userType}Personal`)}
+            >
+              <ListItemIcon>
+                <AvatarLoading
+                  loading={loading}
+                  heightSkeleton={40}
+                  widthSkeleton={40}
+                  alt="avatar"
+                  src={allData.imgProfile}
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    mt: '7px',
+                    backgroundColor: 'primary.main',
+                  }}
+                >
+                  {allData?.firstName?.charAt(0).toUpperCase()}
+                </AvatarLoading>
+              </ListItemIcon>
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <TypographyLoading
+                  heightSkeleton={20}
+                  loading={loading}
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  {userType === 'company'
+                    ? allData?.companyName
+                    : `${`${allData?.firstName} ${allData.lastName}`}`}
+                </TypographyLoading>
+                <Button
+                  startIcon={<SettingsOutlinedIcon />}
+                  variant="outlined"
+                  color="info"
+                  size="small"
+                  sx={{
+                    borderRadius: '1rem',
+                    fontSize: '8px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  Profile Settings
+                </Button>
+              </Box>
+            </ListItem>
+          </List>
         )}
       </Drawer>
     </Box>
