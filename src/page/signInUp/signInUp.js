@@ -9,6 +9,7 @@ import TabList from '@mui/lab/TabList'
 import _get from 'lodash/get'
 import axios from 'axios'
 import TabPanel from '@mui/lab/TabPanel'
+import CircularProgress from '@mui/material/CircularProgress'
 import { makeStyles } from '@mui/styles'
 import userDetail from '../../redux/selector/user.selector'
 import SignUp from '../../component/signUp'
@@ -22,7 +23,6 @@ const useStyles = makeStyles({
     minHeight: '100vh',
     flexDirection: 'column',
     // backgroundColor: 'red',
-
   },
   formWrapper: {
     position: 'relative',
@@ -44,17 +44,23 @@ function SignInUp() {
   const userToken = _get(user, 'userDetail.userToken')
   const [value, setValue] = useState('1')
   const [img, setImg] = useState('')
+  const [loading, setLoading] = useState(false)
   const [name, setName] = useState('')
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
 
   const getImg = async (email) => {
+    setLoading(true)
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/getImgProfile`, { email })
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/api/v1/userProfile/getImgProfile`,
+        { email },
+      )
       if (response.status === 200) {
         setImg(_get(response, 'data.data.imgProfile'))
         setName(_get(response, 'data.data.name'))
+        setLoading(false)
       }
     } catch (error) {
       setImg('')
@@ -73,22 +79,26 @@ function SignInUp() {
         <TabContext value={value}>
           <Box
             sx={{
-              borderBottom: 1, borderColor: 'divider', mx: 3,
+              borderBottom: 1,
+              borderColor: 'divider',
+              mx: 3,
             }}
             className={classes.formWrapper}
           >
-            { value === '1' && (
-            <Box className={classes.avatarWrapper}>
-              <Avatar
-                alt="profile"
-                src={img}
-                sx={{
-                  width: 80, height: 80, border: '3px solid #00000033',
-                }}
-              >
-                {name.charAt(0).toUpperCase()}
-              </Avatar>
-            </Box>
+            {value === '1' && (
+              <Box className={classes.avatarWrapper}>
+                <Avatar
+                  alt="profile"
+                  src={!loading && (img)}
+                  sx={{
+                    width: 80,
+                    height: 80,
+                    border: '3px solid #00000033',
+                  }}
+                >
+                  { loading ? (<CircularProgress size={20} />) : (name.charAt(0).toUpperCase())}
+                </Avatar>
+              </Box>
             )}
             <TabList
               onChange={handleChange}
@@ -100,8 +110,12 @@ function SignInUp() {
               <Tab label="sIGN UP" value="2" />
             </TabList>
           </Box>
-          <TabPanel value="1"><SignUp type="signIn" getImg={getImg} setImg={setImg} /></TabPanel>
-          <TabPanel value="2"><SignUp type="signUp" /></TabPanel>
+          <TabPanel value="1">
+            <SignUp type="signIn" getImg={getImg} setImg={setImg} />
+          </TabPanel>
+          <TabPanel value="2">
+            <SignUp type="signUp" />
+          </TabPanel>
         </TabContext>
       </Box>
     </Box>
