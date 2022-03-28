@@ -57,7 +57,7 @@ function CardGlass({
           color: 'rgba(0,0,0,0)',
           fontWeight: 'bold',
           fontSize: '1.2rem',
-          WebkitTextStroke: '0.5px #fff',
+          WebkitTextStroke: '0.2px #fff',
           textTransform: 'capitalize',
           textAlign: 'center',
         }}
