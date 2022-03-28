@@ -19,13 +19,22 @@ import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import _startCase from 'lodash/startCase'
+import axios from 'axios'
+import Swal from 'sweetalert2'
+import { useDispatch, useSelector } from 'react-redux'
 import ButtonActionManage from './ButtonActionManage'
 import ButtonAddPosition from './ButtonAddPosition'
+import 'sweetalert2/dist/sweetalert2.css'
+import userDetail from '../redux/selector/user.selector'
 
 export default function StickyHeadTable({ columns, body, loading }) {
   const navigate = useNavigate()
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [disableButton, setDisableButton] = useState(false)
+  const dispatch = useDispatch()
+  const user = useSelector(userDetail)
+  const userToken = _get(user, 'userDetail.userToken')
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
@@ -33,9 +42,47 @@ export default function StickyHeadTable({ columns, body, loading }) {
     setRowsPerPage(+event.target.value)
     setPage(0)
   }
-  useEffect(() => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const handleDelete = async (id) => {
+    const swalRes = await Swal.fire({
+      title: 'Are you sure ?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, cancel it!',
+    })
+    if (swalRes.isConfirmed) {
+      setDisableButton(true)
+      try {
+        const response = await axios.delete(
+          `${process.env.REACT_APP_BASE_URL}/api/v1/announcement/company/${id}`,
+          {
+            headers: {
+              authorization: userToken,
+            },
+          },
+        )
+        if (response.status === 200 || response.status === 201) {
+          // setBody(_get(response, 'data.data'))
+          setDisableButton(false)
+          Swal.fire(
+            'cancelled!',
+            'Your job application has been cancelled.',
+            'success',
+          )
+        }
+      } catch (error) {
+        console.log(error)
+        Swal.fire(
+          'Something went wrong!',
+          'Please try again.',
+          'error',
+        )
+        setDisableButton(false)
+      }
+    }
+  }
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden', p: 1 }}>
       <ButtonAddPosition />
@@ -116,7 +163,7 @@ export default function StickyHeadTable({ columns, body, loading }) {
                         </Box>
                       </TableCell>
                       <TableCell align="">
-                        <ButtonActionManage buttonText="Edit" icon={<EditIcon />} path="/ManagePosition" data={item} />
+                        <ButtonActionManage key={item.id} buttonText="Edit" icon={<EditIcon />} path="/ManagePosition" data={item} deleteFunc={handleDelete} disable={disableButton} />
                       </TableCell>
                     </TableRow>
                   ))}

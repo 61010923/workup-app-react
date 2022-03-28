@@ -5,9 +5,10 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
+import _get from 'lodash/get'
 
 export default function BasicButtonGroup({
-  buttonText, icon, path, data,
+  buttonText, icon, path, data, deleteFunc, disable,
 }) {
   const history = useNavigate()
   return (
@@ -15,7 +16,14 @@ export default function BasicButtonGroup({
       <Button color="info" onClick={() => { history(path, { state: data }) }} variant="contained" startIcon={icon}>
         {buttonText}
       </Button>
-      <Button color="error" variant="contained" startIcon={<DeleteIcon />}>
+      <Button
+        key={_get(data, '_id')}
+        color="error"
+        variant="contained"
+        startIcon={<DeleteIcon />}
+        onClick={() => deleteFunc(_get(data, '_id'))}
+        disabled={disable}
+      >
         Delete
       </Button>
     </ButtonGroup>
@@ -27,6 +35,8 @@ BasicButtonGroup.propTypes = {
   buttonText: PropTypes.string,
   icon: PropTypes.element,
   path: PropTypes.string,
+  deleteFunc: PropTypes.func,
+  disable: PropTypes.bool,
 
 }
 BasicButtonGroup.defaultProps = {
@@ -34,4 +44,6 @@ BasicButtonGroup.defaultProps = {
   buttonText: '',
   icon: <QuestionMarkIcon />,
   path: '/',
+  deleteFunc: () => {},
+  disable: false,
 }

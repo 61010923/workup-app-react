@@ -119,7 +119,6 @@ function PersonalTab() {
   const dispatch = useDispatch()
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
-  console.log(birthday)
   const emailValidate = (e) => {
     const re = /\S+@\S+\.\S+/
     return re.test(e)
