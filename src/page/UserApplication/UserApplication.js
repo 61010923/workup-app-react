@@ -153,6 +153,7 @@ function UserApplication() {
   const [profile, setProfile] = useState(null)
   const [experience, setExperience] = useState([])
   const [loading, setLoading] = useState(false)
+  const [disableButton, setDisableBUtton] = useState(false)
   const [otherFile, setOtherFile] = useState([])
   const [openError, setOpenError] = useState(false)
   const [openSkeleton, setOpenSkeleton] = useState(true)
@@ -330,27 +331,42 @@ function UserApplication() {
     const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
     return `${Math.round(bytes / 1024 ** i, 2)} ${sizes[i]}`
   }
-  const handleSubmit = (status) => {
-    if (status === 'wait') {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: 'กรุณายืนยันการเปลี่ยนสถานะเป็น “รอการติดต่อกลับ”',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Confirm',
-      }).then((result) => {
-        if (result.isConfirmed) {
+  const handleSubmit = async (status) => {
+    const alertBox = await Swal.fire({
+      title: 'Are you sure?',
+      text: `กรุณายืนยันการเปลี่ยนสถานะเป็น “${status === 'callback' ? 'รอการติดต่อกลับ' : 'ปฏิเสธ'}”`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirm',
+    })
+    if (alertBox.isConfirmed) {
+      setDisableBUtton(true)
+      try {
+        const response = await axios.patch(`${process.env.REACT_APP_BASE_URL}/api/v1/application/company/${_get(state, 'id')}`, { status }, {
+          headers: {
+            authorization: userToken,
+            'Content-type': 'application/json',
+          },
+        })
+        if (response.status === 201 || response.status === 200) {
           Swal.fire(
             'Updated!',
-            'เปลี่ยนสถานะเป็น “รอการติดต่อกลับ” เรียบร้อย',
+            `เปลี่ยนสถานะเป็น “${status === 'callback' ? 'รอการติดต่อกลับ' : 'ปฏิเสธ'}” เรียบร้อย`,
             'success',
           )
+          setDisableBUtton(false)
         }
-      })
-    } else if (status === 'reject') {
-      alert('ยังไม่ได้ทำ')
+      } catch (error) {
+        Swal.fire(
+          'Something went wrong!',
+          'Please try again.',
+          'error',
+        )
+        setDisableBUtton(false)
+        console.log(error)
+      }
     }
   }
   useEffect(() => {
@@ -891,7 +907,14 @@ function UserApplication() {
           </Grid>
         </Grid>
       </Box>
-      <Footer submitLabel="รอการติดต่อกลับ" submitFunc={() => handleSubmit('wait')} haveCancel cancelLabel="ปฏิเสธ" cancelFunc={() => handleSubmit('reject')} />
+      <Footer
+        submitLabel="รอการติดต่อกลับ"
+        submitFunc={() => handleSubmit('callback')}
+        haveCancel
+        cancelLabel="ปฏิเสธ"
+        cancelFunc={() => handleSubmit('disapproved')}
+        loading={disableButton}
+      />
     </>
   )
 }

@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux'
 import _get from 'lodash/get'
 import { useNavigate } from 'react-router-dom'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { format } from 'date-fns'
 import ButtonActionManage from '../../component/ButtonActionManage'
 import userDetail from '../../redux/selector/user.selector'
 
@@ -26,7 +27,7 @@ const columns = [
     label: 'Position',
     minWidth: 110,
   },
-  { id: 'skill', label: 'Skill', minWidth: 110 },
+  { id: 'updated', label: 'Updated', minWidth: 110 },
   { id: 'status', label: 'Status', minWidth: 100 },
   { id: 'action', label: 'Action' },
 ]
@@ -68,7 +69,8 @@ export default function StickyHeadTable() {
           sx={{ width: 50, height: 50, margin: 'auto 0' }}
         />
       )
-      newData.status = 'รอดำเนินการ'
+      newData.status = data.status
+      newData.updatedAt = data.updatedAt
       newData.url = `/application/${data.applicationId}`
       newArr.push(newData)
     })
@@ -84,7 +86,6 @@ export default function StickyHeadTable() {
       console.log(error)
     }
   }
-
   useEffect(() => {
     fetchData()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -163,7 +164,7 @@ export default function StickyHeadTable() {
                       onClick={() => navigate(row.url, { state: { id: row.applicationId, position: row.position } })}
 
                     >
-                      {row.skill}
+                      {format(new Date(row.updatedAt), 'dd/MM/yyyy HH:mm')}
                     </TableCell>
                     <TableCell
                       align=""
@@ -174,8 +175,9 @@ export default function StickyHeadTable() {
                       <Box
                         sx={{
                           backgroundColor:
-                            (row.status === 'อ่านแล้ว' && 'green')
-                            || (row.status === 'รอดำเนินการ' && 'gray'),
+                            (row.status === 'callback' && 'green')
+                            || (row.status === 'pending' && 'gray')
+                            || (row.status === 'disapproved' && 'red'),
                           padding: '0.5rem',
                           borderRadius: '0.5rem',
                           display: 'inline-block',
@@ -184,7 +186,9 @@ export default function StickyHeadTable() {
                           boxShadow: '0 0 5px 2px #c8c7c6',
                         }}
                       >
-                        {row.status}
+                        { (row.status === 'callback' && 'รอการติดต่อกลับ')
+                            || (row.status === 'pending' && 'รอดำเดินการ')
+                            || (row.status === 'disapproved' && 'ปฏิเสธ')}
                       </Box>
                     </TableCell>
                     <TableCell align="">
