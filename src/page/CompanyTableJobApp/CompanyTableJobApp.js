@@ -27,7 +27,7 @@ const columns = [
     label: 'Position',
     minWidth: 110,
   },
-  { id: 'skill', label: 'Skill', minWidth: 110 },
+  { id: 'updated', label: 'Updated', minWidth: 110 },
   { id: 'status', label: 'Status', minWidth: 100 },
   { id: 'action', label: 'Action' },
 ]
