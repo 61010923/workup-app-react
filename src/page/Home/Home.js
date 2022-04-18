@@ -422,9 +422,9 @@ function Home() {
           ))}
         </Box>
       )}
-      <Box>
+      {/* <Box>
         <StackedCard data={positions} />
-      </Box>
+      </Box> */}
     </Box>
 
   )
