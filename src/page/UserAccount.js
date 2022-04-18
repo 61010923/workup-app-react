@@ -6,9 +6,12 @@ import { makeStyles } from '@mui/styles'
 import _isEmpty from 'lodash/isEmpty'
 import axios from 'axios'
 import _every from 'lodash/every'
+import { useSelector } from 'react-redux'
+import _get from 'lodash/get'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import CancelIcon from '@mui/icons-material/Cancel'
 import ValidatePassword from '../component/ValidatePassword'
+import userDetail from '../redux/selector/user.selector'
 
 const useStyles = makeStyles({
   formContainer: {
@@ -28,25 +31,26 @@ const useStyles = makeStyles({
 
 function AccountTab() {
   const classes = useStyles()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
+  const user = useSelector(userDetail)
+  const userToken = _get(user, 'userDetail.userToken')
   const [loading, setLoading] = useState(false)
   const [openError, setOpenError] = useState(false)
   const emailValidate = (e) => {
     const re = /\S+@\S+\.\S+/
     return re.test(e)
   }
-  const checkEmail = (e) => {
-    let errorMessage = ''
-    if (openError && !emailValidate(email)) {
-      errorMessage = 'please check email'
-    }
-    if (openError && _isEmpty(email)) {
-      errorMessage = 'please fill email'
-    }
-    return errorMessage
-  }
+  // const checkEmail = (e) => {
+  //   let errorMessage = ''
+  //   if (openError && !emailValidate(email)) {
+  //     errorMessage = 'please check email'
+  //   }
+  //   if (openError && _isEmpty(email)) {
+  //     errorMessage = 'please fill email'
+  //   }
+  //   return errorMessage
+  // }
   const handleChange = (e, setValue) => {
     const { value } = e.target
     // const name = e.target.value
@@ -65,14 +69,17 @@ function AccountTab() {
     setLoading(true)
     setOpenError(true)
     const body = {
-      email,
-      password,
+      oldPassword,
       newPassword,
-
     }
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/register`, body)
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/api/v1/auth/update-password`,
+        body,
+        { headers: { authorization: userToken } },
+      )
       if (response.status === 201) {
+        console.log('complete')
         setLoading(false)
       }
     } catch (error) {
@@ -103,12 +110,12 @@ function AccountTab() {
           id="demo-helper-text-aligned"
           label="Old Password"
           type="password"
-          value={password}
-          error={openError && _isEmpty(password)}
+          value={oldPassword}
+          error={openError && _isEmpty(oldPassword)}
           helperText={
-                  openError && _isEmpty(password) && 'please fill password'
+                  openError && _isEmpty(oldPassword) && 'please fill password'
                 }
-          onChange={(e) => handleChange(e, setPassword)}
+          onChange={(e) => handleChange(e, setOldPassword)}
           autoComplete="off"
           fullWidth
         />

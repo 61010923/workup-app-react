@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import Chip from '@mui/material/Chip'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -54,6 +55,23 @@ export default function StickyHeadTable() {
     if (_isEmpty(body)) {
       setLoading(false)
     }
+  }
+  const chipType = (status) => {
+    let label = ''
+    let color = ''
+    if (status === 'pending') {
+      label = 'รอดำเนินการ'
+      color = 'warning'
+    }
+    if (status === 'disapproved') {
+      label = 'ไม่ผ่านการคัดเลือก'
+      color = 'error'
+    }
+    if (status === 'callback') {
+      label = 'รอการนัดสัมภาษณ์'
+      color = 'success'
+    }
+    return <Chip label={label} color={color} sx={{ borderRadius: '8px', padding: '8px' }} />
   }
   const fetchData = async () => {
     try {
@@ -201,21 +219,7 @@ export default function StickyHeadTable() {
                         {format(new Date(_get(row, 'updatedAt', new Date())), 'MM/dd/yyyy HH:mm')}
                       </TableCell>
                       <TableCell align="">
-                        {/* <Box sx={{
-                        backgroundColor:
-                      ((row.status === 'รอนัดสัมภาษณ์งาน' && 'primary.main')
-                      || (row.status === 'รอการติดต่อกลับ' && 'gray')
-                      ),
-                        padding: '0.5rem',
-                        borderRadius: '0.5rem',
-                        display: 'inline-block',
-                        color: '#fff',
-                        fontWeight: 'bold',
-                        boxShadow: '0 0 5px 2px #c8c7c6',
-                      }}
-                      >
-                        {row.status}
-                      </Box> */}
+                        {chipType(row.status)}
                       </TableCell>
                       <TableCell align="">
                         <Button color="error" variant="contained" disabled={disableButton} startIcon={<CancelOutlinedIcon />} onClick={() => handleDelete(row.applicationId)}>

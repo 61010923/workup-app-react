@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Box, Button, MenuItem,
+  Box, Button, MenuItem, IconButton,
 } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { makeStyles } from '@mui/styles'
@@ -19,6 +19,8 @@ import _get from 'lodash/get'
 import _every from 'lodash/every'
 import InputAdornment from '@mui/material/InputAdornment'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined'
+import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined'
 import PhoneIcon from '@mui/icons-material/Phone'
 import Footer from '../../component/Footer'
 import ImageUploader from '../../component/ImageUploader'
@@ -81,9 +83,9 @@ const genders = [
     id: 'none',
     value: 'ไม่ระบุ',
   },
-
 ]
-function CalculateAge(birthday) { // birthday is a date
+function CalculateAge(birthday) {
+  // birthday is a date
   const ageDifMs = Date.now() - birthday.getTime()
   const ageDate = new Date(ageDifMs) // miliseconds from epoch
   return Math.abs(ageDate.getUTCFullYear() - 1970)
@@ -101,7 +103,12 @@ function PersonalTab() {
   const [marital, setMarital] = useState('')
   const [address, setAddress] = useState('')
   const [interestedJob, setInterestedJob] = useState([''])
-  const [education, setEducation] = useState([{ education: '', major: '', university: '' }])
+  const [education, setEducation] = useState([
+    { education: '', major: '', university: '' },
+  ])
+  const [experience, setExperience] = useState([{
+    position: '', company: '', start: null, end: null,
+  }])
   const [skill, setSkill] = useState([])
   const [image, setImage] = useState([])
   const [profile, setProfile] = useState(null)
@@ -114,8 +121,12 @@ function PersonalTab() {
   const [phone, setPhone] = useState('')
   const newDate = new Date()
   const newDateMax = new Date()
-  const decreaseDateMin = new Date(newDate.setFullYear(newDate.getFullYear() - 60))
-  const decreaseDateMax = new Date(newDateMax.setFullYear(newDateMax.getFullYear() - 15))
+  const decreaseDateMin = new Date(
+    newDate.setFullYear(newDate.getFullYear() - 60),
+  )
+  const decreaseDateMax = new Date(
+    newDateMax.setFullYear(newDateMax.getFullYear() - 15),
+  )
   const dispatch = useDispatch()
   const user = useSelector(userDetail)
   const userToken = _get(user, 'userDetail.userToken')
@@ -142,6 +153,30 @@ function PersonalTab() {
   }
   const handleChangeMarital = (event) => {
     setMarital(event.target.value)
+  }
+  const handleAddExperience = () => {
+    const data = [...experience]
+    data.push({
+      experience: '', company: '', start: null, end: null,
+    })
+    setExperience(data)
+  }
+  const handleRemoveExperience = (i) => {
+    const arr = [...experience]
+    arr.splice(i, 1)
+    setExperience(arr)
+  }
+  const handleInputChange = (e, index, type) => {
+    if (type === 'start' || type === 'end') {
+      const list = [...experience]
+      list[index][type] = e
+      setExperience(list)
+    } else {
+      const { name, value } = e.target
+      const list = [...experience]
+      list[index][type] = value
+      setExperience(list)
+    }
   }
   const handleSubmit = async () => {
     setLoading(true)
@@ -186,6 +221,7 @@ function PersonalTab() {
         city,
         responsible,
         phone,
+        experience,
       }
       try {
         const response = await axios.patch(
@@ -243,6 +279,9 @@ function PersonalTab() {
     if (!_isEmpty(data.pastWork)) {
       setSkill(data.pastWork)
     }
+    if (!_isEmpty(data.experience)) {
+      setExperience(data.experience)
+    }
     setImage(data.pastWorkImg)
     setProfile(data.imgProfile)
   }
@@ -267,7 +306,7 @@ function PersonalTab() {
 
   useEffect(() => {
     fetchData()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <Box className={classes.container}>
@@ -628,6 +667,126 @@ function PersonalTab() {
                 state={education}
                 setState={setEducation}
               />
+
+              <Box mt={2}>
+                <Typography sx={{ mt: 2, fontWeight: 'bold' }}>
+                  ประสบการณ์การทำงาน
+                </Typography>
+                {_map(experience, (data, i) => (
+                  <Box display="flex" alignItems="center" width="100%">
+                    {experience.length > 1 && (
+                      <Box sx={{ mt: 2 }}>
+                        <IconButton
+                          aria-label="delete"
+                          onClick={() => handleRemoveExperience(i)}
+                          color="error"
+                        >
+                          <RemoveCircleOutlineOutlinedIcon
+                            sx={{ fontSize: '20px' }}
+                          />
+                        </IconButton>
+                      </Box>
+                    )}
+                    <Box display="flex" flexDirection="column" width="100%">
+                      <Box display="flex" mt={2} sx={{ gap: 2 }}>
+                        <Box width="100%">
+                          <TextField
+                            fullWidth
+                            label="ตำแหน่งหน้าที่"
+                            value={data.position}
+                            onChange={(e) => handleInputChange(e, i, 'position')}
+                            error={openError && _isEmpty(data.position)}
+                            helperText={
+                              openError
+                              && _isEmpty(data.position)
+                              && 'please fill position'
+                            }
+                          />
+                        </Box>
+                        <Box width="100%">
+                          <TextField
+                            fullWidth
+                            label="บริษัท"
+                            value={data.company}
+                            onChange={(e) => handleInputChange(e, i, 'company')}
+                            error={openError && _isEmpty(data.company)}
+                            helperText={
+                              openError
+                              && _isEmpty(data.company)
+                              && 'please fill company'
+                            }
+                          />
+                        </Box>
+                      </Box>
+                      <Box mt={2} width="100%">
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+                            <DatePicker
+                              views={['year']}
+                              label="Start"
+                              name="start"
+                              value={data.start}
+                              onChange={(e) => handleInputChange(e, i, 'start')}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  fullWidth
+                                  helperText={
+                                    openError
+                                    && _isEmpty(
+                                      new Date(data.end).toISOString(),
+                                    )
+                                    && 'please fill end'
+                                  }
+                                  error={
+                                    openError
+                                    && _isEmpty(new Date(data.end).toISOString())
+                                  }
+                                />
+                              )}
+                            />
+                            <DatePicker
+                              views={['year']}
+                              label="End"
+                              name="end"
+                              value={data.end}
+                              onChange={(e) => handleInputChange(e, i, 'end')}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  fullWidth
+                                  helperText={
+                                    openError
+                                    && _isEmpty(
+                                      new Date(data.end).toISOString(),
+                                    )
+                                    && 'please fill end'
+                                  }
+                                  error={
+                                    openError
+                                    && _isEmpty(new Date(data.end).toISOString())
+                                  }
+                                />
+                              )}
+                            />
+                          </Box>
+                        </LocalizationProvider>
+                      </Box>
+                    </Box>
+                  </Box>
+                ))}
+                <Box>
+                  <Button
+                    sx={{ mt: 1, ml: '3px', textTransform: 'none' }}
+                    startIcon={<AddCircleOutlineOutlinedIcon />}
+                    onClick={handleAddExperience}
+                    variant="text"
+                    color="success"
+                  >
+                    เพิ่ม Experience
+                  </Button>
+                </Box>
+              </Box>
               <Typography sx={{ fontWeight: 'bold', mt: 2 }}>
                 ความสามารถ/ผลงาน
               </Typography>
