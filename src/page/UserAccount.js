@@ -102,7 +102,7 @@ function AccountTab() {
           variant="h6"
           color="primary"
         >
-          ACCOUNT
+          CHANGE PASSWORD
         </Typography>
         <TextField
           sx={{ mt: 2 }}
